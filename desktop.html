@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="theme-color" content="red">
+
+    <!-- Windows 12 網頁版 譚景元原創  -->
+
+    <!-- Windows 12 網頁版是一個開放源項目,
+    希望讓使用者在網路上預先體驗 Windows 12,
+    內容可能與 Windows 12 正式版本不一致。
+    使用標準網路技術,例妙如 Html、CSS 和 Javascript
+    此項目絕不附屬於微軟,且不應與微軟作業系統或產品混淆,
+    這也不是 Windows365 cloud PC
+    本項目中微軟、Windows和其他示範產品是微軟公司的商標 -->
+    <link rel="stylesheet" href="./desktop.css" />
+    <!-- Apps style -->
+    <link rel="stylesheet" href="apps/style/setting.css">
+    <link rel="stylesheet" href="apps/style/explorer.css">
+    <link rel="stylesheet" href="apps/style/calc.css">
+    <link rel="stylesheet" href="apps/style/about.css">
+    <link rel="stylesheet" href="apps/style/notepad.css">
+    <link rel="stylesheet" href="apps/style/terminal.css">
+    <link rel="stylesheet" href="apps/style/fonts.css">
+    <link rel="stylesheet" href="widgets.css">
+    <link rel="manifest" href="pwa/manifest.json">
+    <base target="_blank">
+</head>
+
+<!-- 
+
+    你好
+    麻煩看一下 desktop.js line 635
+    apps/style/font.css
+    可以順便寫一下更新日誌 :)
+ -->
+
+<body>
+    <div id="loadback" style="background-color:#000;width:100%;height:100%;z-index:105;position:absolute;transition:200ms;">
+        <style>#loadback.hide{opacity:0;}
+            loading>svg>circle:first-child{stroke:#fff;fill:none;stroke-width:2px;stroke-linecap:round;
+                animation:spin-infinite 2s linear 0s infinite normal none running;transform-origin:50% 50%;
+                transition: all .2s ease-in-out 0s;}loading>svg>circle:last-child{fill:#00000000;}
+            loading>svg{background-color: #00000000;border-radius: 50%;}
+            @keyframes spin-infinite {0%{stroke-dasharray:.01px,43.97px;transform:rotate(0deg)}
+                50%{stroke-dasharray:21.99px,21.99px;transform:rotate(450deg)}
+                to{stroke-dasharray:.01px,43.97px;transform:rotate(3turn)}}</style>
+        <svg id="loadbacksvg" viewbox="0,0,306,305" style="transition: 1s;opacity: 0;position: absolute;left: calc(50% - 125px);top:20%;"
+            width="250" height="250" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><clipPath id="clip0"><rect x="897" y="208" width="306" height="305"/></clipPath><linearGradient x1="885.371" y1="221.859" x2="1214.63" y2="498.141" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="fill1"><stop offset="0" stop-color="#A964C8"/><stop offset="0.18" stop-color="#A964C8"/><stop offset="0.36" stop-color="#A266E4"/><stop offset="0.73" stop-color="#346ED8"/><stop offset="0.91" stop-color="#2D8AD5"/><stop offset="1" stop-color="#2D8AD5"/></linearGradient><linearGradient x1="317.629" y1="13.8595" x2="-11.6295" y2="290.141" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="fill2"><stop offset="0" stop-color="#A964C8"/><stop offset="0.18" stop-color="#A964C8"/><stop offset="0.36" stop-color="#A266E4"/><stop offset="0.73" stop-color="#346ED8"/><stop offset="0.91" stop-color="#2D8AD5"/><stop offset="1" stop-color="#2D8AD5"/></linearGradient><linearGradient x1="885.371" y1="221.859" x2="1214.63" y2="498.141" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="fill3"><stop offset="0" stop-color="#A964C8"/><stop offset="0.18" stop-color="#A964C8"/><stop offset="0.36" stop-color="#A266E4"/><stop offset="0.73" stop-color="#346ED8"/><stop offset="0.91" stop-color="#2D8AD5"/><stop offset="1" stop-color="#2D8AD5"/></linearGradient><linearGradient x1="-11.6295" y1="290.141" x2="317.629" y2="13.8595" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="fill4"><stop offset="0" stop-color="#A964C8"/><stop offset="0.18" stop-color="#A964C8"/><stop offset="0.36" stop-color="#A266E4"/><stop offset="0.73" stop-color="#346ED8"/><stop offset="0.91" stop-color="#2D8AD5"/><stop offset="1" stop-color="#2D8AD5"/></linearGradient></defs><g clip-path="url(#clip0)" transform="translate(-897 -208)"><path d="M936.813 208 1035.2 208 1035.2 208 1036 340.407C1011.65 331.352 986.507 325.493 963.762 325.226 941.508 325.759 919.254 339.075 897 346L897 247.755C897 225.799 914.825 208 936.813 208Z" fill="url(#fill1)" fill-rule="evenodd"/><path d="M40.0431 0 139 0 139 0 139 140.549C115.82 150.681 92.6407 159.212 69.4611 158.946 45.5026 160.012 23.1537 145.082 0 138.15L0 39.7981C0 17.8182 17.9278 0 40.0431 0Z" fill="url(#fill2)" fill-rule="evenodd" transform="matrix(-1 0 0 1 1203 208)"/><path d="M1163.19 512 1064.8 512 1064.8 512 1064 379.593C1088.35 388.648 1113.49 394.507 1136.24 394.774 1158.49 394.241 1180.75 380.925 1203 374L1203 472.245C1203 494.201 1185.18 512 1163.19 512Z" fill="url(#fill3)" fill-rule="evenodd"/><path d="M39.755 0 138 0 138 0 138 140.549C114.987 150.681 91.9742 159.212 68.9614 158.946 45.1752 160.012 22.9872 145.082 0 138.15L0 39.7981C0 17.8182 17.7989 0 39.755 0Z" fill="url(#fill4)" fill-rule="evenodd" transform="matrix(1 -1.22465e-16 -1.22465e-16 -1 897 512)"/></g></svg>
+        <loading id="loadbackloading" style="transition:1s;opacity: 0;">
+            <svg style="position: absolute;left: calc(50% - 25px);top:72%;" width="50px" height="50px" viewBox="0 0 16 16">
+                <circle cx="8px" cy="8px" r="7px"></circle><circle cx="8px" cy="8px" r="6px"></circle></svg>
+        <p id="loadbackupdate" style="position:absolute;top:calc(72% + 55px);left:0;width:100%;text-align:center;color:#fff;font-size: 25px;display:none;">正在更新</p>
+        </loading><script>setTimeout(() => {document.getElementById('loadbacksvg').style.opacity=1;
+        document.getElementById('loadbackloading').style.opacity=1;}, 100);</script>
+    </div>
+    <!-- <img src="https://bing.com/th?id=OHR.Trossachs_ZH-CN9299955040_UHD.jpg&qlt=100" alt=""> -->
+    <script src="./jq.min.js"></script>
+    <div id="start-menu">
+        <!-- 開始菜單 -->
+        <div id="s-m-l">
+            <div id="s-m-user">
+                <svg viewBox="0,0,257,344" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" overflow="hidden"><defs><clipPath id="user-clip0"><rect x="382" y="195" width="257" height="344"/></clipPath><linearGradient x1="351.462" y1="233.56" x2="669.496" y2="500.422" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="user-fill1"><stop offset="0" stop-color="#A964C8"/><stop offset="0.35" stop-color="#A964C8"/><stop offset="0.87" stop-color="#2D8AD5"/><stop offset="1" stop-color="#2D8AD5"/></linearGradient><linearGradient x1="351.462" y1="233.56" x2="669.496" y2="500.422" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="user-fill2"><stop offset="0" stop-color="#A964C8"/><stop offset="0.35" stop-color="#A964C8"/><stop offset="0.87" stop-color="#2D8AD5"/><stop offset="1" stop-color="#2D8AD5"/></linearGradient></defs><g clip-path="url(#user-clip0)" transform="translate(-382 -195)"><path d="M637.755 433.872C642.215 515.221 579.577 537.983 508.011 537.983 436.444 537.983 376.676 507.833 383.513 437.11 383.109 425.234 389.59 414.133 398.634 409.891 413.82 402.768 444.753 402.936 507.484 402.997 570.214 403.058 609.164 402.279 621.521 407.947 633.878 413.614 638.011 424.609 637.755 433.872Z" fill="url(#user-fill1)" fill-rule="evenodd"/><path d="M422 285C422 235.847 461.623 196 510.5 196 559.377 196 599 235.847 599 285 599 334.153 559.377 374 510.5 374 461.623 374 422 334.153 422 285Z" fill="url(#user-fill2)" fill-rule="evenodd"/></g></svg>
+            </div>
+            <p style="width: 100%;text-align: center;margin: -50px 0 20px 0;font-size: 30px;">Administartor</p>
+            <input type="text" class="input" title="搜索" placeholder="在這裡輸入你要搜索的內容" onfocus="hide_startmenu();
+                $('#search-btn').addClass('show');
+                $('#search-win').addClass('show-begin');
+                setTimeout(() => {
+                    $('#search-win').addClass('show');
+                }, 0);
+                $('#search-input').focus();">
+            <input-before class="bi bi-search"></input-before>
+            <list>
+                <p class="text">可用</p>
+                <a onclick="openapp('setting');hide_startmenu();">
+                    <img src="icon/setting.png"><p>設置</p></a>
+                <a onclick="openapp('explorer');hide_startmenu();">
+                    <img src="icon/explorer.png"><p>文件資源管理器</p></a>
+                <a onclick="openapp('calc');hide_startmenu();">
+                    <img src="icon/calc.png"><p>計算器</p></a>
+                <a onclick="openapp('about');hide_startmenu();">
+                    <img src="icon/about.png"><p>關於Win12網頁版</p></a>
+                <a onclick="openapp('notepad');hide_startmenu();">
+                    <img src="icon/notepad.png"><p>記事本</p></a>
+                <a onclick="openapp('terminal');hide_startmenu();">
+                    <img src="icon/terminal.png"><p>終端</p></a>
+                <p class="text">其它</p>
+                <a><img src="icon/camera.png"><p>相機</p></a>
+            </list>
+        </div>
+        <div id="s-m-r">
+            <div class="row1">
+                <div class="folder">
+                    <a class="a sm-app enable" onclick="openapp('explorer');apps.explorer.goto('C:/用戶/Administrator/文檔');
+                        hide_startmenu();"><img src="icon/folder/docs.png"><p>文檔</p></a>
+                    <a class="a sm-app enable" onclick="openapp('explorer');apps.explorer.goto('C:/使用者/Administrator/圖片');
+                        hide_startmenu();"><img src="icon/folder/pics.png"><p>圖片</p></a>
+                    <a class="a sm-app enable" onclick="openapp('explorer');apps.explorer.goto('C:/使用者/Administrator/音樂');
+                        hide_startmenu();"><img src="icon/folder/music.png"><p>音樂</p></a></div>
+                <div class="tool">
+                    <p style="font-size: 40px;margin-bottom: -10px;" class="time">12:00</p>
+                    <p class="date">星期一, 2368年13月34日</p>
+                    <a class="a btn btn-icon power" title="電源" onclick="$(this).addClass('show')">
+                        <span class="bi bi-power"></span>
+                        <i class="bi bi-power" onclick="$('#start-menu').removeClass('show');
+                        setTimeout(() => {window.location='shutdown.html';},200);" title="關機"></i>
+                        <i class="bi bi-arrow-counterclockwise" onclick="$('#start-menu').removeClass('show');
+                        setTimeout(() => {window.location='reload.html';},200);" title="重啟"></i>
+                    </a>
+                    <a class="a btn btn-icon big" onclick="
+                    if($('#start-menu').hasClass('max')){
+                        $('#start-menu>#s-m-r>.row1>.tool>.btn-icon.big').html('<i class=\'bi bi-arrows-angle-expand\'></i>');
+                        $('#start-menu').removeClass('max');
+                    }else{
+                        $('#start-menu>#s-m-r>.row1>.tool>.btn-icon.big').html('<i class=\'bi bi-arrows-angle-contract\'></i>');
+                        $('#start-menu').addClass('max');
+                    }
+                    ">
+                        <i class="bi bi-arrows-angle-expand"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="pinned">
+                <!-- 已固定 卡片 -->
+                <div class="title">
+                    <p>已固定</p>
+                    <div>
+                        <a class="a more-btn">所有應用 <i class="bi bi-chevron-right"></i></a>
+                        <!-- 這個好像沒什麼必要 -->
+                    </div>
+                </div>
+                <div class="apps">
+                    <a class="a sm-app enable" onclick="openapp('calc');hide_startmenu();" oncontextmenu="return showcm(event,'smapp',['calc','計算器'])">
+                        <img src="icon/calc.png"><p>計算器</p></a>
+                    <a class="a sm-app"><img src="icon/camera.png"><p>相機</p></a>
+                    <a class="a sm-app enable jump" onclick="window.open('https:\/\/github.com/tjy-gitnub/win12/issues','_blank');">
+                        <img src="icon/feedback.png"><p>回饋中心</p></a>
+                    <a class="a sm-app"><img src="icon/defender.png"><p>Windows 安全中心</p></a>
+                    <a class="a sm-app enable" onclick="openapp('about');hide_startmenu();" oncontextmenu="return showcm(event,'smapp',['about','關於 Win12 網頁版'])">
+                        <img src="icon/about.png"><p>關於Win12網頁版</p></a>
+                    <a class="a sm-app enable" onclick="openapp('explorer');hide_startmenu();" oncontextmenu="return showcm(event,'smapp',['explorer','文件資源管理器'])">
+                        <img src="icon/explorer.png"><p>文件資源管理器</p></a>
+                    <a class="a sm-app enable" onclick="openapp('notepad');hide_startmenu();" oncontextmenu="return showcm(event,'smapp',['notepad','記事本'])">
+                        <img src="icon/notepad.png"><p>記事本</p></a>
+                    <a class="a sm-app enable" onclick="openapp('setting');hide_startmenu();" oncontextmenu="return showcm(event,'smapp',['setting','設置'])">
+                        <img src="icon/setting.png"><p>設置 </p></a>
+                    <a class="a sm-app"><img src="icon/store.png"><p>Microsoft Store</p></a>
+                    <a class="a sm-app"><img src="icon/taskmanager.png"><p>工作管理員</p></a>
+                    <a class="a sm-app enable"><img src="icon/office.png"><p>這是Office</p></a>
+                    <a class="a sm-app enable" onclick="openapp('terminal');hide_startmenu();" oncontextmenu="return showcm(event,'smapp',['terminal','終端'])">
+                        <img src="icon/terminal.png"><p>終端</p></a>
+                </div>
+            </div>
+            <div class="tuijian">
+                <!-- 推薦的專案 卡片 -->
+                <div class="title">
+                    <p>推薦的專案</p>
+                    <div>
+                        <a class="a more-btn">更多 <i class="bi bi-chevron-right"></i></a>
+                    </div>
+                </div>
+                <div class="apps">
+                    <a class="a tj-obj act"><img src="icon/files/ppt.png"><div><p>科學地使用瓶蓋.pptx</p><p>5 分鐘前</p></div></a>
+                    <a class="a tj-obj act"><img src="icon/files/img.png"><div><p>可口可樂瓶蓋.jpg</p><p>7 分鐘前</p></div></a>
+                    <a class="a tj-obj act"><img src="icon/files/img.png"><div><p>瓶蓋構造圖.jpg</p><p>16 分鐘前</p></div></a>
+                    <a class="a tj-obj act"><img src="icon/files/word.png"><div><p>瓶蓋的構造及作用.docx</p><p>24 分鐘前</p></div></a>
+                    <a class="a tj-obj act"><img src="icon/files/excel.png"><div><p>可口可樂瓶蓋厚度.xlsx</p><p>35 分鐘前</p></div></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="search-win">
+        <!-- 搜索框 -->
+        <input type="text" class="input" placeholder="在這裡輸入你要搜索的內容" id="search-input" oninput="
+        if(this.value.length>0){
+            let rand=['農夫山泉瓶蓋簡介.txt','瓶蓋構造圖.png','瓶蓋結構說明.docx','可口可樂瓶蓋.jpg','可口可樂瓶蓋歷史.pptx','瓶蓋品質統計分析.xlsx','農夫山泉瓶蓋.svg','瓶蓋介紹.doc'];
+            $('#search-win>.ans>.list>list').html('<a class=\'a\'>'+rand[this.value.length%8]+'</a>'+'<a class=\'a\'>'+rand[(this.value.length+3)%8]+'</a>');
+        }else
+            $('#search-win>.ans>.list>list').html('什麼也沒有')
+        $('#search-span').text(this.value);
+        ">
+        <input-before class="bi bi-search"></input-before>
+        <div class="tab">
+            <a class="now">全部</a><a>應用</a><a>文檔</a><a>網頁</a>
+            <a>電子郵件</a><a>人員</a><a>設置</a><a>視頻</a>
+            <a>資料夾</a><a>音樂</a><a>照片</a>
+        </div>
+        <div class="ans">
+            <div class="list">
+                <list>
+                    什麼也沒有
+                </list>
+            </div>
+            <div class="view">
+                <p class="bi bi-search" style="text-align: center;font-size: 50px;"></p>
+                <p style="text-align: center;font-size: 25px;">搜索 "<span id="search-span"></span>"</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        // $('').add()
+    </script>
+    <div id="widgets">
+        <div class="widgets">
+            <div class="bar">
+                <p class="tit">小組件</p>
+                <button onclick="widgets.widgets.add('calc')" class="a act btn btn-icon big" style="background: linear-gradient(100deg, var(--theme-1), var(--theme-2));color:#fff;"><i class="bi bi-plus-lg"></i></button>
+            </div>
+            <div class="content">
+                <div class="template">
+                    <div class="calc">
+                        <div class="wg calc">
+                            <div class="titbar">
+                                <a title="更多" class="a more" onclick="$('.wg.calc>.titbar>.menu').toggleClass('show')"><i class="bi bi-three-dots"></i></a>
+                                <div class="menu">
+                                    <a title="打開應用" class="a img" onclick="$('.wg.calc>.titbar>.menu').removeClass('show');hide_widgets();openapp('calc')">
+                                        <img src="icon/calc.png">
+                                    </a>
+                                    <a class="a" title="移動 (不可用)"><i class="bi bi-arrows-move"></i></a>
+                                    <a class="a" title="添加到桌面 (不可用)"><i class="bi bi-menu-app"></i></a>
+                                    <a class="a" title="刪除" onclick="$('.wg.calc>.titbar>.menu').removeClass('show');widgets.widgets.remove('calc')"><i class="bi bi-trash"></i></a>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <input value="" onkeydown="if(event.keyCode == 13)$('*:not(.template)>*>.wg.calc>.content>.keyb>.ans').click()">
+                                <a style="grid-area: pow;" class="b" onclick="$('*:not(.template)>*>.wg.calc>.content>input')[0].value*=$('*:not(.template)>*>.wg.calc>.content>input').val()">𝑥²</a>
+                                <a style="grid-area: sqrt;" class="b" onclick="$('*:not(.template)>*>.wg.calc>.content>input').val(Math.sqrt($('*:not(.template)>*>.wg.calc>.content>input').val()))">√𝑥</a>
+                                <a style="grid-area: c;" class="b" onclick="$('*:not(.template)>*>.wg.calc>.content>input')[0].value=''">C</a>
+                                <a style="grid-area: jia;" class="b u" onclick="widgets.calc.add('+')">+</a>
+                                <a style="grid-area: n7;" class="b" onclick="widgets.calc.add('7')">7</a>
+                                <a style="grid-area: n8;" class="b" onclick="widgets.calc.add('8')">8</a>
+                                <a style="grid-area: n9;" class="b" onclick="widgets.calc.add('9')">9</a>
+                                <a style="grid-area: jian;" class="b u" onclick="widgets.calc.add('-')">-</a>
+                                <a style="grid-area: n4;" class="b" onclick="widgets.calc.add('4')">4</a>
+                                <a style="grid-area: n5;" class="b" onclick="widgets.calc.add('5')">5</a>
+                                <a style="grid-area: n6;" class="b" onclick="widgets.calc.add('6')">6</a>
+                                <a style="grid-area: cheng;" class="b u" onclick="widgets.calc.add('*')">×</a>
+                                <a style="grid-area: n1;" class="b" onclick="widgets.calc.add('1')">1</a>
+                                <a style="grid-area: n2;" class="b" onclick="widgets.calc.add('2')">2</a>
+                                <a style="grid-area: n3;" class="b" onclick="widgets.calc.add('3')">3</a>
+                                <a style="grid-area: chu;" class="b u" onclick="widgets.calc.add('/')">÷</a>
+                                <a style="grid-area: dot;" class="b" onclick="widgets.calc.add('.')">.</a>
+                                <a style="grid-area: n0;" class="b" onclick="widgets.calc.add('0')">0</a>
+                                <a style="grid-area: back;" class="b" onclick="$('*:not(.template)>*>.wg.calc>.content>input').val($('*:not(.template)>*>.wg.calc>.content>input')[0].value.substring(0,$('*:not(.template)>*>.wg.calc>.content>input')[0].value.length-1));"><i class="bi bi-backspace"></i></a>
+                                <a style="grid-area: ans;" class="b ans u" onclick="$('*:not(.template)>*>.wg.calc>.content>input')[0].value=eval($('*:not(.template)>*>.wg.calc>.content>input')[0].value)"> =</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid">
+
+                </div>
+            </div>
+        </div>
+        <span class="hr"></span>
+        <div class="news">
+            <div class="bar">
+                <p class="tit">新聞</p>
+                <p style="color: #7f7f7f;margin-right: 5px;margin-top: 2px;">注意: 新聞內容均不屬實 </p>
+            </div>
+            <div class="content">
+                <div class="card" style="grid-column: 1/6;grid-row: 1/3;color: #fff;background: var(--bgul);background-position:0px -70px;background-size: 170%;">
+                    <p class="tit" style="font-size: 22px;margin: 110px 0 0 30px;text-shadow: 0 0 8px #000;">Windows12 發佈</p>
+                    <a class="a" style="margin: 5px 0 0 250px;font-size: 17px;color: rgb(255, 156, 156);text-shadow: 0 0 3px #000;" onclick="hide_widgets();
+                    openapp('about');if($('.window.about').hasClass('min'))minwin('about');
+                    $('#win-about>.update').show(200);$('#win-about>.about').hide();
+                    $('#win-about>.update>div>details:first-child').attr('open','open')">詳細資訊 ></a>
+                </div>
+                <div class="card" style="grid-column: 3/6;grid-row: 7/9;background:url(img/win13.jpg) center;background-size: cover;">
+                    <p class="tit" style="font-size: 19px;margin: 50px 0 0 10px;color: #fff;">Windows13 即將發佈，官方透露: 將自帶 Macos 子系統</p>
+                    <a class="a" style="margin: 5px 0 0 130px;font-size: 17px;color: rgb(238, 108, 108);text-shadow: 0 0 3px #000;">詳細資訊 ></a>
+                </div>
+                <div class="card" style="grid-column: 4/6;grid-row: 3/5;background:linear-gradient(#00000000,var(--bg) 70%),url(img/win11.jpg) center;background-size: cover;">
+                    <p class="tit" style="font-size: 19px;margin: 100px 0 0 10px;">Windows11 將于下周停止支持</p>
+                    <a class="a" style="margin: 5px 0 0 80px;font-size: 17px;">詳細資訊 ></a>
+                </div>
+                <div class="card" style="grid-column: 1/3;grid-row: 5/8;background:linear-gradient(#00000000,#111 80%),url(img/corsiri.svg) bottom;background-size: 200%;">
+                    <p class="tit" style="font-size: 19px;margin: 170px 0 0px 10px;color: #fff;">2029年,微軟終重拾Cortana 微軟員工透露:將與Siri整合</p>
+                    <a class="a" style="margin: 0 0 0 80px;font-size: 17px;color: rgb(255, 97, 97);">詳細資訊 ></a>
+                </div>
+                <div class="card" style="grid-column: 3/6;grid-row: 5/7;background:linear-gradient(#00000000 0 30%,var(--bg) 70%),url(img/mc.jpg) bottom;background-size: cover;">
+                    <p class="tit" style="font-size: 19px;margin: 100px 0 -20px 10px;">今日淩晨,Minecraft把代理權交給台灣,mc敗下陣來了?</p>
+                    <a class="a" style="margin: 0 0 0 170px;font-size: 17px;">詳細資訊 ></a>
+                </div>
+                <div class="card" style="grid-column: 1/3;grid-row: 8/10;background:#171b22;">
+                    <p class="tit" style="font-size: 19px;margin: 50px 0 0 10px;color: #fff;">想給新聞增加更多奇思妙想? <br>快在github上來提交吧</p>
+                    <a class="a" title="https://github.com/cheerre56?tab=repositories" style="margin: 10px 0 0 70px;font-size: 17px;color: rgb(255, 115, 115);" onclick="
+                    window.open('https://github.com/cheerre56?tab=repositories','_blank');">提交issues ></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="datebox">
+        <div class="tit">
+            <p class="time">12:29:19</p>
+            <p class="date">星期一, 2022年09月22日</p>
+            <hr>
+        </div>
+        <div class="cont">
+            <div class="head">
+                <p>一</p><p>二</p><p>三</p><p>四</p><p>五</p><p>六</p><p>日</p>
+            </div>
+            <div class="body">
+            </div>
+        </div>
+    </div>
+
+    <div id="dock-box">
+        <!-- Dock(任務)欄 -->
+        <div class="dock dock-start">
+            <a class="dock-btn" id="start-btn" title="開始" onclick="
+                if($('#start-menu').hasClass('show')){
+                    hide_startmenu();
+                }
+                else{
+                    $('#start-btn').addClass('show');
+                    if($('#search-win').hasClass('show')){
+                        $('#search-btn').removeClass('show');
+                        $('#search-win').removeClass('show');
+                        setTimeout(() => {
+                            $('#search-win').removeClass('show-begin');
+                        }, 200);
+                        hide_widgets();
+                    }
+                    if($('#widgets').hasClass('show'))hide_widgets();
+                    $('#start-menu').addClass('show-begin');
+                    setTimeout(() => {
+                        $('#start-menu').addClass('show');
+                    }, 0);
+                }" oncontextmenu="return showcm(event,'winx',null)">
+                <!-- 開始按鈕 -->
+                <svg class="menu" viewBox="0,0,440,439" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                    overflow="hidden">
+                    <defs>
+                        <clipPath id="clip-start1">
+                            <rect x="134" y="59" width="440" height="439" />
+                        </clipPath>
+                    </defs>
+                    <g clip-path="url(#clip-start1)" transform="translate(-134 -59)">
+                        <path
+                            d="M233.479 67.5001 475.521 67.5001C525.767 67.5001 566.5 108.233 566.5 158.479L566.5 490.5 142.5 490.5 142.5 158.479C142.5 108.233 183.233 67.5001 233.479 67.5001Z"
+                            stroke="#7F7F7F" stroke-width="14.6667" stroke-linecap="round" stroke-miterlimit="8" fill="#A6A6A6"
+                            fill-rule="evenodd" style="fill: var(--bg70);"/>
+                        <path d="M208.5 132.5 334.716 132.5" stroke="#888" stroke-width="14.6667" stroke-linecap="round"
+                            stroke-miterlimit="8" fill="none" fill-rule="evenodd" />
+                        <path d="M208.5 175.5 386.34 175.5" stroke="#888" stroke-width="14.6667" stroke-linecap="round"
+                            stroke-miterlimit="8" fill="none" fill-rule="evenodd" />
+                        <path d="M208.5 221.5 271.608 221.5" stroke="#888" stroke-width="14.6667" stroke-linecap="round"
+                            stroke-miterlimit="8" fill="none" fill-rule="evenodd" />
+                    </g>
+                </svg>
+                
+                <svg class="ico" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="26" height="26" viewBox="0,0,306,305"><defs><clipPath id="clip0"><rect x="897" y="208" width="306" height="305"></rect>
+                    </clipPath><linearGradient x1="885.371" y1="221.859" x2="1214.63" y2="498.141" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="sf1">
+                        <stop offset="0" stop-color="#A964C8"></stop><stop offset="0.18" stop-color="#A964C8"></stop><stop offset="0.36" stop-color="#A266E4"></stop>
+                        <stop offset="0.73" stop-color="#346ED8"></stop><stop offset="0.91" stop-color="#2D8AD5"></stop><stop offset="1" stop-color="#2D8AD5"></stop>
+                    </linearGradient><linearGradient x1="317.629" y1="13.8595" x2="-11.6295" y2="290.141" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="sf2">
+                        <stop offset="0" stop-color="#A964C8"></stop><stop offset="0.18" stop-color="#A964C8"></stop><stop offset="0.36" stop-color="#A266E4"></stop>
+                        <stop offset="0.73" stop-color="#346ED8"></stop><stop offset="0.91" stop-color="#2D8AD5"></stop><stop offset="1" stop-color="#2D8AD5"></stop>
+                    </linearGradient><linearGradient x1="885.371" y1="221.859" x2="1214.63" y2="498.141" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="sf3">
+                        <stop offset="0" stop-color="#A964C8"></stop><stop offset="0.18" stop-color="#A964C8"></stop><stop offset="0.36" stop-color="#A266E4"></stop>
+                        <stop offset="0.73" stop-color="#346ED8"></stop><stop offset="0.91" stop-color="#2D8AD5"></stop><stop offset="1" stop-color="#2D8AD5"></stop>
+                    </linearGradient><linearGradient x1="-11.6295" y1="290.141" x2="317.629" y2="13.8595" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="sf4">
+                        <stop offset="0" stop-color="#A964C8"></stop><stop offset="0.18" stop-color="#A964C8"></stop><stop offset="0.36" stop-color="#A266E4"></stop>
+                        <stop offset="0.73" stop-color="#346ED8"></stop><stop offset="0.91" stop-color="#2D8AD5"></stop><stop offset="1" stop-color="#2D8AD5"></stop>
+                    </linearGradient></defs><g clip-path="url(#clip0)" transform="translate(-897 -208)">
+                        <path d="M936.813 208 1035.2 208 1035.2 208 1036 340.407C1011.65 331.352 986.507 325.493 963.762 325.226 941.508 325.759 919.254 339.075 897 346L897 247.755C897 225.799 914.825 208 936.813 208Z" fill="url(#sf1)" fill-rule="evenodd"></path>
+                        <path d="M40.0431 0 139 0 139 0 139 140.549C115.82 150.681 92.6407 159.212 69.4611 158.946 45.5026 160.012 23.1537 145.082 0 138.15L0 39.7981C0 17.8182 17.9278 0 40.0431 0Z" fill="url(#sf2)" fill-rule="evenodd" transform="matrix(-1 0 0 1 1203 208)"></path>
+                        <path d="M1163.19 512 1064.8 512 1064.8 512 1064 379.593C1088.35 388.648 1113.49 394.507 1136.24 394.774 1158.49 394.241 1180.75 380.925 1203 374L1203 472.245C1203 494.201 1185.18 512 1163.19 512Z" fill="url(#sf3)" fill-rule="evenodd"></path>
+                        <path d="M39.755 0 138 0 138 0 138 140.549C114.987 150.681 91.9742 159.212 68.9614 158.946 45.1752 160.012 22.9872 145.082 0 138.15L0 39.7981C0 17.8182 17.7989 0 39.755 0Z" fill="url(#sf4)" fill-rule="evenodd" transform="matrix(1 -1.22465e-16 -1.22465e-16 -1 897 512)"></path>
+                    </g></svg></a>
+            <a class="dock-btn" id="search-btn" title="搜索" onclick="
+            if($('#search-win').hasClass('show')){
+                $('#search-btn').removeClass('show');
+                $('#search-win').removeClass('show');
+                setTimeout(() => {
+                    $('#search-win').removeClass('show-begin');
+                }, 200);
+            }
+            else{
+                $('#search-btn').addClass('show');
+                if($('#start-menu').hasClass('show'))hide_startmenu();
+                if($('#widgets').hasClass('show'))hide_widgets();
+                $('#search-win').addClass('show-begin');
+                setTimeout(() => {
+                    $('#search-win').addClass('show');
+                }, 0);
+                $('#search-input').focus();
+            }">
+                <svg class="out" width="26" height="26" viewBox="0,0,398,406" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" overflow="hidden"><defs><clipPath id="clip-search0"><rect x="77" y="29" width="398" height="406"/></clipPath></defs><g clip-path="url(#clip-search0)" transform="translate(-77 -29)"><path style="fill: var(--text);filter:brightness(0.9);" d="M77 195C77 103.873 151.097 30 242.5 30 333.903 30 408 103.873 408 195 408 286.127 333.903 360 242.5 360 151.097 360 77 286.127 77 195ZM122.372 195C122.372 261.069 176.155 314.629 242.5 314.629 308.845 314.629 362.628 261.069 362.628 195 362.628 128.931 308.845 75.3717 242.5 75.3717 176.155 75.3717 122.372 128.931 122.372 195Z" fill-rule="evenodd"/><path style="fill: var(--text);filter:brightness(0.9);" d="M329.14 331.039C317.792 319.691 317.792 301.292 329.14 289.944L329.14 289.944C340.488 278.596 358.887 278.596 370.235 289.944L465.351 385.06C476.699 396.408 476.699 414.807 465.351 426.155L465.351 426.155C454.003 437.503 435.604 437.503 424.256 426.155Z" fill-rule="evenodd"/></g></svg>
+                <svg class="in" width="20" height="20" viewBox="0,0,245,245" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" overflow="hidden"><defs><clipPath id="clip-search1"><rect x="121" y="76" width="245" height="245"/></clipPath><linearGradient x1="99.764" y1="115.514" x2="387.236" y2="281.486" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="fill-search1"><stop offset="0" stop-color="#A964C8"/><stop offset="0.26" stop-color="#A964C8"/><stop offset="1" stop-color="#2D8AD5"/></linearGradient></defs><g clip-path="url(#clip-search1)" transform="translate(-121 -76)"><path d="M122 198.5C122 131.397 176.397 77 243.5 77 310.603 77 365 131.397 365 198.5 365 265.603 310.603 320 243.5 320 176.397 320 122 265.603 122 198.5Z" fill="url(#fill-search1)" fill-rule="evenodd"/></g></svg>
+            </a>
+            <a class="dock-btn" id="widgets-btn" title="小組件" onclick="
+            if($('#widgets').hasClass('show')){
+                hide_widgets();
+            }
+            else{
+                $('#widgets-btn').addClass('show');
+                if($('#search-win').hasClass('show')){
+                    $('#search-btn').removeClass('show');
+                    $('#search-win').removeClass('show');
+                    setTimeout(() => {
+                        $('#search-win').removeClass('show-begin');
+                    }, 200);
+                }
+                if($('#start-menu').hasClass('show'))hide_startmenu();
+                $('#widgets').addClass('show-begin');
+                setTimeout(() => {
+                    $('#widgets').addClass('show');
+                }, 0);
+                $('#widgets-input').focus();
+            }">
+                <svg viewBox="0,0,464,464" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" overflow="hidden" class="wid1"><defs><clipPath id="wid1-clip0"><rect x="655" y="70" width="464" height="464"/></clipPath><linearGradient x1="613.849" y1="144.008" x2="1161.15" y2="459.992" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="wid1-fill1"><stop offset="0" stop-color="#A964C8"/><stop offset="0.26" stop-color="#A964C8"/><stop offset="1" stop-color="#2D8AD5"/></linearGradient></defs><g clip-path="url(#wid1-clip0)" transform="translate(-655 -70)"><path d="M656 187.928C656 123.35 708.35 71 772.928 71L1002.07 71C1066.65 71 1119 123.35 1119 187.928L1119 416.072C1119 480.65 1066.65 533 1002.07 533L772.928 533C708.35 533 656 480.65 656 416.072Z" fill="url(#wid1-fill1)" fill-rule="evenodd"/></g></svg>
+                <svg viewBox="0,0,207,226" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" overflow="hidden" class="wid2"><defs><clipPath id="wid2-clip0"><rect x="316" y="202" width="207" height="226"/></clipPath><linearGradient x1="344.945" y1="185.866" x2="494.055" y2="444.134" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="wid2-fill1"><stop offset="0" stop-color="#11CCF1"/><stop offset="0.13" stop-color="#11CCF1"/><stop offset="1" stop-color="#2983CC"/></linearGradient></defs><g clip-path="url(#wid2-clip0)" transform="translate(-316 -202)"><path d="M317 260.165C317 228.041 343.041 202 375.165 202L463.835 202C495.959 202 522 228.041 522 260.165L522 369.835C522 401.959 495.959 428 463.835 428L375.165 428C343.041 428 317 401.959 317 369.835Z" fill="url(#wid2-fill1)" fill-rule="evenodd"/><path d="M349.5 249.5 393.5 249.5" stroke="#FFFFFF" stroke-width="14.6667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"/><path d="M349.5 286.5 464.5 286.5" stroke="#FFFFFF" stroke-width="14.6667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"/><path d="M349.5 323.5 422.5 323.5" stroke="#FFFFFF" stroke-width="14.6667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"/></g></svg>
+                <svg viewBox="0,0,180,394" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" overflow="hidden" class="wid3"><defs><clipPath id="wid3-clip0"><rect x="111" y="202" width="180" height="394"/></clipPath><linearGradient x1="93.038" y1="212.37" x2="307.962" y2="584.63" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="wid3-fill1"><stop offset="0" stop-color="#E062D7"/><stop offset="0.13" stop-color="#E062D7"/><stop offset="1" stop-color="#A266E4"/></linearGradient></defs><g clip-path="url(#wid3-clip0)" transform="translate(-111 -202)"><path d="M111 265.803C111 230.565 139.565 202 174.803 202L226.197 202C261.435 202 290 230.565 290 265.803L290 531.197C290 566.435 261.435 595 226.197 595L174.803 595C139.565 595 111 566.435 111 531.197Z" fill="url(#wid3-fill1)" fill-rule="evenodd"/><path d="M144.5 250.5 217.5 250.5" stroke="#FFFFFF" stroke-width="14.6667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"/><path d="M144.5 287.5 184.246 287.5" stroke="#FFFFFF" stroke-width="14.6667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"/><path d="M144.5 324.5 230.931 324.5" stroke="#FFFFFF" stroke-width="14.6667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"/></g></svg>
+                <svg viewBox="0,0,206,152" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" overflow="hidden" class="wid4"><defs><clipPath id="wid4-clip0"><rect x="317" y="444" width="206" height="152"/></clipPath><linearGradient x1="361.399" y1="419.366" x2="477.601" y2="620.634" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="wid4-fill1"><stop offset="0" stop-color="#D854CB"/><stop offset="0.13" stop-color="#D854CB"/><stop offset="1" stop-color="#A266E4"/></linearGradient></defs><g clip-path="url(#wid4-clip0)" transform="translate(-317 -444)"><path d="M317 498.466C317 468.938 340.938 445 370.466 445L468.534 445C498.062 445 522 468.938 522 498.466L522 541.534C522 571.062 498.062 595 468.534 595L370.466 595C340.938 595 317 571.062 317 541.534Z" fill="url(#wid4-fill1)" fill-rule="evenodd"/><path d="M356.5 548.5C370.917 521.094 385.333 493.688 400.5 492.521 415.667 491.355 434 538.837 447.5 541.503 461 544.168 479.417 520.386 481.5 508.515" stroke="#FFFFFF" stroke-width="14.6667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"/></g></svg>
+            </a>
+        </div>
+        <div class="dock" id="taskbar" style="display: none;" count="0">
+        </div>
+        <div class="dock about" oncontextmenu="return showcm(event,'dockabout',$(this).hasClass('show'))"
+            onclick="if($(this).hasClass('show')){$(this).removeClass('show')}else{$(this).addClass('show')}">
+            Windows 12 網頁版 譚景元原創
+            <p>Windows 12 網頁版是一個開放源項目,<br>
+                希望讓使用者在網路上預先體驗 Windows 12,<br>
+                內容可能與 Windows 12 正式版本不一致。<br>
+                使用標準網路技術,例如 Html,CSS 和 JS<br>
+                此項目絕不附屬於微軟,且不應與微軟作業系統或產品混淆,<br>
+                這也不是 Windows365 cloud PC<br>
+                本項目中微軟、Windows和其他示範產品是微軟公司的商標</p>
+        </div>
+        <div class="a dock theme" title="切換主題" onclick="toggletheme()">
+            <svg viewBox="0,0,307,307" class="light" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" overflow="hidden"><defs><clipPath id="theme-light-clip0"><rect x="79" y="77" width="307" height="307"/></clipPath><linearGradient x1="128.499" y1="49.9991" x2="337.501" y2="412.001" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="theme-light-fill1"><stop offset="0" stop-color="#FFC567"/><stop offset="0.18" stop-color="#FFC567"/><stop offset="0.8" stop-color="#EE54F2"/></linearGradient></defs><g clip-path="url(#theme-light-clip0)" transform="translate(-79 -77)"><path d="M80 231C80 146.5 148.5 78 233 78 317.5 78 386 146.5 386 231 386 315.5 317.5 384 233 384 148.5 384 80 315.5 80 231Z" fill="url(#theme-light-fill1)" fill-rule="evenodd"/></g></svg>
+            <svg viewBox="0,0,275,294" class="dark" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" overflow="hidden"><defs><clipPath id="theme-dark-clip0"><rect x="525" y="230" width="275" height="294"/></clipPath><linearGradient x1="599.492" y1="203.887" x2="725.508" y2="550.113" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="theme-dark-fill1"><stop offset="0" stop-color="#2474B6"/><stop offset="0.42" stop-color="#2474B6"/><stop offset="0.98" stop-color="#FFD966"/><stop offset="1" stop-color="#FFD966"/></linearGradient></defs><g clip-path="url(#theme-dark-clip0)" transform="translate(-525 -230)"><path d="M635.002 236.062C638.664 240.491 639.245 246.694 636.469 251.721 625.869 271.094 620.334 292.809 620.372 314.869 620.372 388.255 680.469 447.679 754.537 447.679 764.199 447.679 773.604 446.675 782.643 444.759 788.307 443.538 794.156 445.809 797.493 450.526 801.036 455.459 800.803 462.148 796.925 466.824 767.803 502.434 724.103 523.073 677.976 523 593.458 523 525 455.217 525 371.701 525 308.846 563.757 254.933 618.942 232.083 624.588 229.708 631.132 231.329 635.002 236.062Z" fill="url(#theme-dark-fill1)" fill-rule="evenodd"/></g></svg>
+        </div>
+        <div class="a dock date" onclick="if($('#datebox').hasClass('show')){
+            $('.dock.date').removeClass('show');
+            $('#datebox').removeClass('show');
+            setTimeout(() => {
+                $('#datebox').removeClass('show-begin');
+            }, 200);
+        }
+        else{
+            $('.dock.date').addClass('show');
+            $('#datebox').css('left',$(this).position().left-125);
+            $('#datebox').addClass('show-begin');
+            setTimeout(() => {
+                $('#datebox').addClass('show');
+            }, 0);
+        }">
+            <p class="time">12:34:56</p>
+            <p class="date">2022/10/01</p>
+            <i class="bi bi-chevron-down"></i>
+        </div>
+    </div>
+    <div id="desktop" oncontextmenu="return showcm(event,'desktop',null)">
+        <div ondblclick="openapp('explorer');" ontouchstart="openapp('explorer');">
+            <img src="apps/icons/explorer/thispc.png" title="顯示連接到此電腦的驅動器和硬體。">
+            <p>此電腦</p>
+        </div>
+        <div class="b" ondblclick="openapp('setting');" ontouchstart="openapp('setting');">
+            <img src="icon/setting.png">
+            <p>設置</p>
+        </div>
+        <div class="b" ondblclick="openapp('about');" ontouchstart="openapp('about');">
+            <img src="icon/about.png">
+            <p>關於 Win12 網頁版</p>
+        </div>
+    </div>
+    <div id="cm">
+        <input class="foc">
+        <list>
+        </list>
+    </div>
+    <div id="dp">
+        <list>
+        </list>
+    </div>
+    <div id="window-fill"></div>
+    <div class="window setting"  onmousedown="focwin('setting')" ontouchstart="focwin('setting')">
+        <div class="titbar" oncontextmenu="return showcm(event,'titbar','setting')" ondblclick="maxwin('setting')">
+            <img src="icon/setting.png" class="icon"><p>設置</p>
+            <div>
+                <a class="a wbtg red" onclick="hidewin('setting')"><i class="bi bi-x-lg"></i></a>
+                <a class="a wbtg max" onclick="maxwin('setting')"><i class="bi bi-app"></i></a>
+                <a class="a wbtg" onclick="minwin('setting')"><i class="bi bi-dash-lg"></i></a>
+            </div>
+        </div>
+        <div class="loadback">
+            <img src="icon/setting.png" class="icon">
+        </div>
+        <div class="content" id="win-setting">
+            <div class="menu">
+                <a class="a user">
+                    <svg viewBox="0,0,257,344" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" overflow="hidden"><defs><clipPath id="user-clip1"><rect x="382" y="195" width="257" height="344"/></clipPath><linearGradient x1="351.462" y1="233.56" x2="669.496" y2="500.422" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="user-fill3"><stop offset="0" stop-color="#A964C8"/><stop offset="0.35" stop-color="#A964C8"/><stop offset="0.87" stop-color="#2D8AD5"/><stop offset="1" stop-color="#2D8AD5"/></linearGradient><linearGradient x1="351.462" y1="233.56" x2="669.496" y2="500.422" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="user-fill4"><stop offset="0" stop-color="#A964C8"/><stop offset="0.35" stop-color="#A964C8"/><stop offset="0.87" stop-color="#2D8AD5"/><stop offset="1" stop-color="#2D8AD5"/></linearGradient></defs><g clip-path="url(#user-clip1)" transform="translate(-382 -195)"><path d="M637.755 433.872C642.215 515.221 579.577 537.983 508.011 537.983 436.444 537.983 376.676 507.833 383.513 437.11 383.109 425.234 389.59 414.133 398.634 409.891 413.82 402.768 444.753 402.936 507.484 402.997 570.214 403.058 609.164 402.279 621.521 407.947 633.878 413.614 638.011 424.609 637.755 433.872Z" fill="url(#user-fill3)" fill-rule="evenodd"/><path d="M422 285C422 235.847 461.623 196 510.5 196 559.377 196 599 235.847 599 285 599 334.153 559.377 374 510.5 374 461.623 374 422 334.153 422 285Z" fill="url(#user-fill4)" fill-rule="evenodd"/></g></svg>
+                    <div>
+                        <p>瓶蓋</p>
+                        <p>tanjingyuan@win12.com</p>
+                    </div>
+                </a>
+                <input type="text" class="input" placeholder="查找設置" style="padding-left: 30px;">
+                <input-before class="bi bi-search"></input-before>
+                <list>
+                    <a class="check"><span
+                        style="background-image: linear-gradient(180deg, var(--theme-1), var(--theme-2));border-radius: 10px;position: relative;left: -10px;top:1px;height: 20px;margin-right: -4px;">
+                        &nbsp;</span><img src="apps/icons/setting/system.png">系統</a>
+                    <a><img src="apps/icons/setting/blueteeth.png">藍牙和其他設備</a>
+                    <a><img src="apps/icons/setting/network.png">網路和 Internet</a>
+                    <a><img src="apps/icons/setting/personal.png">個性化</a>
+                    <a><img src="apps/icons/setting/apps.png">應用</a>
+                    <a><img src="apps/icons/setting/user.png">帳戶</a>
+                    <a><img src="apps/icons/setting/time.png">時間和語言</a>
+                    <a><img src="apps/icons/setting/game.png">遊戲</a>
+                    <a><img src="apps/icons/setting/help.png">協助工具</a>
+                    <a><img src="apps/icons/setting/safe.png">隱私和安全性</a>
+                    <a><img src="apps/icons/setting/update.png">Windows 更新</a>
+                </list>
+            </div>
+            <div class="page" style="overflow: auto;">
+                <p class="title">系統</p>
+                <div style="display: flex;">
+                    <p class="s-icon" style="font-size: 70px;margin: -8px 10px 0px 20px;"></p>
+                    <div>
+                        <p style="font-size: 28px;text-overflow: ellipsis;white-space: nowrap;">Desktop-PingGai</p>
+                        <p style="color: #7f7f7f;margin:-8px 0 -5px 0;">瓶蓋</p>
+                        <a style="color: #2983cc;text-decoration: underline;">重命名</a>
+                    </div>
+                </div>
+                <div class="setting-list">
+                    <a><icon></icon><div><p>顯示</p><p>顯示器、亮度、夜間模式、顯示描述</p></div><i class="bi bi-chevron-right"></i></a>
+                    <a><icon></icon><div><p>聲音</p><p>聲音級別、輸入、輸出、聲音設備</p></div><i class="bi bi-chevron-right"></i></a>
+                    <a><icon></icon><div><p>通知</p><p>来自系统和应用的警报</p></div><i class="bi bi-chevron-right"></i></a>
+                    <a><icon></icon><div><p>專注助手</p><p>通知、自動規則</p></div><i class="bi bi-chevron-right"></i></a>
+                    <a><icon class="b">&#xF186;</icon><div><p>電源</p><p>睡眠、電池使用情況、節電模式</p></div><i class="bi bi-chevron-right"></i></a>
+                    <a><icon></icon><div><p>存儲</p><p>存儲空間、驅動器、配置規則</p></div><i class="bi bi-chevron-right"></i></a>
+                    <a><icon></icon><div><p>多工處理</p><p>貼靠視窗、桌面、任務切換</p></div><i class="bi bi-chevron-right"></i></a>
+                    <a><icon></icon><div><p>啟動</p><p>啟動狀態、訂閱、產品金鑰</p></div><i class="bi bi-chevron-right"></i></a>
+                    <a><icon></icon><div><p>疑難排解</p><p>建議的疑難排解、首選項和歷史記錄</p></div><i class="bi bi-chevron-right"></i></a>
+                    <a><icon></icon><div><p>恢復</p><p>重置、高級啟動、返回</p></div><i class="bi bi-chevron-right"></i></a>
+                    <a><icon></icon><div><p>投影到此電腦</p><p>許可權、配對 PIN、可發現性</p></div><i class="bi bi-chevron-right"></i></a>
+                    <a><icon></icon><div><p>遠端桌面</p><p>遠端桌面用戶、連接許可權</p></div><i class="bi bi-chevron-right"></i></a>
+                    <a><icon></icon><div><p>剪貼板</p><p>剪貼和複製歷史記錄、同步、清除</p></div><i class="bi bi-chevron-right"></i></a>
+                    <a><icon></icon><div><p>關於</p><p>設備規格、重命名電腦、Windows 規格</p></div><i class="bi bi-chevron-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="window explorer"  onmousedown="focwin('explorer')" ontouchstart="focwin('explorer')">
+        <div class="titbar" oncontextmenu="return showcm(event,'titbar','explorer')" ondblclick="maxwin('explorer')">
+            <img src="icon/explorer.png" class="icon">
+            <p>文件資源管理器</p>
+            <div>
+                <a class="a wbtg red" onclick="hidewin('explorer')"><i class="bi bi-x-lg"></i></a>
+                <a class="a wbtg max" onclick="maxwin('explorer')"><i class="bi bi-app"></i></a>
+                <a class="a wbtg" onclick="minwin('explorer')"><i class="bi bi-dash-lg"></i></a>
+            </div>
+        </div>
+        <div class="loadback">
+            <img src="icon/explorer.png" class="icon">
+        </div>
+        <div class="content" id="win-explorer">
+            <div class="menu">
+                <div class="card pinned">
+                    <p class="title"><span style="font: 15px;">📌</span> 已固定</p>
+                    <list>
+                        <a><img src="apps/icons/explorer/qa.png">快速訪問</a>
+                        <a><img src="apps/icons/explorer/od.png">OneDrive</a>
+                        <a class="check" onclick="apps.explorer.reset();"><span
+                            style="background:linear-gradient(180deg, var(--theme-1), var(--theme-2));width:4px;height: 19px;border-radius: 10px;margin-left: -12px;margin-right: 8px;margin-top: 1px;"></span>
+                            <img src="apps/icons/explorer/thispc.png">此電腦</a>
+                        <a><img src="apps/icons/explorer/rb.png">回收站</a>
+                    </list>
+                </div>
+                <div class="card tags">
+                    <p class="title"><span style="font: 15px;">🏷</span> 標籤</p>
+                    <list>
+                        <a><span style="background-color: red;"></span>紅色</a>
+                        <a><span style="background-color: #3981d9;"></span>藍色</a>
+                        <a><span style="background-color: yellow;"></span>黃色</a>
+                        <a><span style="background-color: green;"></span>綠色</a>
+                        <a><span style="background-color: #fc9816;"></span>橙色</a>
+                        <a><span style="background-color: purple;"></span>紫色</a>
+                        <a><span style="background-color: #ffcad4;"></span>粉色</a>
+                    </list>
+                </div>
+            </div>
+            <div class="main">
+                <div class="tool">
+                    <a class="a b t"><img src="apps/icons/explorer/tool-new.png">新建</a><div class="hr"></div>
+                    <a class="a b"><img src="apps/icons/explorer/tool-cut.png"></a>
+                    <a class="a b"><img src="apps/icons/explorer/tool-copy.png"></a>
+                    <a class="a b"><img src="apps/icons/explorer/tool-paste.png"></a>
+                    <a class="a b"><img src="apps/icons/explorer/tool-rename.png"></a><div class="hr"></div>
+                    <a class="a b t"><img src="apps/icons/explorer/tool-sort.png">排序方式</a>
+                    <a class="a b t"><img src="apps/icons/explorer/tool-view.png">佈局</a>
+                </div>
+                <div class="content" oncontextmenu="return showcm(event,'explorer.content',null);">
+                    <div class="tool">
+                        <a class="a btn btn-icon"><i class="bi bi-arrow-left"></i></a>
+                        <a class="a btn btn-icon"><i class="bi bi-arrow-right"></i></a>
+                        <a class="a btn btn-icon goback"><i class="bi bi-arrow-up"></i></a>
+                        <p class="tit">此電腦</p>
+                        <div class="search">
+                            <input type="text" class="input" placeholder="在這裡輸入你要搜索的內容">
+                            <input-before class="bi bi-search"></input-before>
+                        </div>
+                    </div>
+                    <div class="view">
+                        <!-- 文件列表  -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="window calc" onmousedown="focwin('calc')" ontouchstart="focwin('calc')">
+        <div class="titbar" oncontextmenu="return showcm(event,'titbar','calc')">
+            <img src="icon/calc.png" class="icon">
+            <p>計算器</p>
+            <div>
+                <a class="a wbtg red" onclick="hidewin('calc')"><i class="bi bi-x-lg"></i></a>
+                <a class="a wbtg max" style="pointer-events: none;color: #777;"><i class="bi bi-app"></i></a>
+                <a class="a wbtg" onclick="minwin('calc')"><i class="bi bi-dash-lg"></i></a>
+            </div>
+        </div>
+        <div class="loadback">
+            <img src="icon/calc.png" class="icon">
+        </div>
+        <div class="content" id="win-calc">
+            <input id="calc-input" value="" onkeydown="if(event.keyCode == 13)$('#win-calc>.keyb>.ans').click()">
+            <div class="keyb">
+                <a class="a b" onclick="$('#calc-input')[0].value*=$('#calc-input').val()">𝑥²</a>
+                <a class="a b" onclick="$('#calc-input').val(Math.sqrt($('#calc-input').val()))">√𝑥</a>
+                <a class="a b" onclick="$('#calc-input')[0].value=''">C</a>
+                <a class="a b u" onclick="apps.calc.add('+')">+</a>
+                <a class="a b" onclick="apps.calc.add('7')">7</a>
+                <a class="a b" onclick="apps.calc.add('8')">8</a>
+                <a class="a b" onclick="apps.calc.add('9')">9</a>
+                <a class="a b u" onclick="apps.calc.add('-')">-</a>
+                <a class="a b" onclick="apps.calc.add('4')">4</a>
+                <a class="a b" onclick="apps.calc.add('5')">5</a>
+                <a class="a b" onclick="apps.calc.add('6')">6</a>
+                <a class="a b u" onclick="apps.calc.add('*')">×</a>
+                <a class="a b" onclick="apps.calc.add('1')">1</a>
+                <a class="a b" onclick="apps.calc.add('2')">2</a>
+                <a class="a b" onclick="apps.calc.add('3')">3</a>
+                <a class="a b u" onclick="apps.calc.add('/')">÷</a>
+                <a class="a b" onclick="apps.calc.add('.')">.</a>
+                <a class="a b" onclick="apps.calc.add('0')">0</a>
+                <a class="a b" onclick="$('#calc-input').val($('#calc-input')[0].value.substring(0,$('#calc-input')[0].value.length-1));"><i class="bi bi-backspace"></i></a>
+                <a class="a b ans u" onclick="$('#calc-input')[0].value=eval($('#calc-input')[0].value)"> =</a>
+            </div>
+        </div>
+    </div>
+    <div class="window about"  onmousedown="focwin('about')" ontouchstart="focwin('about')">
+        <div class="titbar" oncontextmenu="return showcm(event,'titbar','about')" ondblclick="maxwin('about')">
+            <img src="icon/about.png" class="icon">
+            <p>關於 Windows12 網頁版</p>
+            <div>
+                <a class="a wbtg red" onclick="hidewin('about')"><i class="bi bi-x-lg"></i></a>
+                <a class="a wbtg max" onclick="maxwin('about')"><i class="bi bi-app"></i></a>
+                <a class="a wbtg" onclick="minwin('about')"><i class="bi bi-dash-lg"></i></a>
+            </div>
+        </div>
+        <div class="loadback">
+            <img src="icon/about.png" class="icon">
+        </div>
+        <div class="content" id="win-about">
+            <div class="menu">
+                <list>
+                    <a onclick="$('#win-about>.about').show(200);$('#win-about>.update').hide();"><img src="apps/icons/about/info.svg" height="17px" width="19px">簡介</a>
+                    <a onclick="$('#win-about>.update').show(200);$('#win-about>.about').hide();"><img src="apps/icons/about/update.svg" height="20px" width="18px">更新記錄</a>
+                </list>
+            </div>
+            <div class="cnt about">
+                <h1 class="tit"><span></span>Windows 12 網頁版</h1>
+                <div style="margin-left: 20px;">
+                    <h2 class="tit"><span></span>簡介</h2>
+                    <p>&emsp;&emsp;Windows 12 網頁版是一個開源項目, 由譚景元原創, 使用標準網路技術,例如 Html、CSS 和 Javascript, 希望讓使用者在網路上預先體驗 Windows 12。</p>
+                    <p>&emsp;&emsp;因為這只是概念版，所以內容可能與 Windows 12 正式版本不一致。</p>
+                    <p>&emsp;&emsp;由於這是一個開源項目，你可以在任何媒介以任何形式複製、發行本作品。
+                        你還可以對該項目進行修改、轉換或以本作品為基礎進行創作。
+                        但您必須給出適當的署名，您必須提供創作者姓名、作品連結，同時標明是否對此作了修改。您可以用任何合理的方式來署名，但是不得以任何方式暗示許可方認可您或您的使用。</p>
+                    <p>&emsp;&emsp;此項目絕不附屬於微軟,且不應與微軟作業系統或產品混淆, 這也不是 Windows365 cloud PC</p>
+                    <p>&emsp;&emsp;本專案中微軟、Windows和其他示範產品是微軟公司的商標</p>
+                </div>
+                <div style="margin-left: 20px;">
+                    <h2 class="tit"><span></span>其它</h2>
+                    <p>&emsp;&emsp;此項目已發佈至 Github, <a onclick="window.open('https://github.com/cheerre56?tab=repositories','_blank');" title="https://github.com/cheerre56?tab=repositories" class="jump">點擊此處查看</a></p>
+                    <p>&emsp;&emsp;若您對於該專案有任何意見或建議，請在 Github 上<a onclick="window.open('https://github.com/cheerre56?tab=repositories','_blank');" title="https://github.com/cheerre56?tab=repositories" class="jump">提交 issues</a>, 您的問題會被盡可能快地解決</p>
+                </div>
+            </div>
+            <div class="cnt update" style="display: none;">
+                <h1 class="tit"><span></span>更新記錄</h1>
+                <div style="margin-left: 20px;">
+                    <details><summary><span>v3.8.0</span> 記事本字體，視窗焦點邏輯改善</summary>
+                        <p>&emsp;&emsp;<strong style="color: red;">祝大家新的一年萬事如意,幸福快樂,心想事成!</strong><br>
+                        &emsp;&emsp;<i>非常感謝 @User782Tec 的pr</i><br>
+                        &emsp;&emsp;-詳見<a href="https://github.com/cheerre56?tab=repositories">pull</a>中的詳細<br>
+                        &emsp;&emsp;-視窗焦點邏輯改善<br>
+                        &emsp;&emsp;-細節優化和修復</p>
+                    </details>
+                    <details><summary><span>v3.7.0</span> 視窗最大化完善,讓顏色更"喜慶"一點</summary>
+                        <p>&emsp;&emsp;<strong style="color: red;">祝大家新的一年萬事如意,幸福快樂,心想事成!</strong><br>
+                        &emsp;&emsp;<i>非常感謝 @User782Tec 的pr</i><br>
+                        &emsp;&emsp;-增加最大化視窗下拖還原功能<br>
+                        &emsp;&emsp;-最大化視窗還原後保留之前的位置<br>
+                        &emsp;&emsp;-讓系統的色調更"喜慶"一點<br>
+                        &emsp;&emsp;-增加 @iamkezo1 提供的新聞<br>
+                        &emsp;&emsp;-壓縮背景圖片加速<br>
+                        &emsp;&emsp;-禁用縮放<br>
+                        &emsp;&emsp;-細節優化和修復</p>
+                    </details>
+                    <details><summary><span>v3.6.1</span> Windows12新年特別版</summary>
+                        <p>&emsp;&emsp;<strong style="color: red;">祝大家新的一年萬事如意,幸福快樂,心想事成!</strong><br>
+                        &emsp;&emsp;-增加主題色控制功能<br>
+                        &emsp;&emsp;-測試新的更新機制<br>
+                        &emsp;&emsp;-細節優化和修復</p>
+                    </details>
+                    <details><summary><span>v3.6.0</span> 更新機制改進，新增office和終端</summary>
+                        <p>&emsp;&emsp;-使用新的更新機制，更新速度提升<br>
+                        &emsp;&emsp;-新增終端應用<br>
+                        &emsp;&emsp;-新增Office<br>
+                        &emsp;&emsp;-修改關機後黑屏而不是白屏<br>
+                        &emsp;&emsp;-更新記錄僅顯示最近的，優化速度<br>
+                        &emsp;&emsp;-細節優化和修復</p>
+                    </details>
+                    <details><summary><span>v3.5.0</span> 視窗層級和焦點控制</summary>
+                        <p>&emsp;&emsp;-增加了視窗層級的控制<br>
+                        &emsp;&emsp;-非焦點窗口關閉模糊效果以提速<br>
+                        &emsp;&emsp;-新增 @Planet-xu 提供的新聞<br>
+                        &emsp;&emsp;-修復了下拉式功能表停留的問題 @Samtjs<br>
+                        &emsp;&emsp;-細節優化和修復</p>
+                    </details>
+                    <details><summary><span>v3.4.1</span> 移動端適配</summary>
+                        <p>&emsp;&emsp;-適配了移動端的雙(改成按一下)<br>
+                        &emsp;&emsp;-適配了移動端的拖動視窗<br>
+                        &emsp;&emsp;-優化工作列按鈕點擊效果<br>
+                        &emsp;&emsp;-更改右鍵功能表樣式<br>
+                        &emsp;&emsp;-下拉式功能表懸停展開<br>
+                        &emsp;&emsp;-細節優化和修復</p>
+                        <i>感謝 @User782Tec</i>
+                    </details>
+                    <details><summary><span>v3.4.0</span> 動畫優化</summary>
+                        <p>&emsp;&emsp;-別問我為什麼動畫占一個新版<br>
+                        &emsp;&emsp;-基本上所有動畫都進行了更新優化<br>
+                        &emsp;&emsp;-修復了上個版本沒刪完的標題列問題<br>
+                        &emsp;&emsp;-修改了開始功能表的圖示<br>
+                        &emsp;&emsp;-細節優化和修復</p>
+                    </details>
+                    <details><summary><span>v3.3.0</span> 增加計算器小組件</summary>
+                        <p>&emsp;&emsp;-增加了計算器小組件<br>
+                        &emsp;&emsp;-修復了小元件新聞圖片無法載入的問題<br>
+                        &emsp;&emsp;-移除了上一個版本的新視窗標題列<br>
+                        &emsp;&emsp;-在一些圖示按鈕上懸停滑鼠顯示提示<br>
+                        &emsp;&emsp;-去除了所有連結的左下角連結提示<br>
+                        &emsp;&emsp;-細節優化和修復</p>
+                    </details>
+                    <details><summary><span>v3.2.0</span> 增加小元件功能表</summary>
+                        <p>&emsp;&emsp;-增加了小元件(資訊和興趣)菜單<br>
+                        &emsp;&emsp;-小元件功能表中的新聞內容<br>
+                        &emsp;&emsp;-小元件按鈕動畫效果<br>
+                        &emsp;&emsp;-應用視窗標題列樣式新增<br>
+                        &emsp;&emsp;-對計算器的計算代碼的精簡<br>
+                        &emsp;&emsp;-細節優化和修復</p>
+                    </details>
+                    <details><summary><span>v3.1.0</span> 增加檔流覽功能，一些新功能</summary>
+                        <p>&emsp;&emsp;-文件資源管理器流覽功能<br>
+                        &emsp;&emsp;-對PWA更新的優化<br>
+                        &emsp;&emsp;-檔資源管理器右鍵功能表<br>
+                        &emsp;&emsp;-增加應用啟動的載入動畫<br>
+                        &emsp;&emsp;-增加應用啟動初始化<br>
+                        &emsp;&emsp;-記事本新增"編輯"功能表<br>
+                        &emsp;&emsp;-下拉式功能表整體優化<br>
+                        &emsp;&emsp;-右鍵功能表優化<br>
+                        &emsp;&emsp;-在輸入框中允許流覽器的右鍵功能表<br>
+                        &emsp;&emsp;-按兩下視窗標題列最大化<br>
+                        &emsp;&emsp;-細節優化和修復</p>
+                    </details>
+                    <details><summary><span>v3.0.0</span> 桌面圖示、記事本、可安裝到電腦</summary>
+                        <p>&emsp;&emsp;-可以在Edge、Chrome等主流流覽器中將Win12安裝為pwa應用¹<br>
+                        &emsp;&emsp;-新增桌面圖示，並增加桌面右鍵功能表"刷新"功能<br>
+                        &emsp;&emsp;-可以將開始功能表應用右鍵添加到桌面<br>
+                        &emsp;&emsp;-新增"記事本"應用<br>
+                        &emsp;&emsp;-新的深色模式切換按鈕<br>
+                        &emsp;&emsp;-改進了視窗的外觀<br>
+                        &emsp;&emsp;-細節優化和修復<br>
+                        <i>1: 正常會有安裝的提示，會在連結列右上角，安裝後可離線使用，有網會自動更新。感謝 @dzc120223 的建議</i>
+                    </p>
+                    </details>
+                </div>
+                <a class="jump" title="https://github.com/cheerre56?tab=repositories" onclick="window.open('https://github.com/cheerre56?tab=repositories','_blank')" style="text-align: center;display: block;margin-top: 5px;">更多</a>
+            </div>
+        </div>
+    </div>
+    <div class="window notepad"  onmousedown="focwin('notepad')" ontouchstart="focwin('notepad')">
+        <div class="titbar" oncontextmenu="return showcm(event,'titbar','notepad')" ondblclick="maxwin('notepad')">
+            <img src="icon/notepad.png" class="icon">
+            <p>記事本</p>
+            <div>
+                <a class="a wbtg red" onclick="hidewin('notepad');hidewin('notepad-fonts', 'configs')"><i class="bi bi-x-lg"></i></a>
+                <a class="a wbtg max" onclick="maxwin('notepad')"><i class="bi bi-app"></i></a>
+                <a class="a wbtg" onclick="minwin('notepad')"><i class="bi bi-dash-lg"></i></a>
+            </div>
+        </div>
+        <div class="loadback">
+            <img src="icon/notepad.png" class="icon">
+        </div>
+        <div class="content" id="win-notepad">
+            <div class="tool">
+                <a class="a" onmouseover="showdp(this,'notepad.file',null)" onmouseleave="hidedp()">文件</a>
+                <a class="a" onmouseover="showdp(this,'notepad.edit',null)" onmouseleave="hidedp()">編輯</a>
+                <a class="a" onmouseover="showdp(this,'notepad.view',null)" onmouseleave="hidedp()">格式</a>
+            </div>
+            <textarea class="text-box"></textarea>
+            <a href="" download="未命名.txt" style="opacity: 0;" class="save">另存為</a>
+        </div>
+    </div>
+
+    <div class="window notepad-fonts" onmousedown="focwin('notepad-fonts')" ontouchstart="focwin('notepad-fonts')">
+        <div class="titbar" oncontextmenu="return showcm(event,'titbar','notepad-fonts')">
+            <img src="icon/notepad.png" class="icon">
+            <p>字體</p>
+            <div>
+                <a class="a wbtg red" onclick="hidewin('notepad-fonts', 'configs')"><i class="bi bi-x-lg"></i></a>
+            </div>
+        </div>
+        <div class="loadback">
+            <img src="icon/notepad.png" class="icon">
+        </div>
+        <div class="content" id="win-notepad-font">
+        <div class="row">
+            <div class="select-input" id="win-notepad-font-type">
+                <div class="description">字體</div>
+                <input type="text" />
+                <list class="value-box">
+                    <a class="option">Arial</a>
+                    <a class="option">Arial Black</a>
+                    <a class="option">"Book Antiqua"</a>
+                    <a class="option">Charcoal</a>
+                    <a class="option">"Comic Sans MS"</a>
+                    <a class="option">Consolas</a>
+                    <a class="option">Courier</a>
+                    <a class="option">"Courier New"</a>
+                    <a class="option">cursive</a>
+                    <a class="option">Geneva</a>
+                    <a class="option">Georgia</a>
+                    <a class="option">Helvetica</a>
+                    <a class="option">"Lucida Console"</a>
+                    <a class="option">"Lucida Grande"</a>
+                    <a class="option">"Lucida Sans Unicode"</a>
+                    <a class="option">Monaco</a>
+                    <a class="option">monospace</a>
+                    <a class="option">Palatino</a>
+                    <a class="option">"Palatino Linotype"</a>
+                    <a class="option">sans-serif</a>
+                    <a class="option">serif</a>
+                    <a class="option">Tahoma</a>
+                    <a class="option">"Trebuchet MS"</a>
+                    <a class="option">Verdana</a>
+                </list>
+            </div>
+            <div class="select-input" id="win-notepad-font-size">
+                <div class="description">大小</div>
+                <input type="text" />
+                <list class="value-box">
+                    <a class="option">初號</a>
+                    <a class="option">小初</a>
+                    <a class="option">一號</a>
+                    <a class="option">小一</a>
+                    <a class="option">二號</a>
+                    <a class="option">小二</a>
+                    <a class="option">三號</a>
+                    <a class="option">小三</a>
+                    <a class="option">四號</a>
+                    <a class="option">小四</a>
+                    <a class="option">五號</a>
+                    <a class="option">小五</a>
+                </list>
+            </div>
+            <div class="select-input" id="win-notepad-font-style">
+                <div class="description">字形</div>
+                <input type="text" />
+                <list class="value-box">
+                    <a class="option">正常</a>
+                    <a class="option">斜體</a>
+                    <a class="option">粗體</a>
+                    <a class="option">粗偏斜體</a>
+                </list>
+            </div>
+            </div><br />
+            <div class="preview">
+                <div class="description">
+                    預覽
+                </div>
+                <div class="preview-box">
+                    <div>Hello</div>
+                    <div>你好</div>
+                    <div>こんにちは</div>
+                </div>
+            </div>
+            <div class="buttons">
+                <a class="a submit act" onclick="commitFont();">確定</a>
+                <a class="a cancel act" onclick="hidewin('notepad-fonts', 'configs');">取消</a>
+            </div>
+        </div>
+    </div>
+    <div class="window terminal"  onmousedown="focwin('terminal')" ontouchstart="focwin('terminal')">
+        <div class="titbar" oncontextmenu="return showcm(event,'titbar','terminal')" ondblclick="maxwin('terminal')">
+            <img src="icon/terminal.png" class="icon">
+            <p>終端</p>
+            <div>
+                <a class="a wbtg red" onclick="hidewin('terminal')"><i class="bi bi-x-lg"></i></a>
+                <a class="a wbtg max" onclick="maxwin('terminal')"><i class="bi bi-app"></i></a>
+                <a class="a wbtg" onclick="minwin('terminal')"><i class="bi bi-dash-lg"></i></a>
+            </div>
+        </div>
+        <div class="loadback">
+            <img src="icon/terminal.png" class="icon">
+        </div>
+        <div class="content" id="win-terminal">
+            <pre>Micrsotft Windosw [版本 12.0.39035.7324]
+(c) Micrsotft Corparotoin。保所留有權利。
+一個擺設，後續會完善。
+
+C:\Windows\System32> <input type="text" oninput="setTimeout(() => {$('#win-terminal>pre')[0].innerHTML+=this.outerHTML;$('#win-terminal>pre>input').focus()}, 0);$('#win-terminal>pre')[0].innerText+=$(this).val();"></pre>
+        </div>
+    </div>
+    <div class="msg update" oncontextmenu="return showcm(event,'msgupdate',null)">
+        <div class="main" onclick="openapp('about');if($('.window.about').hasClass('min'))minwin('about');
+            $('#win-about>.update').show(200);$('#win-about>.about').hide();
+            $('#win-about>.update>div>details:first-child').attr('open','open')">
+            <p class="tit"></p>
+            <p class="cont"></p>
+        </div>
+        <div class="a hide" onclick="$('.msg').removeClass('show')"><i class="bi bi-arrow-right-short"></i></div>
+    </div>
+    <script src="desktop.js"></script>
+</body>
+</html>
