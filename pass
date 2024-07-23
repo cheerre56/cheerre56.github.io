@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安全密碼生成器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        #passwordDisplay {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #message {
+            margin-top: 10px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>安全密碼生成器</h1>
+        <input type="text" id="passwordDisplay" readonly>
+        <button onclick="generatePassword()">生成新密碼</button>
+        <button onclick="copyPassword()">複製密碼</button>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        function generatePassword() {
+            // 這裡使用簡化版的密碼生成邏輯，實際應用中應該使用更複雜的算法
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*!?+-=()[]{}|;:,.<>";
+            const passwordLength = Math.floor(Math.random() * (29 - 19 + 1)) + 19;
+            let password = '';
+            for (let i = 0; i < passwordLength; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('passwordDisplay').value = password;
+            document.getElementById('message').textContent = '';
+        }
+
+        function copyPassword() {
+            const passwordField = document.getElementById('passwordDisplay');
+            passwordField.select();
+            passwordField.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand('copy');
+            document.getElementById('message').textContent = '密碼已複製到剪貼板！';
+        }
+
+        // 頁面加載時生成一個密碼
+        generatePassword();
+    </script>
+</body>
+</html>
