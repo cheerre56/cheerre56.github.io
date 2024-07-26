@@ -107,12 +107,28 @@
 
     <script>
         function generatePassword() {
-            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*!?+-=()[]{}|;:,.<>";
-            const passwordLength = Math.floor(Math.random() * (29 - 19 + 1)) + 19;
+            const lowercase = "abcdefghijklmnopqrstuvwxyz";
+            const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const numbers = "0123456789";
+            const symbols = "!@#$%^&*()";
+            const allChars = lowercase + uppercase + numbers + symbols;
+            const passwordLength = Math.floor(Math.random() * (20 - 12 + 1)) + 12; // 12-20 characters
+
             let password = '';
-            for (let i = 0; i < passwordLength; i++) {
-                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            // Ensure at least one character from each category
+            password += lowercase[Math.floor(Math.random() * lowercase.length)];
+            password += uppercase[Math.floor(Math.random() * uppercase.length)];
+            password += numbers[Math.floor(Math.random() * numbers.length)];
+            password += symbols[Math.floor(Math.random() * symbols.length)];
+
+            // Fill the rest of the password
+            for (let i = password.length; i < passwordLength; i++) {
+                password += allChars[Math.floor(Math.random() * allChars.length)];
             }
+
+            // Shuffle the password
+            password = password.split('').sort(() => 0.5 - Math.random()).join('');
+
             document.getElementById('passwordDisplay').value = password;
             document.getElementById('message').textContent = '';
             checkPasswordStrength(password);
@@ -135,12 +151,12 @@
 
             // 檢查密碼強度
             let strength = 0;
-            if (password.length >= 8) strength += 1;
             if (password.length >= 12) strength += 1;
+            if (password.length >= 16) strength += 1;
             if (/[A-Z]/.test(password)) strength += 1;
             if (/[a-z]/.test(password)) strength += 1;
             if (/[0-9]/.test(password)) strength += 1;
-            if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+            if (/[!@#$%^&*()]/.test(password)) strength += 1;
 
             // 更新強度條和文字
             let barColor, strengthDescription;
