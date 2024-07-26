@@ -6,52 +6,89 @@
     <title>安全密碼生成器</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: #f7f7f7;
         }
         .container {
             background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             text-align: center;
+            max-width: 400px;
+            width: 90%;
         }
         h1 {
             color: #333;
+            margin-bottom: 1.5rem;
         }
         #passwordDisplay {
-            width: 100%;
-            padding: 10px;
+            width: calc(100% - 20px);
+            padding: 12px;
             margin: 10px 0;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            transition: border-color 0.3s;
+        }
+        #passwordDisplay:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
         }
         button {
             background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 20px;
             text-align: center;
             text-decoration: none;
             display: inline-block;
             font-size: 16px;
             margin: 4px 2px;
             cursor: pointer;
-            border-radius: 4px;
-            transition: background-color 0.3s;
+            border-radius: 6px;
+            transition: background-color 0.3s, transform 0.1s;
+            flex: 1;
         }
         button:hover {
             background-color: #45a049;
         }
+        button:active {
+            transform: scale(0.98);
+        }
         #message {
-            margin-top: 10px;
+            margin-top: 1rem;
             color: #666;
+            font-size: 14px;
+            height: 20px;
+        }
+        #strengthBar {
+            width: 100%;
+            height: 10px;
+            background-color: #e0e0e0;
+            margin-top: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        #strengthBarFill {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s, background-color 0.3s;
+        }
+        #strengthText {
+            margin-top: 5px;
+            font-size: 14px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -59,14 +96,17 @@
     <div class="container">
         <h1>安全密碼生成器</h1>
         <input type="text" id="passwordDisplay" readonly>
-        <button onclick="generatePassword()">生成新密碼</button>
-        <button onclick="copyPassword()">複製密碼</button>
+        <div id="strengthBar"><div id="strengthBarFill"></div></div>
+        <p id="strengthText"></p>
+        <div class="button-group">
+            <button onclick="generatePassword()">生成新密碼</button>
+            <button onclick="copyPassword()">複製密碼</button>
+        </div>
         <p id="message"></p>
     </div>
 
     <script>
         function generatePassword() {
-            // 這裡使用簡化版的密碼生成邏輯，實際應用中應該使用更複雜的算法
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*!?+-=()[]{}|;:,.<>";
             const passwordLength = Math.floor(Math.random() * (29 - 19 + 1)) + 19;
             let password = '';
@@ -75,6 +115,7 @@
             }
             document.getElementById('passwordDisplay').value = password;
             document.getElementById('message').textContent = '';
+            checkPasswordStrength(password);
         }
 
         function copyPassword() {
@@ -83,6 +124,55 @@
             passwordField.setSelectionRange(0, 99999); // For mobile devices
             document.execCommand('copy');
             document.getElementById('message').textContent = '密碼已複製到剪貼板！';
+            setTimeout(() => {
+                document.getElementById('message').textContent = '';
+            }, 3000);
+        }
+
+        function checkPasswordStrength(password) {
+            const strengthBar = document.getElementById('strengthBarFill');
+            const strengthText = document.getElementById('strengthText');
+
+            // 檢查密碼強度
+            let strength = 0;
+            if (password.length >= 8) strength += 1;
+            if (password.length >= 12) strength += 1;
+            if (/[A-Z]/.test(password)) strength += 1;
+            if (/[a-z]/.test(password)) strength += 1;
+            if (/[0-9]/.test(password)) strength += 1;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+
+            // 更新強度條和文字
+            let barColor, strengthDescription;
+            switch(strength) {
+                case 0:
+                case 1:
+                    barColor = '#ff4d4d';
+                    strengthDescription = '非常弱';
+                    break;
+                case 2:
+                    barColor = '#ff8c1a';
+                    strengthDescription = '弱';
+                    break;
+                case 3:
+                    barColor = '#ffff00';
+                    strengthDescription = '中等';
+                    break;
+                case 4:
+                    barColor = '#b3ff66';
+                    strengthDescription = '強';
+                    break;
+                case 5:
+                case 6:
+                    barColor = '#4dff4d';
+                    strengthDescription = '非常強';
+                    break;
+            }
+
+            strengthBar.style.width = ((strength / 6) * 100) + '%';
+            strengthBar.style.backgroundColor = barColor;
+            strengthText.textContent = '密碼強度：' + strengthDescription;
+            strengthText.style.color = barColor;
         }
 
         // 頁面加載時生成一個密碼
