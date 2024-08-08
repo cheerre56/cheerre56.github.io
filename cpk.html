@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPK 數值生成器</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            color: #555;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            white-space: pre-wrap;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>CPK 數值生成器</h1>
+    <form id="cpkForm">
+        <label for="decimalPlaces">請問要保留小數點幾位數：</label>
+        <input type="number" id="decimalPlaces" required min="0">
+        
+        <label for="usl">請輸入規格上限 (USL)：</label>
+        <input type="number" id="usl" required step="any">
+        
+        <label for="lsl">請輸入規格下限 (LSL)：</label>
+        <input type="number" id="lsl" required step="any">
+        
+        <label for="cpk">請輸入Cpk值：</label>
+        <input type="number" id="cpk" required step="any">
+        
+        <label for="n">請輸入想要生成的數據筆數：</label>
+        <input type="number" id="n" required min="1">
+        
+        <label for="outputFormat">請選擇輸出格式：</label>
+        <select id="outputFormat">
+            <option value="1">文本文件 (.txt)</option>
+            <option value="2">Excel 表格 (.xlsx)</option>
+            <option value="3">不需要輸出格式</option>
+        </select>
+        
+        <button type="submit">生成數值</button>
+    </form>
+    
+    <div id="result"></div>
+
+    <script>
+        function normalRandom(mean, stdDev) {
+            let u = 0, v = 0;
+            while(u === 0) u = Math.random();
+            while(v === 0) v = Math.random();
+            return mean + stdDev * Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+        }
+
+        function mean(arr) {
+            return arr.reduce((a, b) => a + b) / arr.length;
+        }
+
+        function stdDev(arr) {
+            const mu = mean(arr);
+            return Math.sqrt(arr.reduce((a, b) => a + Math.pow(b - mu, 2), 0) / (arr.length - 1));
+        }
+
+        function generateValues(USL, LSL, cpk, n) {
+            const C = (USL + LSL) / 2;
+            const T = USL - LSL;
+            const sigma = T / (6 * cpk);
+            
+            let values;
+            while (true) {
+                values = Array.from({length: n}, () => normalRandom(C, sigma));
+                const X_bar = mean(values);
+                const calculated_sigma = stdDev(values);
+                const Cp = (USL - LSL) / (6 * calculated_sigma);
+                const Ca = Math.abs((X_bar - C) / (T / 2));
+                const calculated_cpk = Cp * (1 - Ca);
+                
+                if (Math.abs(calculated_cpk - cpk) < 0.01) {
+                    break;
+                }
+            }
+            
+            return values;
+        }
+
+        document.getElementById('cpkForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const decimalPlaces = parseInt(document.getElementById('decimalPlaces').value);
+            const USL = parseFloat(document.getElementById('usl').value);
+            const LSL = parseFloat(document.getElementById('lsl').value);
+            const cpk = parseFloat(document.getElementById('cpk').value);
+            const n = parseInt(document.getElementById('n').value);
+            const outputFormat = document.getElementById('outputFormat').value;
+            
+            const values = generateValues(USL, LSL, cpk, n);
+            
+            let result;
+            if (outputFormat === "3") {
+                // 為Excel準備的格式，每個數值佔一行
+                result = values.map(value => value.toFixed(decimalPlaces)).join('\n');
+            } else {
+                // 原來的格式，適合閱讀
+                result = "生成的數值為:\n\n" + values.map(value => value.toFixed(decimalPlaces)).join('\n\n');
+            }
+            
+            document.getElementById('result').textContent = result;
+            
+            if (outputFormat === "1") {
+                const blob = new Blob([result], {type: "text/plain;charset=utf-8"});
+                saveAs(blob, `output_${new Date().toISOString().replace(/[:.]/g, "")}.txt`);
+            } else if (outputFormat === "2") {
+                const ws = XLSX.utils.aoa_to_sheet([["Values"], ...values.map(v => [v.toFixed(decimalPlaces)])]);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                XLSX.writeFile(wb, `output_${new Date().toISOString().replace(/[:.]/g, "")}.xlsx`);
+            }
+        });
+    </script>
+</body>
+</html>
