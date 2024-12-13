@@ -194,6 +194,19 @@ body::before {
     color: white;
     margin: 0;
 }
+.user-location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    margin-top: 0.2rem;
+}
+
+.flag {
+    font-size: 1.1rem; /* 讓國旗表情符號稍微大一點 */
+}
+
 
 .user-title {
     font-size: 0.9rem;
