@@ -1,138 +1,145 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
-<meta charset="utf-8">
-<title>NIKGAME</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-light-blue.css">   
-<title>Links website</title>
-<script src="https://unpkg.com/feather-icons"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人主頁</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
 
-.container {
-  width: 100%;
-  height: 100%;
-  padding-right: 50px;
-  padding-left: 50px;
-  margin-right: auto;
-  margin-left: auto;
-}
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6rem;
+        }
 
-.name {
-  margin-top: 15px !important;
-}
+        .profile-image {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 4px solid #4a90e2;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            margin-bottom: 1rem;
+        }
 
-.w3-theme-d3 {
-  background-color: rgba(70, 70, 70, 0.788) !important;
-}
+        .profile-image:hover {
+            transform: scale(1.05);
+        }
 
-.w3-theme-d3:hover {
-  background-color: rgba(238, 238, 238, 0.8) !important;
-}
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-a {
-  font-size: x-large;
-}
+        .social-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            max-width: 320px;
+            width: 100%;
+            padding: 0 1rem;
+        }
 
-.w3-border {
-  border: 1px solid #ccc !important;
-}
+        .social-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
 
-.links-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+        .social-button:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
 
-.links-container a {
-  width: 80%;
-}
+        .social-button i {
+            font-size: 1.5rem;
+        }
 
+        .instagram {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        }
 
-.icons {
-  display: flex;
-  gap: 40px;
-}
+        .facebook {
+            background: linear-gradient(45deg, #3b5998, #4267B2);
+        }
 
-.icons a {
-  text-decoration: none;
-}
+        .discord {
+            background: linear-gradient(45deg, #5865F2, #7289da);
+        }
 
-.icons a svg {
-  fill: #d0ecf7;
-  transform: scale(1.5);
-}
+        .steam {
+            background: linear-gradient(45deg, #171a21, #2a475e);
+        }
 
-@media screen and (min-width: 768px) {
-  .link {
-    width: 100%;
-  }
-}
-@media screen and (min-width: 576px) {
-  .container {
-    max-width: 540px;
-  }
+        .other {
+            grid-column: span 2;
+            background: linear-gradient(45deg, #2c3e50, #34495e);
+            width: 100%;
+        }
 
-  .profession {
-    font-size: 24px;
-  }
-}
-video{
-   position: fixed;
-   right:0;
-   bottom:0;
-   min-width: 100%;
-   min-height: 100%;
-   width: auto;
-   height:auto;
-   z-index: -9999;
-
-}
-</style>
-  </head>
-
-  <body>
-   <video id="v1" autoplay muted loop>
-      <source src="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/items/700600/084b4654b1824c15573b75e4b4b43e53a2505f3b.webm">
-   </video>
-   <br>
-   <br>
-   <br>
-    <!-- Content container -->
-    <div class="container">
-
-      <!-- Image and name container. Change to your picture here. -->
-      <div class="" style="text-align: center">
-        <img src="https://media.tenor.com/OeswMjtpFdQAAAAd/cat.gif" class="w3-round" alt="person image" width="200px" height="200px" style="border-radius: 50%; border: 5px solid #494949 !important; margin-top: 16px;">
-        <p class="name"><br><span style="background:rgba(210, 211, 206, 0.932);font-weight: bolder; font-size: x-large; border: 3px solid #474747;">NIKGAME#6666</span></p>
-        <div class="links-container">
-          <div class="icons w3-padding">
-            <a href="https://www.instagram.com/lin_lcx/" target="_blank">
-              <i data-feather="instagram"></i>
-            </a>
-            <a href="https://www.facebook.com/facebook/?_rdc=1&_rdr" target="_blank">
-              <i data-feather="facebook"></i>
-            </a>
-            <a href="https://twitter.com/" target="_blank">
-              <i data-feather="twitter"></i>
-            </a>
-          </div>
-      </div>
-
-      <!-- Links section 1. Replace the # inside of the "" with your links. -->
-      <div class="links-container">
+        @media (max-width: 480px) {
+            .social-buttons {
+                grid-template-columns: 1fr;
+            }
+            .other {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-image">
+            <img src="https://cdn.discordapp.com/attachments/728248304638623844/1316929489460269087/i4a4fyirt52.jpg?ex=675cd5a9&is=675b8429&hm=cc622c53579eb65e91b77c25930b30095ce775e0f4edadb9f5a1017f320e0701&" alt="個人照片">
+        </div>
         
-        <br><a href="https://steamcommunity.com/profiles/76561197963954358" class="w3-button w3-round w3-theme-d3 w3-border link" target="_blank">Steam🦾</a><br>
-         <a href="https://tracker.gg/valorant/profile/riot/NIK%23GAME/overview?playlist=competitive&season=aca29595-40e4-01f5-3f35-b1b3d304c96e" class="w3-button w3-round w3-theme-d3 w3-border link" target="_blank">RiotGame👊</a><br>
-         <a href="https://discord.gg/kKk8RZyskK" class="w3-button w3-round w3-theme-d3 w3-border link" target="_blank">Discord📧</a><br>
-        
-    <script>
-        
-      feather.replace()
-      var video= document.getElementById('v1');
-      video.playbaackrate = 0.5;
-    </script>
-  </body>  </html>
+        <div class="social-buttons">
+            <a href="https://www.instagram.com/lin_lcx/" target="_blank" class="social-button instagram">
+                <i class="ri-instagram-line"></i>
+                <span>Instagram</span>
+            </a>
+            <a href="#" class="social-button facebook">
+                <i class="ri-facebook-fill"></i>
+                <span>Facebook</span>
+            </a>
+            <a href="https://discord.gg/kKk8RZyskK" target="_blank" class="social-button discord">
+                <i class="ri-discord-line"></i>
+                <span>Discord</span>
+            </a>
+            <a href="https://steamcommunity.com/id/TWDL/" target="_blank" class="social-button steam">
+                <i class="ri-gamepad-line"></i>
+                <span>Steam</span>
+            </a>
+            <a href="#" class="social-button other">
+                <i class="ri-more-line"></i>
+                <span>Other</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
