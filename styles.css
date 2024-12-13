@@ -143,17 +143,10 @@ body::before {
     animation-delay: -4s;
 }
 
-/* 頭像和文字容器 */
-.header-container {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    width: 100%;
-    margin-bottom: 1rem;
-}
-
+/* 主容器樣式 */
 .profile-container {
-    width: 380px;
+    width: 90%;
+    max-width: 380px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -169,19 +162,38 @@ body::before {
         inset 0 0 2px rgba(255, 255, 255, 0.05);
 }
 
+/* 頭像和文字容器 */
+.header-container {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    margin-bottom: 0.0rem; /* 從 1rem 改為 0.75rem */
+}
+
 .profile-image {
     width: 120px;
     height: 120px;
     border-radius: 50%;
     border: 3px solid rgba(74, 144, 226, 0.8);
     overflow: hidden;
-    transition: transform 0.6s ease; /* 調整過渡時間為 0.6s */
+    transition: transform 0.6s ease;
     box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
     opacity: 0;
     animation: fadeInSlideRight 0.8s ease forwards;
-    cursor: pointer; /* 添加指針樣式 */
+    cursor: pointer;
 }
 
+.profile-image:hover {
+    transform: rotate(360deg) scale(1.05);
+}
+
+.profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: rotate(0deg);
+}
 
 .profile-text {
     opacity: 0;
@@ -196,6 +208,7 @@ body::before {
     color: white;
     margin: 0;
 }
+
 .user-location {
     display: flex;
     align-items: center;
@@ -206,9 +219,8 @@ body::before {
 }
 
 .flag {
-    font-size: 1.1rem; /* 讓國旗表情符號稍微大一點 */
+    font-size: 1.1rem;
 }
-
 
 .user-title {
     font-size: 0.9rem;
@@ -216,35 +228,13 @@ body::before {
     margin: 0.2rem 0 0 0;
 }
 
-@keyframes fadeInSlideRight {
-    from {
-        opacity: 0;
-        transform: translateX(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-/* 修改懸停效果 */
-.profile-image:hover {
-    transform: rotate(360deg) scale(1.05); /* 添加旋轉效果並稍微放大 */
-}
-
-/* 確保圖片本身不會旋轉 */
-.profile-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform: rotate(0deg); /* 保持圖片不旋轉 */
-}
-
+/* 社交按鈕樣式 */
 .social-buttons {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
     width: 100%;
+    margin-top: 1.5rem;
 }
 
 .button-row {
@@ -295,6 +285,7 @@ body::before {
     font-size: 1.25rem;
 }
 
+/* 社交按鈕顏色 */
 .instagram {
     background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
 }
@@ -316,6 +307,7 @@ body::before {
     width: 100%;
 }
 
+/* 預覽視窗樣式 */
 .preview-window {
     position: absolute;
     bottom: calc(100% + 10px);
@@ -383,12 +375,36 @@ body::before {
     visibility: visible;
 }
 
-.social-button.other {
-    position: relative;
-    z-index: 2;
+/* 動畫關鍵幀 */
+@keyframes fadeInSlideRight {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
-.social-button.other:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+/* 響應式設計 */
+@media (max-width: 480px) {
+    .profile-container {
+        width: 95%;
+        padding: 1.5rem;
+    }
+
+    .header-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-image {
+        width: 100px;
+        height: 100px;
+    }
+
+    .preview-window {
+        width: 90%;
+    }
 }
