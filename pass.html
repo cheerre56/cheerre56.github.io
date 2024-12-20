@@ -5,104 +5,213 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>安全密碼生成器</title>
     <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4895ef;
+            --weak-color: #ef476f;
+            --medium-color: #ffd166;
+            --strong-color: #06d6a0;
+            --text-color: #2b2d42;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Microsoft JhengHei', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f6f8ff 0%, #f1f4ff 100%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f7f7f7;
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 1rem;
         }
+
         .container {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            animation: fadeIn 0.5s ease-out;
         }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         h1 {
-            color: #333;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--success-color));
+            border-radius: 2px;
+        }
+
+        .password-container {
+            position: relative;
             margin-bottom: 1.5rem;
         }
+
         #passwordDisplay {
-            width: calc(100% - 20px);
-            padding: 12px;
-            margin: 10px 0;
-            font-size: 18px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            transition: border-color 0.3s;
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            background: #f8f9fa;
+            color: var(--text-color);
+            font-family: 'Courier New', monospace;
+            transition: var(--transition);
+            text-align: center;
         }
+
         #passwordDisplay:focus {
             outline: none;
-            border-color: #4CAF50;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
         }
-        .button-group {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 1rem;
+
+        .strength-container {
+            margin: 1.5rem 0;
         }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: background-color 0.3s, transform 0.1s;
-            flex: 1;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        button:active {
-            transform: scale(0.98);
-        }
-        #message {
-            margin-top: 1rem;
-            color: #666;
-            font-size: 14px;
-            height: 20px;
-        }
+
         #strengthBar {
-            width: 100%;
-            height: 10px;
-            background-color: #e0e0e0;
-            margin-top: 10px;
-            border-radius: 5px;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
             overflow: hidden;
+            margin-bottom: 0.5rem;
         }
+
         #strengthBarFill {
             height: 100%;
             width: 0;
-            transition: width 0.3s, background-color 0.3s;
+            transition: var(--transition);
+            border-radius: 4px;
         }
+
         #strengthText {
-            margin-top: 5px;
-            font-size: 14px;
-            font-weight: bold;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        button {
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            color: white;
+        }
+
+        button:first-child {
+            background: linear-gradient(45deg, var(--primary-color), var(--success-color));
+        }
+
+        button:last-child {
+            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 1rem;
+            min-height: 20px;
+            font-size: 0.9rem;
+            color: var(--success-color);
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #message.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .button-group {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>安全密碼生成器</h1>
-        <input type="text" id="passwordDisplay" readonly>
-        <div id="strengthBar"><div id="strengthBarFill"></div></div>
-        <p id="strengthText"></p>
+        <div class="password-container">
+            <input type="text" id="passwordDisplay" readonly>
+        </div>
+        <div class="strength-container">
+            <div id="strengthBar">
+                <div id="strengthBarFill"></div>
+            </div>
+            <div id="strengthText"></div>
+        </div>
         <div class="button-group">
             <button onclick="generatePassword()">生成新密碼</button>
             <button onclick="copyPassword()">複製密碼</button>
         </div>
-        <p id="message"></p>
+        <div id="message"></div>
     </div>
 
     <script>
@@ -112,36 +221,39 @@
             const numbers = "0123456789";
             const symbols = "!@#$%^&*()";
             const allChars = lowercase + uppercase + numbers + symbols;
-            const passwordLength = Math.floor(Math.random() * (20 - 12 + 1)) + 12; // 12-20 characters
+            const passwordLength = Math.floor(Math.random() * (20 - 12 + 1)) + 12;
 
             let password = '';
-            // Ensure at least one character from each category
             password += lowercase[Math.floor(Math.random() * lowercase.length)];
             password += uppercase[Math.floor(Math.random() * uppercase.length)];
             password += numbers[Math.floor(Math.random() * numbers.length)];
             password += symbols[Math.floor(Math.random() * symbols.length)];
 
-            // Fill the rest of the password
             for (let i = password.length; i < passwordLength; i++) {
                 password += allChars[Math.floor(Math.random() * allChars.length)];
             }
 
-            // Shuffle the password
             password = password.split('').sort(() => 0.5 - Math.random()).join('');
 
             document.getElementById('passwordDisplay').value = password;
-            document.getElementById('message').textContent = '';
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = '';
+            messageEl.classList.remove('show');
             checkPasswordStrength(password);
         }
 
         function copyPassword() {
             const passwordField = document.getElementById('passwordDisplay');
             passwordField.select();
-            passwordField.setSelectionRange(0, 99999); // For mobile devices
+            passwordField.setSelectionRange(0, 99999);
             document.execCommand('copy');
-            document.getElementById('message').textContent = '密碼已複製到剪貼板！';
+            
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = '密碼已複製到剪貼板！';
+            messageEl.classList.add('show');
+            
             setTimeout(() => {
-                document.getElementById('message').textContent = '';
+                messageEl.classList.remove('show');
             }, 3000);
         }
 
@@ -149,7 +261,6 @@
             const strengthBar = document.getElementById('strengthBarFill');
             const strengthText = document.getElementById('strengthText');
 
-            // 檢查密碼強度
             let strength = 0;
             if (password.length >= 12) strength += 1;
             if (password.length >= 16) strength += 1;
@@ -158,29 +269,28 @@
             if (/[0-9]/.test(password)) strength += 1;
             if (/[!@#$%^&*()]/.test(password)) strength += 1;
 
-            // 更新強度條和文字
             let barColor, strengthDescription;
             switch(strength) {
                 case 0:
                 case 1:
-                    barColor = '#ff4d4d';
+                    barColor = 'var(--weak-color)';
                     strengthDescription = '非常弱';
                     break;
                 case 2:
-                    barColor = '#ff8c1a';
+                    barColor = 'var(--weak-color)';
                     strengthDescription = '弱';
                     break;
                 case 3:
-                    barColor = '#ffff00';
+                    barColor = 'var(--medium-color)';
                     strengthDescription = '中等';
                     break;
                 case 4:
-                    barColor = '#b3ff66';
+                    barColor = 'var(--strong-color)';
                     strengthDescription = '強';
                     break;
                 case 5:
                 case 6:
-                    barColor = '#4dff4d';
+                    barColor = 'var(--strong-color)';
                     strengthDescription = '非常強';
                     break;
             }
