@@ -1,13 +1,41 @@
+:root {
+    /* 淺色主題 */
+    --bg-gradient: linear-gradient(135deg, #f0f2f5 0%, #e5e7eb 100%);
+    --text-color: #000;
+    --container-bg: rgba(255, 255, 255, 0.8);
+    --border-color: rgba(0, 0, 0, 0.1);
+    --profile-border: rgba(74, 144, 226, 0.8);
+    --profile-shadow: rgba(74, 144, 226, 0.3);
+    --text-secondary: rgba(0, 0, 0, 0.7);
+}
+
+:root.dark {
+    /* 深色主題 */
+    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    --text-color: #fff;
+    --container-bg: rgba(255, 255, 255, 0.05);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --profile-border: rgba(74, 144, 226, 0.8);
+    --profile-shadow: rgba(74, 144, 226, 0.3);
+    --text-secondary: rgba(255, 255, 255, 0.7);
+}
+
+/* 視圖轉換設置 */
+::view-transition-new(root),
+::view-transition-old(root) {
+    animation: none;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
-    user-select: none;  /* 防止文字被選中 */
-    -webkit-user-select: none;  /* Safari 支援 */
-    -moz-user-select: none;     /* Firefox 支援 */
-    -ms-user-select: none;      /* IE/Edge 支援 */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 body {
@@ -16,10 +44,37 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    background: var(--bg-gradient);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     position: relative;
     overflow: hidden;
+    transition: background 0.3s ease;
+}
+
+/* 主題切換按鈕 */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: var(--container-bg);
+    backdrop-filter: blur(10px);
+    color: var(--text-color);
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
 }
 
 /* 背景動態效果 */
@@ -60,7 +115,7 @@ body::before {
     position: absolute;
     width: 2px;
     height: 2px;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--text-secondary);
     border-radius: 50%;
     animation: moveParticles 15s infinite linear;
 }
@@ -147,6 +202,25 @@ body::before {
     animation-delay: -4s;
 }
 
+/* 主要容器樣式 */
+.profile-container {
+    width: 380px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+    background: var(--container-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 0 2px rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
 /* 頭像和文字容器 */
 .header-container {
     display: flex;
@@ -156,36 +230,29 @@ body::before {
     margin-bottom: 1rem;
 }
 
-.profile-container {
-    width: 380px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-    position: relative;
-    z-index: 1;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.1),
-        inset 0 0 2px rgba(255, 255, 255, 0.05);
-}
-
 .profile-image {
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    border: 3px solid rgba(74, 144, 226, 0.8);
+    border: 3px solid var(--profile-border);
     overflow: hidden;
-    transition: transform 0.6s ease; /* 調整過渡時間為 0.6s */
-    box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+    transition: transform 0.6s ease;
+    box-shadow: 0 0 20px var(--profile-shadow);
     opacity: 0;
     animation: fadeInSlideRight 0.8s ease forwards;
-    cursor: pointer; /* 添加指針樣式 */
+    cursor: pointer;
 }
 
+.profile-image:hover {
+    transform: rotate(360deg) scale(1.05);
+}
+
+.profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: rotate(0deg);
+}
 
 .profile-text {
     opacity: 0;
@@ -197,51 +264,20 @@ body::before {
 .username {
     font-size: 1.5rem;
     font-weight: 700;
-    color: white;
+    color: var(--text-color);
     margin: 0;
 }
 .user-location {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-secondary);
     font-size: 0.9rem;
     margin-top: 0.2rem;
 }
 
 .flag {
-    font-size: 1.1rem; /* 讓國旗表情符號稍微大一點 */
-}
-
-
-.user-title {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.7);
-    margin: 0.2rem 0 0 0;
-}
-
-@keyframes fadeInSlideRight {
-    from {
-        opacity: 0;
-        transform: translateX(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-/* 修改懸停效果 */
-.profile-image:hover {
-    transform: rotate(360deg) scale(1.05); /* 添加旋轉效果並稍微放大 */
-}
-
-/* 確保圖片本身不會旋轉 */
-.profile-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform: rotate(0deg); /* 保持圖片不旋轉 */
+    font-size: 1.1rem;
 }
 
 .social-buttons {
@@ -299,107 +335,113 @@ body::before {
     font-size: 1.25rem;
 }
 
+/* 社交按鈕顏色 */
 .instagram {
     background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
 }
 
 .facebook {
-    background: linear-gradient(45deg, #3b5998 0%, #4267B2 100%);
+    background: linear-gradient(45deg, #3b5998, #2b4170);
 }
 
 .discord {
-    background: linear-gradient(45deg, #5865F2 0%, #7289da 100%);
+    background: linear-gradient(45deg, #7289da, #4752c4);
 }
 
 .steam {
-    background: linear-gradient(45deg, #171a21 0%, #2a475e 100%);
+    background: linear-gradient(45deg, #171a21, #2a475e);
 }
 
 .other {
-    background: linear-gradient(45deg, #2c3e50 0%, #34495e 100%);
+    background: linear-gradient(45deg, #6b7280, #4b5563);
+    width: 100%;
+}
+
+/* 其他連結預覽窗口 */
+.other-container {
+    position: relative;
     width: 100%;
 }
 
 .preview-window {
     position: absolute;
-    bottom: calc(100% + 10px);
+    top: calc(100% + 10px);
     left: 50%;
     transform: translateX(-50%);
-    width: 340px;
-    background: rgba(30, 41, 59, 0.95);
+    background: var(--container-bg);
     backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 0.75rem;
-    color: white;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
-    padding-bottom: 1.5rem;
-}
-
-.preview-window::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 8px;
-    border-style: solid;
-    border-color: rgba(30, 41, 59, 0.95) transparent transparent transparent;
+    width: 200px;
+    display: none;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 10;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .preview-bridge {
     position: absolute;
-    bottom: 100%;
-    left: 0;
-    width: 100%;
-    height: 15px;
-    background: transparent;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 12px;
+    height: 12px;
+    background: var(--container-bg);
+    border-left: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-color);
+}
+
+.other-container:hover .preview-window {
+    display: flex;
 }
 
 .preview-link {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.75rem;
-    color: white;
+    padding: 0.5rem;
+    color: var(--text-color);
     text-decoration: none;
+    border-radius: 6px;
     transition: all 0.2s ease;
-    border-radius: 8px;
-    font-size: 0.95rem;
 }
 
 .preview-link:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    transform: translateX(5px);
+    background: rgba(255, 255, 255, 0.1);
 }
 
-.other-container {
-    position: relative;
-    width: 100%;
+/* 動畫效果 */
+@keyframes fadeInSlideRight {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
-.other-container:hover .preview-window,
-.preview-window:hover {
-    opacity: 1;
-    visibility: visible;
-}
+/* 響應式設計 */
+@media (max-width: 480px) {
+    .profile-container {
+        width: 90%;
+        margin: 1rem;
+        padding: 1.5rem;
+    }
 
-.social-button.other {
-    position: relative;
-    z-index: 2;
-}
+    .header-container {
+        flex-direction: column;
+        text-align: center;
+    }
 
-.social-button.other:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-}
+    .social-buttons {
+        width: 100%;
+    }
 
-.selectable {
-    user-select: text;
-    -webkit-user-select: text;
-    -moz-user-select: text;
-    -ms-user-select: text;
+    .button-row {
+        grid-template-columns: 1fr;
+    }
 }
