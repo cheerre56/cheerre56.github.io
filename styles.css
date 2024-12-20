@@ -267,6 +267,7 @@ body::before {
     color: var(--text-color);
     margin: 0;
 }
+
 .user-location {
     display: flex;
     align-items: center;
@@ -352,20 +353,21 @@ body::before {
     background: linear-gradient(45deg, #171a21, #2a475e);
 }
 
-.other {
-    background: linear-gradient(45deg, #6b7280, #4b5563);
-    width: 100%;
-}
-
-/* 其他連結預覽窗口 */
+/* 其他連結預覽窗口相關樣式 */
 .other-container {
     position: relative;
     width: 100%;
 }
 
+.other {
+    background: linear-gradient(45deg, #6b7280, #4b5563);
+    width: 100%;
+    position: relative;
+}
+
 .preview-window {
     position: absolute;
-    top: calc(100% + 10px);
+    top: calc(100% + 5px);
     left: 50%;
     transform: translateX(-50%);
     background: var(--container-bg);
@@ -374,11 +376,23 @@ body::before {
     border-radius: 12px;
     padding: 0.75rem;
     width: 200px;
-    display: none;
+    opacity: 0;
+    visibility: hidden;
+    display: flex;
     flex-direction: column;
     gap: 0.5rem;
     z-index: 10;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.preview-connection {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: transparent;
 }
 
 .preview-bridge {
@@ -393,19 +407,23 @@ body::before {
     border-top: 1px solid var(--border-color);
 }
 
-.other-container:hover .preview-window {
-    display: flex;
+.other-container:hover .preview-window,
+.preview-window:hover,
+.other:hover + .preview-window {
+    opacity: 1;
+    visibility: visible;
 }
 
 .preview-link {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem;
+    padding: 0.75rem;
     color: var(--text-color);
     text-decoration: none;
     border-radius: 6px;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
 }
 
 .preview-link:hover {
@@ -443,5 +461,14 @@ body::before {
 
     .button-row {
         grid-template-columns: 1fr;
+    }
+
+    .preview-window {
+        width: 90%;
+        max-width: 200px;
+    }
+    
+    .preview-link {
+        padding: 0.8rem;
     }
 }
