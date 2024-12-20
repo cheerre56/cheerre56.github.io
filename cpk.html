@@ -7,89 +7,228 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <style>
-        body {
-            font-family: 'Microsoft JhengHei', Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f0f0f0;
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4895ef;
+            --text-color: #2b2d42;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
         }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        form {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        label {
-            display: block;
-            margin-top: 15px;
-            color: #555;
-        }
-        input, select {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
+
+        body {
+            font-family: 'Microsoft JhengHei', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f6f8ff 0%, #f1f4ff 100%);
+            min-height: 100vh;
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--success-color));
+            border-radius: 2px;
+        }
+
+        form {
+            display: grid;
+            gap: 1.5rem;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: #f8f9fa;
+            color: var(--text-color);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+        }
+
         button {
-            margin-top: 20px;
-            padding: 10px 15px;
-            background-color: #4CAF50;
+            background: linear-gradient(45deg, var(--primary-color), var(--success-color));
             color: white;
             border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        #result {
-            margin-top: 20px;
-            white-space: pre-wrap;
-            background-color: white;
-            padding: 15px;
+            padding: 1rem 2rem;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        #result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 2px solid #e9ecef;
+        }
+
+        #result::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #result::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        #result::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        #result::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            form {
+                padding: 1rem;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            animation: fadeIn 0.5s ease-out;
         }
     </style>
 </head>
 <body>
-    <h1>CPK 數值生成器</h1>
-    <form id="cpkForm">
-        <label for="decimalPlaces">請問要保留小數點幾位數：</label>
-        <input type="number" id="decimalPlaces" required min="0">
+    <div class="container">
+        <h1>CPK 數值生成器</h1>
+        <form id="cpkForm">
+            <div class="form-group">
+                <label for="decimalPlaces">請問要保留小數點幾位數：</label>
+                <input type="number" id="decimalPlaces" required min="0" placeholder="例如：2">
+            </div>
+            
+            <div class="form-group">
+                <label for="usl">請輸入規格上限 (USL)：</label>
+                <input type="number" id="usl" required step="any" placeholder="例如：10.5">
+            </div>
+            
+            <div class="form-group">
+                <label for="lsl">請輸入規格下限 (LSL)：</label>
+                <input type="number" id="lsl" required step="any" placeholder="例如：9.5">
+            </div>
+            
+            <div class="form-group">
+                <label for="cpk">請輸入Cpk值：</label>
+                <input type="number" id="cpk" required step="any" placeholder="例如：1.33">
+            </div>
+            
+            <div class="form-group">
+                <label for="n">請輸入想要生成的數據筆數：</label>
+                <input type="number" id="n" required min="1" placeholder="例如：100">
+            </div>
+            
+            <div class="form-group">
+                <label for="outputFormat">請選擇輸出格式：</label>
+                <select id="outputFormat">
+                    <option value="1">文本文件 (.txt)</option>
+                    <option value="2">Excel 表格 (.xlsx)</option>
+                    <option value="3">不需要輸出格式</option>
+                </select>
+            </div>
+            
+            <button type="submit">生成數值</button>
+        </form>
         
-        <label for="usl">請輸入規格上限 (USL)：</label>
-        <input type="number" id="usl" required step="any">
-        
-        <label for="lsl">請輸入規格下限 (LSL)：</label>
-        <input type="number" id="lsl" required step="any">
-        
-        <label for="cpk">請輸入Cpk值：</label>
-        <input type="number" id="cpk" required step="any">
-        
-        <label for="n">請輸入想要生成的數據筆數：</label>
-        <input type="number" id="n" required min="1">
-        
-        <label for="outputFormat">請選擇輸出格式：</label>
-        <select id="outputFormat">
-            <option value="1">文本文件 (.txt)</option>
-            <option value="2">Excel 表格 (.xlsx)</option>
-            <option value="3">不需要輸出格式</option>
-        </select>
-        
-        <button type="submit">生成數值</button>
-    </form>
-    
-    <div id="result"></div>
+        <div id="result"></div>
+    </div>
 
     <script>
         function normalRandom(mean, stdDev) {
@@ -144,10 +283,13 @@
             
             let result;
             if (outputFormat === "3") {
-                // 為Excel準備的格式，每個數值佔一行
+                // 不需要輸出格式時的顯示
                 result = values.map(value => value.toFixed(decimalPlaces)).join('\n');
+            } else if (outputFormat === "1") {
+                // 輸出為 txt 時的格式（每個數值之間多一個空行）
+                result = values.map(value => value.toFixed(decimalPlaces)).join('\n\n');
             } else {
-                // 原來的格式，適合閱讀
+                // 在網頁上顯示時的格式
                 result = "生成的數值為:\n\n" + values.map(value => value.toFixed(decimalPlaces)).join('\n\n');
             }
             
