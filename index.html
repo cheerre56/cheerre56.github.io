@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <button id="themeButton" class="theme-toggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
     <div class="particles">
         <div class="particle"></div>
         <div class="particle"></div>
@@ -32,7 +36,7 @@
             <div class="profile-text">
                 <h1 class="username">NIKGAME</h1>
                 <div class="user-location">
-                    <span class="flag">	Taiwan | Taipei</span>
+                    <span class="flag">Taiwan | Taipei</span>
                 </div>
             </div>
         </div>
@@ -77,8 +81,73 @@
                         <i class="fab fa-youtube"></i>
                         YouTube
                     </a>
+                </div>
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeButton = document.getElementById('themeButton');
+            const themeIcon = themeButton.querySelector('i');
+
+            // 檢查本地存儲中的主題設置
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+
+            themeButton.addEventListener('click', (e) => {
+                // 檢查瀏覽器是否支持視圖轉換
+                if (!document.startViewTransition) {
+                    toggleTheme();
+                    return;
+                }
+
+                // 使用視圖轉換API
+                const transition = document.startViewTransition(() => {
+                    toggleTheme();
+                });
+
+                transition.ready.then(() => {
+                    const { clientX, clientY } = e;
+                    const radius = Math.hypot(
+                        Math.max(clientX, innerWidth - clientX),
+                        Math.max(clientY, innerHeight - clientY)
+                    );
+
+                    document.documentElement.animate(
+                        {
+                            clipPath: [
+                                `circle(0% at ${clientX}px ${clientY}px)`,
+                                `circle(${radius}px at ${clientX}px ${clientY}px)`,
+                            ],
+                        },
+                        {
+                            duration: 300,
+                            easing: 'ease-out',
+                            pseudoElement: '::view-transition-new(root)',
+                        }
+                    );
+                });
+            });
+
+            function toggleTheme() {
+                const isDark = document.documentElement.classList.toggle('dark');
+                // 更新圖標
+                if (isDark) {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                } else {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                }
+                // 保存主題設置
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            }
+        });
+    </script>
 </body>
 </html>
