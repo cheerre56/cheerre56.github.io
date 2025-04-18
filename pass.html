@@ -466,13 +466,25 @@
             },
 
             configs: [
-                { level: 1, length: 8, charSets: ['lowercase', 'numbers'] },
-                { level: 2, length: 12, charSets: ['lowercase', 'uppercase', 'numbers'] },
-                { level: 3, length: 16, charSets: ['lowercase', 'uppercase', 'numbers', 'symbols'] }
+                { level: 1, length: 6, charSets: ['lowercase', 'numbers'], expectedStrength: '非常弱' },
+                { level: 2, length: 6, charSets: ['lowercase', 'numbers', 'uppercase'], expectedStrength: '非常弱' },
+                { level: 3, length: 6, charSets: ['lowercase', 'numbers', 'uppercase', 'symbols'], expectedStrength: '弱' },
+                { level: 4, length: 8, charSets: ['lowercase', 'numbers'], expectedStrength: '弱' },
+                { level: 5, length: 8, charSets: ['lowercase', 'numbers', 'uppercase'], expectedStrength: '弱' },
+                { level: 6, length: 8, charSets: ['lowercase', 'numbers', 'uppercase', 'symbols'], expectedStrength: '中等' },
+                { level: 7, length: 10, charSets: ['lowercase', 'numbers'], expectedStrength: '弱' },
+                { level: 8, length: 10, charSets: ['lowercase', 'numbers', 'uppercase'], expectedStrength: '中等' },
+                { level: 9, length: 10, charSets: ['lowercase', 'numbers', 'uppercase', 'symbols'], expectedStrength: '中等' },
+                { level: 10, length: 14, charSets: ['lowercase', 'numbers'], expectedStrength: '中等' },
+                { level: 11, length: 14, charSets: ['lowercase', 'numbers', 'uppercase'], expectedStrength: '強' },
+                { level: 12, length: 14, charSets: ['lowercase', 'numbers', 'uppercase', 'symbols'], expectedStrength: '強' },
+                { level: 13, length: 16, charSets: ['lowercase', 'numbers'], expectedStrength: '強' },
+                { level: 14, length: 16, charSets: ['lowercase', 'numbers', 'uppercase'], expectedStrength: '強' },
+                { level: 15, length: 16, charSets: ['lowercase', 'numbers', 'uppercase', 'symbols'], expectedStrength: '非常強' }
             ],
 
-            generate(level = 2) {
-                const config = this.configs.find(c => c.level === level) || this.configs[1];
+            generate(level = 8) {
+                const config = this.configs.find(c => c.level === level) || this.configs[7];
                 const chars = config.charSets.map(set => this.chars[set]).join('');
                 const crypto = window.crypto || window.msCrypto;
                 const array = new Uint32Array(config.length);
@@ -496,26 +508,40 @@
             },
 
             evaluateStrength(password) {
-                let strength = 0;
-                if (password.length >= 8) strength += 1;
-                if (password.length >= 12) strength += 1;
-                if (password.length >= 16) strength += 1;
-                if (/[A-Z]/.test(password)) strength += 1;
-                if (/[a-z]/.test(password)) strength += 1;
-                if (/[0-9]/.test(password)) strength += 1;
-                if (/[!@#$%^&*()]/.test(password)) strength += 1;
+                // Base score for character types
+                let charScore = 0;
+                if (/[A-Z]/.test(password)) charScore += 1;
+                if (/[a-z]/.test(password)) charScore += 1;
+                if (/[0-9]/.test(password)) charScore += 1;
+                if (/[!@#$%^&*()]/.test(password)) charScore += 1;
+
+                // Length-based score with more granularity
+                let lengthScore = 0;
+                if (password.length >= 6) lengthScore += 1; // Minimal length
+                if (password.length >= 8) lengthScore += 1; // Standard length
+                if (password.length >= 10) lengthScore += 1; // Good length
+                if (password.length >= 14) lengthScore += 1; // Strong length
+                if (password.length >= 16) lengthScore += 1; // Very strong length
+
+                // Total score: combine character types and length, but cap to avoid over-scoring short passwords
+                let totalScore = Math.min(charScore + lengthScore, 8);
+
+                // Adjust score based on length to prevent short passwords from scoring too high
+                if (password.length <= 6 && charScore >= 3) totalScore = Math.min(totalScore, 3); // Cap 6-char passwords
+                if (password.length === 8 && charScore >= 3) totalScore = Math.min(totalScore, 4); // Cap 8-char passwords
+                if (password.length === 10 && charScore >= 3) totalScore = Math.min(totalScore, 5); // Cap 10-char passwords
 
                 const levels = [
                     { score: [0, 1], color: 'var(--weak-color)', text: '非常弱' },
-                    { score: [2], color: 'var(--weak-color)', text: '弱' },
-                    { score: [3, 4], color: 'var(--medium-color)', text: '中等' },
-                    { score: [5], color: 'var(--strong-color)', text: '強' },
-                    { score: [6, 7], color: 'var(--strong-color)', text: '非常強' }
+                    { score: [2, 3], color: 'var(--weak-color)', text: '弱' },
+                    { score: [4, 5], color: 'var(--medium-color)', text: '中等' },
+                    { score: [6, 7], color: 'var(--strong-color)', text: '強' },
+                    { score: [8], color: 'var(--strong-color)', text: '非常強' }
                 ];
 
-                const level = levels.find(l => l.score.includes(strength)) || levels[0];
+                const level = levels.find(l => l.score.includes(totalScore)) || levels[0];
                 return {
-                    percentage: (strength / 7) * 100,
+                    percentage: (totalScore / 8) * 100,
                     color: level.color,
                     text: `密碼強度：${level.text}`
                 };
@@ -536,15 +562,32 @@
             },
 
             sliderLabels: {
-                1: '低強度（8 位，字母+數字）',
-                2: '中等強度（12 位，字母+數字+大寫）',
-                3: '高強度（16 位，字母+數字+大寫+符號）'
+                1: '低強度（6 位，字母+數字）',
+                2: '低強度（6 位，字母+數字+大寫）',
+                3: '低強度（6 位，字母+數字+大寫+符號）',
+                4: '中低強度（8 位，字母+數字）',
+                5: '中低強度（8 位，字母+數字+大寫）',
+                6: '中低強度（8 位，字母+數字+大寫+符號）',
+                7: '中等強度（10 位，字母+數字）',
+                8: '中等強度（10 位，字母+數字+大寫）',
+                9: '中等強度（10 位，字母+數字+大寫+符號）',
+                10: '中高等強度（14 位，字母+數字）',
+                11: '中高等強度（14 位，字母+數字+大寫）',
+                12: '中高等強度（14 位，字母+數字+大寫+符號）',
+                13: '高等強度（16 位，字母+數字）',
+                14: '高等強度（16 位，字母+數字+大寫）',
+                15: '高強度（16 位，字母+數字+大寫+符號）'
             },
 
             mapSliderValue(value) {
-                if (value <= 33) return 1;
-                if (value <= 66) return 2;
-                return 3;
+                const thresholds = [
+                    6.67, 13.34, 20.01, 26.68, 33.35, 40.02, 46.69, 53.36,
+                    60.03, 66.70, 73.37, 80.04, 86.71, 93.38, 100
+                ];
+                for (let i = 0; i < thresholds.length; i++) {
+                    if (value <= thresholds[i]) return i + 1;
+                }
+                return 15;
             },
 
             updatePassword(password) {
@@ -600,7 +643,7 @@
         };
 
         function init() {
-            let lastLevel = 2;
+            let lastLevel = 8;
 
             const debouncedUpdate = UI.debounce((level) => {
                 if (level !== lastLevel) {
@@ -673,17 +716,17 @@
                     UI.elements.copyBtn.click();
                 }
                 if (e.key === 'ArrowLeft' && e.target === UI.elements.strengthSlider) {
-                    UI.elements.strengthSlider.value = Math.max(0, parseInt(UI.elements.strengthSlider.value) - 10);
+                    UI.elements.strengthSlider.value = Math.max(0, parseInt(UI.elements.strengthSlider.value) - 6.67);
                     UI.elements.strengthSlider.dispatchEvent(new Event('input'));
                 }
                 if (e.key === 'ArrowRight' && e.target === UI.elements.strengthSlider) {
-                    UI.elements.strengthSlider.value = Math.min(100, parseInt(UI.elements.strengthSlider.value) + 10);
+                    UI.elements.strengthSlider.value = Math.min(100, parseInt(UI.elements.strengthSlider.value) + 6.67);
                     UI.elements.strengthSlider.dispatchEvent(new Event('input'));
                 }
             });
 
             UI.updateSlider(50);
-            UI.updatePassword(PasswordGenerator.generate(2));
+            UI.updatePassword(PasswordGenerator.generate(8));
         }
 
         init();
