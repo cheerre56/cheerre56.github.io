@@ -73,12 +73,13 @@
 </head>
 <body>
     <div class="container">
-        <h1>CPK 數值生成器（優化版）</h1>
+        <h1>CPK 數值生成器（最終版）</h1>
         <form id="cpkForm">
             <input type="number" id="decimalPlaces" required min="0" placeholder="保留小數點位數，例如：2">
             <input type="number" id="usl" required step="any" placeholder="規格上限 (USL)，例如：10.5">
             <input type="number" id="lsl" required step="any" placeholder="規格下限 (LSL)，例如：9.5">
             <input type="number" id="cpk" required step="any" placeholder="Cpk值，例如：1.33">
+            <input type="number" id="n" required min="1" value="32" placeholder="生成數據筆數，默認32">
             <button type="submit">生成數值</button>
         </form>
         <div id="result"></div>
@@ -99,7 +100,7 @@
             return Math.sqrt(arr.reduce((sum, val) => sum + (val - mu) ** 2, 0) / (arr.length - 1));
         };
 
-        const generateValues = (USL, LSL, cpk, n = 32) => {
+        const generateValues = (USL, LSL, cpk, n) => {
             const C = (USL + LSL) / 2;
             const T = USL - LSL;
             const sigma = T / (6 * cpk);
@@ -123,8 +124,9 @@
             const USL = parseFloat(document.getElementById('usl').value);
             const LSL = parseFloat(document.getElementById('lsl').value);
             const cpk = parseFloat(document.getElementById('cpk').value);
+            const n = parseInt(document.getElementById('n').value) || 32;
 
-            const values = generateValues(USL, LSL, cpk);
+            const values = generateValues(USL, LSL, cpk, n);
 
             const result = values.map(value => value.toFixed(decimalPlaces)).join('\n');
             document.getElementById('result').textContent = result;
