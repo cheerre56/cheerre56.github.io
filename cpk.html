@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CPK 數值生成器</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <style>
         :root {
             --primary-color: #4361ee;
-            --secondary-color: #3f37c9;
             --success-color: #4895ef;
             --text-color: #2b2d42;
             --bg-color: #f8f9fa;
@@ -17,293 +14,120 @@
             --border-radius: 12px;
             --transition: all 0.3s ease;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Microsoft JhengHei', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #f6f8ff 0%, #f1f4ff 100%);
+            font-family: 'Microsoft JhengHei', sans-serif;
+            background: linear-gradient(135deg, #f6f8ff, #f1f4ff);
             min-height: 100vh;
             color: var(--text-color);
-            line-height: 1.6;
             padding: 2rem;
         }
-
         .container {
             max-width: 800px;
-            margin: 0 auto;
+            margin: auto;
             padding: 2rem;
             background: var(--card-bg);
             border-radius: var(--border-radius);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
-
         h1 {
-            color: var(--primary-color);
             text-align: center;
+            color: var(--primary-color);
             margin-bottom: 2rem;
-            font-size: 2.5rem;
-            font-weight: 700;
-            position: relative;
-            padding-bottom: 1rem;
         }
-
-        h1::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), var(--success-color));
-            border-radius: 2px;
-        }
-
         form {
             display: grid;
-            gap: 1.5rem;
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            gap: 1rem;
         }
-
-        .form-group {
-            position: relative;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-color);
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        input, select {
+        input, button {
             width: 100%;
-            padding: 0.75rem 1rem;
-            border: 2px solid #e9ecef;
+            padding: 0.75rem;
             border-radius: 8px;
-            font-size: 1rem;
+            border: 1px solid #ccc;
             transition: var(--transition);
-            background: #f8f9fa;
-            color: var(--text-color);
         }
-
-        input:focus, select:focus {
-            outline: none;
+        input:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+            outline: none;
         }
-
         button {
             background: linear-gradient(45deg, var(--primary-color), var(--success-color));
             color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
             cursor: pointer;
-            transition: var(--transition);
-            width: 100%;
+            border: none;
             margin-top: 1rem;
         }
-
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+            box-shadow: 0 5px 15px rgba(67,97,238,0.3);
         }
-
         #result {
             margin-top: 2rem;
-            padding: 1.5rem;
-            background: #f8f9fa;
+            padding: 1rem;
+            background: var(--bg-color);
             border-radius: var(--border-radius);
+            max-height: 300px;
+            overflow-y: auto;
             font-family: monospace;
             white-space: pre-wrap;
-            line-height: 1.5;
-            max-height: 400px;
-            overflow-y: auto;
-            border: 2px solid #e9ecef;
-        }
-
-        #result::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        #result::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
-        }
-
-        #result::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
-        }
-
-        #result::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-            }
-
-            .container {
-                padding: 1rem;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            form {
-                padding: 1rem;
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .container {
-            animation: fadeIn 0.5s ease-out;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>CPK 數值生成器</h1>
+        <h1>CPK 數值生成器（優化版）</h1>
         <form id="cpkForm">
-            <div class="form-group">
-                <label for="decimalPlaces">請問要保留小數點幾位數：</label>
-                <input type="number" id="decimalPlaces" required min="0" placeholder="例如：2">
-            </div>
-            
-            <div class="form-group">
-                <label for="usl">請輸入規格上限 (USL)：</label>
-                <input type="number" id="usl" required step="any" placeholder="例如：10.5">
-            </div>
-            
-            <div class="form-group">
-                <label for="lsl">請輸入規格下限 (LSL)：</label>
-                <input type="number" id="lsl" required step="any" placeholder="例如：9.5">
-            </div>
-            
-            <div class="form-group">
-                <label for="cpk">請輸入Cpk值：</label>
-                <input type="number" id="cpk" required step="any" placeholder="例如：1.33">
-            </div>
-            
-            <div class="form-group">
-                <label for="n">請輸入想要生成的數據筆數：</label>
-                <input type="number" id="n" required min="1" placeholder="例如：100">
-            </div>
-            
-            <div class="form-group">
-                <label for="outputFormat">請選擇輸出格式：</label>
-                <select id="outputFormat">
-                    <option value="1">文本文件 (.txt)</option>
-                    <option value="2">Excel 表格 (.xlsx)</option>
-                    <option value="3">不需要輸出格式</option>
-                </select>
-            </div>
-            
+            <input type="number" id="decimalPlaces" required min="0" placeholder="保留小數點位數，例如：2">
+            <input type="number" id="usl" required step="any" placeholder="規格上限 (USL)，例如：10.5">
+            <input type="number" id="lsl" required step="any" placeholder="規格下限 (LSL)，例如：9.5">
+            <input type="number" id="cpk" required step="any" placeholder="Cpk值，例如：1.33">
             <button type="submit">生成數值</button>
         </form>
-        
         <div id="result"></div>
     </div>
 
     <script>
-        function normalRandom(mean, stdDev) {
+        const normalRandom = (mean, stdDev) => {
             let u = 0, v = 0;
             while(u === 0) u = Math.random();
             while(v === 0) v = Math.random();
-            return mean + stdDev * Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
-        }
+            return mean + stdDev * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+        };
 
-        function mean(arr) {
-            return arr.reduce((a, b) => a + b) / arr.length;
-        }
+        const mean = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
 
-        function stdDev(arr) {
+        const stdDev = arr => {
             const mu = mean(arr);
-            return Math.sqrt(arr.reduce((a, b) => a + Math.pow(b - mu, 2), 0) / (arr.length - 1));
-        }
+            return Math.sqrt(arr.reduce((sum, val) => sum + (val - mu) ** 2, 0) / (arr.length - 1));
+        };
 
-        function generateValues(USL, LSL, cpk, n) {
+        const generateValues = (USL, LSL, cpk, n = 32) => {
             const C = (USL + LSL) / 2;
             const T = USL - LSL;
             const sigma = T / (6 * cpk);
-            
             let values;
-            while (true) {
+            while(true) {
                 values = Array.from({length: n}, () => normalRandom(C, sigma));
                 const X_bar = mean(values);
                 const calculated_sigma = stdDev(values);
-                const Cp = (USL - LSL) / (6 * calculated_sigma);
+                const Cp = T / (6 * calculated_sigma);
                 const Ca = Math.abs((X_bar - C) / (T / 2));
                 const calculated_cpk = Cp * (1 - Ca);
-                
-                if (Math.abs(calculated_cpk - cpk) < 0.01) {
-                    break;
-                }
+                if(Math.abs(calculated_cpk - cpk) < 0.01) break;
             }
-            
             return values;
-        }
+        };
 
-        document.getElementById('cpkForm').addEventListener('submit', function(e) {
+        document.getElementById('cpkForm').addEventListener('submit', e => {
             e.preventDefault();
-            
+
             const decimalPlaces = parseInt(document.getElementById('decimalPlaces').value);
             const USL = parseFloat(document.getElementById('usl').value);
             const LSL = parseFloat(document.getElementById('lsl').value);
             const cpk = parseFloat(document.getElementById('cpk').value);
-            const n = parseInt(document.getElementById('n').value);
-            const outputFormat = document.getElementById('outputFormat').value;
-            
-            const values = generateValues(USL, LSL, cpk, n);
-            
-            let result;
-            if (outputFormat === "3") {
-                // 不需要輸出格式時的顯示
-                result = values.map(value => value.toFixed(decimalPlaces)).join('\n');
-            } else if (outputFormat === "1") {
-                // 輸出為 txt 時的格式（每個數值之間多一個空行）
-                result = values.map(value => value.toFixed(decimalPlaces)).join('\n\n');
-            } else {
-                // 在網頁上顯示時的格式
-                result = "生成的數值為:\n\n" + values.map(value => value.toFixed(decimalPlaces)).join('\n\n');
-            }
-            
+
+            const values = generateValues(USL, LSL, cpk);
+
+            const result = values.map(value => value.toFixed(decimalPlaces)).join('\n');
             document.getElementById('result').textContent = result;
-            
-            if (outputFormat === "1") {
-                const blob = new Blob([result], {type: "text/plain;charset=utf-8"});
-                saveAs(blob, `output_${new Date().toISOString().replace(/[:.]/g, "")}.txt`);
-            } else if (outputFormat === "2") {
-                const ws = XLSX.utils.aoa_to_sheet([["Values"], ...values.map(v => [v.toFixed(decimalPlaces)])]);
-                const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-                XLSX.writeFile(wb, `output_${new Date().toISOString().replace(/[:.]/g, "")}.xlsx`);
-            }
         });
     </script>
 </body>
