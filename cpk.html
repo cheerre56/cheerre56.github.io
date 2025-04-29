@@ -38,14 +38,14 @@
             display: grid;
             gap: 1rem;
         }
-        input, button {
+        input, button, select {
             width: 100%;
             padding: 0.75rem;
             border-radius: 8px;
             border: 1px solid #ccc;
             transition: var(--transition);
         }
-        input:focus {
+        input:focus, select:focus {
             border-color: var(--primary-color);
             outline: none;
         }
@@ -69,23 +69,35 @@
             font-family: monospace;
             white-space: pre-wrap;
         }
+        .stats {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #e9f5ff;
+            border-radius: var(--border-radius);
+        }
+        .stats p {
+            margin: 0.5rem 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>CPK 數值生成器（最終版）</h1>
+        <h1>CPK 數值生成器（改進版）</h1>
         <form id="cpkForm">
-            <input type="number" id="decimalPlaces" required min="0" placeholder="保留小數點位數，例如：2">
+            <input type="number" id="decimalPlaces" required min="0" placeholder="保留小數點位數，例如：2" value="2">
             <input type="number" id="usl" required step="any" placeholder="規格上限 (USL)，例如：10.5">
             <input type="number" id="lsl" required step="any" placeholder="規格下限 (LSL)，例如：9.5">
-            <input type="number" id="cpk" required step="any" placeholder="Cpk值，例如：1.33">
+            <input type="number" id="cpk" required step="any" placeholder="目標Cpk值，例如：1.33">
+            <input type="number" id="ca" required step="any" placeholder="目標Ca值（百分比，例如：0.5）" value="0">
             <input type="number" id="n" required min="1" value="32" placeholder="生成數據筆數，默認32">
             <button type="submit">生成數值</button>
         </form>
+        <div class="stats" id="stats"></div>
         <div id="result"></div>
     </div>
 
     <script>
+        // 生成正態分佈隨機數
         const normalRandom = (mean, stdDev) => {
             let u = 0, v = 0;
             while(u === 0) u = Math.random();
@@ -93,27 +105,81 @@
             return mean + stdDev * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
         };
 
+        // 計算平均值
         const mean = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
 
+        // 計算標準差
         const stdDev = arr => {
             const mu = mean(arr);
             return Math.sqrt(arr.reduce((sum, val) => sum + (val - mu) ** 2, 0) / (arr.length - 1));
         };
 
-        const generateValues = (USL, LSL, cpk, n) => {
-            const C = (USL + LSL) / 2;
-            const T = USL - LSL;
-            const sigma = T / (6 * cpk);
-            let values;
-            while(true) {
-                values = Array.from({length: n}, () => normalRandom(C, sigma));
-                const X_bar = mean(values);
-                const calculated_sigma = stdDev(values);
-                const Cp = T / (6 * calculated_sigma);
-                const Ca = Math.abs((X_bar - C) / (T / 2));
-                const calculated_cpk = Cp * (1 - Ca);
-                if(Math.abs(calculated_cpk - cpk) < 0.01) break;
+        // 生成符合指定Cpk和Ca的數值
+        const generateValues = (USL, LSL, targetCpk, targetCa, n) => {
+            const C = (USL + LSL) / 2; // 規格中心
+            const T = USL - LSL; // 規格寬度
+            
+            // 根據目標Ca計算目標均值
+            const caDecimal = targetCa / 100; // 將百分比轉為小數
+            const targetMean = C + (caDecimal * (T / 2));
+            
+            // 根據目標Cpk計算標準差
+            const targetSigma = T / (6 * targetCpk * (1 + Math.abs(caDecimal)));
+            
+            // 生成數據
+            let values = [];
+            let attempts = 0;
+            const maxAttempts = 100;
+            
+            while(attempts < maxAttempts) {
+                values = Array.from({length: n}, () => normalRandom(targetMean, targetSigma));
+                
+                // 計算實際統計量
+                const actualMean = mean(values);
+                const actualSigma = stdDev(values);
+                const Cp = T / (6 * actualSigma);
+                const actualCa = ((actualMean - C) / (T / 2)) * 100; // 轉為百分比
+                const actualCpk = Math.min(
+                    (USL - actualMean) / (3 * actualSigma),
+                    (actualMean - LSL) / (3 * actualSigma)
+                );
+                
+                // 檢查是否接近目標值
+                if(Math.abs(actualCpk - targetCpk) < 0.05 && Math.abs(actualCa - targetCa) < 1.0) {
+                    // 顯示統計資訊
+                    document.getElementById('stats').innerHTML = `
+                        <p><strong>生成數據統計：</strong></p>
+                        <p>平均值: ${actualMean.toFixed(4)}</p>
+                        <p>標準差: ${actualSigma.toFixed(4)}</p>
+                        <p>Cp: ${Cp.toFixed(4)}</p>
+                        <p>Ca: ${actualCa.toFixed(2)}%</p>
+                        <p>Cpk: ${actualCpk.toFixed(4)}</p>
+                    `;
+                    return values;
+                }
+                
+                attempts++;
             }
+            
+            // 如果無法達到精確目標，返回最後一次嘗試的結果
+            const actualMean = mean(values);
+            const actualSigma = stdDev(values);
+            const Cp = T / (6 * actualSigma);
+            const actualCa = ((actualMean - C) / (T / 2)) * 100;
+            const actualCpk = Math.min(
+                (USL - actualMean) / (3 * actualSigma),
+                (actualMean - LSL) / (3 * actualSigma)
+            );
+            
+            document.getElementById('stats').innerHTML = `
+                <p><strong>生成數據統計（最佳近似值）：</strong></p>
+                <p>平均值: ${actualMean.toFixed(4)}</p>
+                <p>標準差: ${actualSigma.toFixed(4)}</p>
+                <p>Cp: ${Cp.toFixed(4)}</p>
+                <p>Ca: ${actualCa.toFixed(2)}%</p>
+                <p>Cpk: ${actualCpk.toFixed(4)}</p>
+            `;
+            
             return values;
         };
 
@@ -124,12 +190,16 @@
             const USL = parseFloat(document.getElementById('usl').value);
             const LSL = parseFloat(document.getElementById('lsl').value);
             const cpk = parseFloat(document.getElementById('cpk').value);
+            const ca = parseFloat(document.getElementById('ca').value);
             const n = parseInt(document.getElementById('n').value) || 32;
 
-            const values = generateValues(USL, LSL, cpk, n);
-
-            const result = values.map(value => value.toFixed(decimalPlaces)).join('\n');
-            document.getElementById('result').textContent = result;
+            try {
+                const values = generateValues(USL, LSL, cpk, ca, n);
+                const result = values.map(value => value.toFixed(decimalPlaces)).join('\n');
+                document.getElementById('result').textContent = result;
+            } catch (error) {
+                document.getElementById('result').textContent = `錯誤: ${error.message}`;
+            }
         });
     </script>
 </body>
