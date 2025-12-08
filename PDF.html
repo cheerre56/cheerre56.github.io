@@ -540,7 +540,7 @@
                 console.error(err);
                 alert("合併失敗，請檢查檔案是否正常。");
             } finally {
-                if (document.getElementById('merge-download').classList.contains('hidden')) {
+                if (document。getElementById('merge-download')。classList.contains('hidden')) {
                      btn.innerHTML = originalText;
                      btn.disabled = false;
                 }
@@ -551,9 +551,9 @@
         function handleUnlockFile(fileList) {
             if (fileList && fileList[0]) {
                 const f = fileList[0];
-                if (f.输入 !== 'application/pdf' && !f.name.endsWith('.pdf')) return;
+                if (f.type !== 'application/pdf' && !f.name.endsWith('.pdf')) return;
                 unlockFile = f;
-                document.getElementById('unlock-filename').innerHTML = `<span class="text-purple-600 font-bold">${f.name}</span>`;
+                document。getElementById('unlock-filename')。innerHTML = `<span class="text-purple-600 font-bold">${f.name}</span>`;
             }
             document。getElementById('unlock-input')。value = '';
         }
@@ -564,16 +564,16 @@
             const btn = document.getElementById('btn-unlock');
             const status = document.getElementById('unlock-status');
             btn。innerHTML = '<div class="loader inline-block mr-2"></div> 解密中...';
-            btn.disabled = true;
-            status.innerText = "";
+            btn。disabled = true;
+            status。innerText = "";
 
             try {
-                const arrayBuffer = await unlockFile。arrayBuffer();
+                const arrayBuffer = await unlockFile.arrayBuffer();
                 const pdf = await PDFDocument.load(arrayBuffer, { password: password });
                 const pdfBytes = await pdf.save();
-                const blob = new Blob([pdfBytes]， { 输入: 'application/pdf' });
-                const url = URL。createObjectURL(blob);
-                const a = document。createElement('a');
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
                 a.href = url;
                 a.download = `unlocked_${unlockFile.name}`;
                 document.body.appendChild(a);
