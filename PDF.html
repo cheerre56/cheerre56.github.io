@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NuvexPDF - GitHub Pages 修復版</title>
+    <title>NuvexPDF - 自由插入旗艦版</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-    
     <script src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <style>
@@ -26,29 +23,63 @@
 
         /* 拖曳視覺樣式 */
         .dragging-source { opacity: 0.4; background: #f3f4f6; border: 2px dashed #9ca3af; }
+        
+        /* 一般的拖曳目標樣式 (內部排序) */
         .drag-target-hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 0 2px #3b82f6 !important;
+            transform: scale(1.05);
+            box-shadow: 0 0 0 3px #3b82f6 !important;
             background-color: #eff6ff !important;
             z-index: 10;
             position: relative;
         }
+        
+        /* 來自側邊欄的插入樣式 (用不同顏色區分，或是加上左邊框提示插入) */
+        .sidebar-insert-hover {
+            transform: scale(1.02);
+            box-shadow: -4px 0 0 0 #10b981, 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important; /* 綠色左邊框表示插入點 */
+            background-color: #ecfdf5 !important;
+            z-index: 20;
+        }
+
         .draggable-item { cursor: grab; transition: transform 0.2s; }
         .draggable-item:active { cursor: grabbing; }
-        .page-card { cursor: grab; transition: transform 0.2s; }
+        
+        .page-card { cursor: grab; transition: transform 0.2s, box-shadow 0.2s; }
         .page-card:active { cursor: grabbing; }
+        
         .drag-over-zone { background-color: #eff6ff !important; border-color: #3b82f6 !important; transform: scale(1.01); }
+
+        /* Modal 內 Drop Overlay */
+        #editor-drop-overlay {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 4px dashed #3b82f6;
+            pointer-events: none; 
+            z-index: 50; 
+        }
+
+        /* 側邊欄樣式 */
+        .sidebar-item {
+            cursor: grab;
+            transition: all 0.2s;
+        }
+        .sidebar-item:active { cursor: grabbing; }
+        
+        .sidebar-target-hover {
+            border-color: #3b82f6 !important;
+            background-color: #eff6ff !important;
+            transform: translateX(5px);
+        }
     </style>
 </head>
 <body class="bg-slate-100 min-h-screen font-sans text-slate-800">
 
-    <div class="container mx-auto px-4 py-8 max-w-5xl">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
         
         <div class="text-center mb-8">
             <h1 class="text-3xl font-extrabold text-slate-800 mb-2">
                 <span class="text-blue-600">Nuvex</span>PDF
             </h1>
-            <p class="text-slate-500 text-sm">全域拖曳 • 邊緣自動捲動 • 雙擊編輯</p>
+            <p class="text-slate-500 text-sm">自由插入 • 側邊欄排序 • 終極完整版</p>
         </div>
 
         <div class="bg-white rounded-xl shadow-xl overflow-hidden min-h-[500px]">
@@ -76,8 +107,8 @@
                     <div id="merge-ui-container" class="hidden">
                         <div class="flex justify-between items-end mb-4">
                             <h3 class="text-sm font-bold text-slate-700">檔案列表 (<span id="file-count">0</span>)</h3>
-                            <span class="text-xs text-blue-500 bg-blue-50 px-2 py-1 rounded select-none">
-                                <i class="fas fa-mouse-pointer mr-1"></i> 雙擊卡片編輯頁面
+                            <span class="text-xs text-blue-500 bg-blue-50 px-2 py-1 rounded select-none animate-pulse">
+                                <i class="fas fa-mouse-pointer mr-1"></i> 雙擊卡片進入編輯
                             </span>
                         </div>
                         <div id="file-list" class="space-y-3 mb-8"></div>
@@ -117,42 +148,69 @@
     </div>
 
     <div id="page-editor-modal" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl h-[90vh] flex flex-col">
-            <div class="flex justify-between items-center p-5 border-b border-gray-100">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-6xl h-[90vh] flex flex-col relative overflow-hidden">
+            
+            <div id="editor-drop-overlay" class="absolute inset-0 hidden flex flex-col items-center justify-center text-blue-500">
+                <i class="fas fa-file-import text-6xl mb-4 animate-bounce"></i>
+                <p class="text-2xl font-bold bg-white px-6 py-2 rounded-full shadow-lg">放開以插入頁面</p>
+            </div>
+
+            <div class="flex justify-between items-center p-5 border-b border-gray-100 bg-white z-30">
                 <div>
                     <h3 class="text-xl font-bold text-slate-800" id="editor-filename">編輯頁面</h3>
-                    <p class="text-xs text-slate-500">拖曳調整順序 • 點擊 X 刪除</p>
+                    <p class="text-xs text-slate-500">
+                        <i class="fas fa-bolt text-yellow-500 mr-1"></i>極速模式 • 
+                        <span class="text-blue-600 font-bold">可從右側或桌面拖入以插入</span>
+                    </p>
                 </div>
                 <div class="flex gap-2">
                     <button onclick="closeEditor()" class="px-4 py-2 text-slate-500 hover:bg-slate-100 rounded-lg text-sm font-bold">取消</button>
-                    <button onclick="saveEditorChanges()" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold shadow">
-                        確認修改
+                    <button id="btn-save-editor" onclick="saveEditorChanges()" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold shadow flex items-center">
+                        <span>確認修改</span>
                     </button>
                 </div>
             </div>
 
-            <div id="modal-scroll-container" class="flex-1 overflow-y-auto p-5 bg-slate-50 relative scroll-smooth">
-                <div id="editor-loading" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 z-10 hidden">
-                    <div class="loader w-10 h-10 border-4 border-blue-500 mb-4"></div>
-                    <p class="text-slate-500 font-bold">正在讀取頁面...</p>
+            <div class="flex-1 flex overflow-hidden relative">
+                
+                <div id="modal-scroll-container" class="flex-1 overflow-y-auto p-5 bg-slate-50 relative scroll-smooth">
+                    <div id="editor-loading" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 z-20 hidden">
+                        <div class="loader w-10 h-10 border-4 border-blue-500 mb-4"></div>
+                        <p class="text-slate-500 font-bold mt-2" id="editor-loading-text">準備編輯器...</p>
+                    </div>
+                    
+                    <div id="page-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 pb-20"></div>
                 </div>
-                <div id="page-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+
+                <div class="w-64 bg-white border-l border-gray-200 flex flex-col shadow-lg z-20">
+                    <div class="p-3 bg-gray-50 border-b border-gray-200 font-bold text-xs text-gray-500 uppercase tracking-wide flex justify-between items-center">
+                        <span>其他已上傳檔案</span>
+                        <i class="fas fa-sort text-gray-300"></i>
+                    </div>
+                    
+                    <div id="sidebar-file-list" class="flex-1 overflow-y-auto p-2 space-y-2">
+                        </div>
+                    
+                    <div class="p-3 bg-blue-50 text-xs text-blue-600 text-center border-t border-blue-100">
+                        拖曳檔案到左側目標頁面上<br>即可插入該位置
+                    </div>
+                </div>
+
             </div>
             
-            <div class="p-4 border-t border-gray-100 text-xs text-slate-400 flex justify-between">
-                <span>保留頁數: <b id="editor-page-count" class="text-blue-600">0</b></span>
-                <span>按住拖曳至邊緣可自動捲動</span>
+            <div class="p-4 border-t border-gray-100 text-xs text-slate-400 flex justify-between bg-white z-30">
+                <span>目前頁數: <b id="editor-page-count" class="text-blue-600">0</b></span>
+                <span>支援定點插入</span>
             </div>
         </div>
     </div>
 
     <script>
-        // --- 全域錯誤捕捉 (Debug Mode) ---
-        window.onerror = function(message, source, lineno, colno, error) {
-            console.error(error);
-            // 只有當出現 pdfjsLib 相關錯誤時才警告
-            if(message.includes('pdfjsLib') || message.includes('PDFLib')) {
-                alert("系統初始化失敗：\n可能是網路不穩導致資源未載入。\n請嘗試重新整理網頁。\n\n錯誤訊息: " + message);
+        window.onerror = function(message) {
+            if (message.includes('detached ArrayBuffer')) {
+                alert("操作過快，請重新載入檔案。");
+            } else if (!message.includes('pdfjsLib') && !message.includes('tailwindcss')) {
+                console.error(message);
             }
         };
 
@@ -161,54 +219,195 @@
         let unlockFile = null;
         let currentEditingFileId = null;
         let editorPagesData = []; 
+
+        // State
         let isDraggingPage = false;
         let currentMouseY = 0;
         let scrollAnimationId = null;
+        let editorDragCounter = 0;
+        let imageObserver = null;
 
         // --- Initialization ---
         document.addEventListener('DOMContentLoaded', async () => {
-            // 1. 初始化 PDF Worker (這是 GitHub Pages 修復的關鍵)
             await initPdfWorker();
-
-            // 2. 初始化事件監聽
             setupUploadZone('drop-zone-merge', handleMergeFiles);
             setupUploadZone('drop-zone-unlock', handleUnlockFile);
             initAutoScroll();
+            setupEditorDropZone(); 
+
+            imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        const idx = parseInt(img.dataset.idx);
+                        loadPageThumbnail(idx, img);
+                        observer.unobserve(img);
+                    }
+                });
+            }, { root: document.getElementById('modal-scroll-container'), rootMargin: "100px" });
         });
 
-        // 🔥 關鍵修復：繞過 CORS 限制載入 Worker 🔥
         async function initPdfWorker() {
-            if (typeof pdfjsLib === 'undefined') {
-                console.error("PDF.js library not loaded!");
-                return;
-            }
-            
+            if (typeof pdfjsLib === 'undefined') return;
             const workerUrl = 'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
-            
             try {
-                // 嘗試將 Worker 程式碼下載下來，轉成 Blob
-                // 這樣瀏覽器會認為這是「本地」程式碼，就不會擋掉
                 const response = await fetch(workerUrl);
                 if (!response.ok) throw new Error("Worker fetch failed");
-                const workerScript = await response.text();
-                const blob = new Blob([workerScript], { type: "text/javascript" });
-                const blobUrl = URL.createObjectURL(blob);
-                
-                pdfjsLib.GlobalWorkerOptions.workerSrc = blobUrl;
-                console.log("PDF Worker loaded via Blob (CORS Bypass Success)");
+                const blob = new Blob([await response.text()], { type: "text/javascript" });
+                pdfjsLib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(blob);
             } catch (e) {
-                console.warn("Blob worker failed, falling back to CDN URL", e);
-                // 如果下載失敗，才使用原本的 CDN 連結 (當作最後手段)
                 pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
+            }
+        }
+
+        // --- Editor Internal Drop Zone (空白處追加) ---
+        function setupEditorDropZone() {
+            const container = document.getElementById('page-editor-modal'); 
+            const overlay = document.getElementById('editor-drop-overlay');
+
+            // 處理檔案拖入 (Files) - 顯示遮罩
+            container.addEventListener('dragenter', (e) => {
+                if (e.dataTransfer.types.includes('Files')) {
+                    e.preventDefault();
+                    editorDragCounter++;
+                    if (editorDragCounter === 1) overlay.classList.remove('hidden');
+                }
+            });
+
+            container.addEventListener('dragleave', (e) => {
+                if (e.dataTransfer.types.includes('Files')) {
+                    e.preventDefault();
+                    editorDragCounter--;
+                    if (editorDragCounter <= 0) {
+                        editorDragCounter = 0;
+                        overlay.classList.add('hidden');
+                    }
+                }
+            });
+
+            container.addEventListener('dragover', (e) => {
+                if (e.dataTransfer.types.includes('Files')) e.preventDefault(); 
+            });
+
+            container.addEventListener('drop', async (e) => {
+                // 1. 外部檔案 Drop 到空白處 (追加)
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    e.preventDefault();
+                    editorDragCounter = 0;
+                    overlay.classList.add('hidden');
+                    await handleExternalFileDropInEditor(e.dataTransfer.files); // 預設 index = -1 (append)
+                    return;
+                }
+
+                // 2. 側邊欄檔案 Drop 到空白處 (追加)
+                const sidebarFileId = e.dataTransfer.getData('application/x-nuvex-file-id');
+                // 檢查是否 Drop 到 Grid 區域以外
+                const gridRect = document.getElementById('page-grid').getBoundingClientRect();
+                // 簡易判定：如果不在卡片上，通常會視為 append
+                // 但這裡我們主要處理「Drop在Modal容器上但不是Grid Item」的情況
+                if (sidebarFileId && !e.target.closest('.page-card')) {
+                    e.preventDefault();
+                    await handleSidebarFileDrop(sidebarFileId); // 預設 index = -1 (append)
+                    return;
+                }
+            });
+        }
+
+        // 處理側邊欄檔案拖入 -> 插入到指定位置
+        // insertAtIndex: 如果是 -1 代表追加到最後
+        async function handleSidebarFileDrop(fileId, insertAtIndex = -1) {
+            const fileObj = mergeFiles.find(f => f.id === fileId);
+            if (!fileObj) return;
+
+            const loader = document.getElementById('editor-loading');
+            document.getElementById('editor-loading-text').innerText = "正在匯入頁面...";
+            loader.classList.remove('hidden');
+
+            try {
+                let arrayBuffer;
+                if (fileObj.blob) arrayBuffer = await fileObj.blob.arrayBuffer();
+                else arrayBuffer = await fileObj.file.arrayBuffer();
+
+                const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer.slice(0) });
+                const pdf = await loadingTask.promise;
+
+                const newPages = [];
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    newPages.push({
+                        buffer: arrayBuffer,
+                        pageIndex: i - 1,
+                        imgSrc: null, 
+                        status: 'pending'
+                    });
+                }
+
+                if (insertAtIndex >= 0) {
+                    // 插入模式
+                    editorPagesData.splice(insertAtIndex, 0, ...newPages);
+                } else {
+                    // 追加模式
+                    editorPagesData.push(...newPages);
+                }
+                
+                renderEditorGrid();
+            } catch(e) {
+                console.error(e);
+                alert("匯入失敗");
+            } finally {
+                loader.classList.add('hidden');
+            }
+        }
+
+        // 處理外部檔案拖入 -> 插入到指定位置
+        async function handleExternalFileDropInEditor(files, insertAtIndex = -1) {
+            const loader = document.getElementById('editor-loading');
+            document.getElementById('editor-loading-text').innerText = "正在解析外部檔案...";
+            loader.classList.remove('hidden');
+
+            try {
+                let hasPDF = false;
+                const allNewPages = [];
+
+                for (const file of files) {
+                    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) continue;
+                    hasPDF = true;
+                    const arrayBuffer = await file.arrayBuffer();
+                    
+                    const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer.slice(0) });
+                    const pdf = await loadingTask.promise;
+
+                    for (let i = 1; i <= pdf.numPages; i++) {
+                        allNewPages.push({
+                            buffer: arrayBuffer,
+                            pageIndex: i - 1,
+                            imgSrc: null, 
+                            status: 'pending'
+                        });
+                    }
+                }
+                
+                if (hasPDF) {
+                    if (insertAtIndex >= 0) {
+                        editorPagesData.splice(insertAtIndex, 0, ...allNewPages);
+                    } else {
+                        editorPagesData.push(...allNewPages);
+                    }
+                    renderEditorGrid();
+                } else {
+                    alert("請拖入有效的 PDF 檔案。");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("無法載入檔案：" + err.message);
+            } finally {
+                loader.classList.add('hidden');
             }
         }
 
         // --- Auto Scroll ---
         function initAutoScroll() {
             const container = document.getElementById('modal-scroll-container');
-            document.addEventListener('dragover', (e) => {
-                if (isDraggingPage) currentMouseY = e.clientY;
-            });
+            document.addEventListener('dragover', (e) => { if (isDraggingPage) currentMouseY = e.clientY; });
             function scrollLoop() {
                 if (isDraggingPage) {
                     const rect = container.getBoundingClientRect();
@@ -224,6 +423,7 @@
             scrollAnimationId = requestAnimationFrame(scrollLoop);
         }
 
+        // --- Upload Helpers ---
         function setupUploadZone(id, callback) {
             const el = document.getElementById(id);
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => {
@@ -246,23 +446,19 @@
             else activeBtn.classList.add('text-purple-600', 'border-purple-600');
         }
 
-        // ================= MERGE FILE LIST =================
+        // ================= MERGE LOGIC =================
         async function handleMergeFiles(fileList) {
             if (!fileList || fileList.length === 0) return;
-            // 檢查 PDFLib 是否存在
-            if (typeof PDFLib === 'undefined') { alert("核心組件尚未載入，請稍後再試或重新整理"); return; }
-
             document.getElementById('merge-ui-container').classList.remove('hidden');
 
             for (let i = 0; i < fileList.length; i++) {
                 const file = fileList[i];
                 if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) continue;
-
                 const fileId = Date.now() + Math.random().toString(36).substr(2, 9);
                 
                 try {
                     const arrayBuffer = await file.arrayBuffer();
-                    const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+                    const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer.slice(0) });
                     const pdf = await loadingTask.promise;
 
                     const page = await pdf.getPage(1);
@@ -281,14 +477,11 @@
                         name: file.name,
                         originalPageCount: pdf.numPages,
                         pageIndices: indices,
-                        thumbnail: canvas.toDataURL()
+                        thumbnail: canvas.toDataURL(),
+                        blob: null 
                     });
-                } catch (err) {
-                    console.error("Error parsing PDF:", err);
-                    alert(`無法讀取檔案 ${file.name}，可能是檔案損毀或加密。`);
-                }
+                } catch (err) { console.error(err); }
             }
-            
             document.getElementById('merge-input').value = '';
             renderMergeList();
         }
@@ -356,10 +549,7 @@
             updateMergeBtnState();
         }
 
-        function removeFile(id) {
-            mergeFiles = mergeFiles.filter(f => f.id !== id);
-            renderMergeList();
-        }
+        function removeFile(id) { mergeFiles = mergeFiles.filter(f => f.id !== id); renderMergeList(); }
 
         // ================= PAGE EDITOR LOGIC =================
         async function openPageEditor(fileId) {
@@ -367,6 +557,10 @@
             if (!fileObj) return;
             currentEditingFileId = fileId;
             editorPagesData = []; 
+            
+            editorDragCounter = 0;
+            document.getElementById('editor-drop-overlay').classList.add('hidden');
+
             const modal = document.getElementById('page-editor-modal');
             const grid = document.getElementById('page-grid');
             const loader = document.getElementById('editor-loading');
@@ -375,23 +569,26 @@
             modal.classList.remove('hidden');
             grid.innerHTML = ''; 
             loader.classList.remove('hidden');
+            document.getElementById('editor-loading-text').innerText = "讀取結構中...";
+
+            renderSidebarList();
 
             try {
-                const arrayBuffer = await fileObj.file.arrayBuffer();
-                const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+                let arrayBuffer;
+                if (fileObj.blob) arrayBuffer = await fileObj.blob.arrayBuffer();
+                else arrayBuffer = await fileObj.file.arrayBuffer();
+
+                const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer.slice(0) });
+                const pdf = await loadingTask.promise;
 
                 for (let i = 0; i < fileObj.pageIndices.length; i++) {
                     const originalIndex = fileObj.pageIndices[i];
-                    const page = await pdf.getPage(originalIndex + 1); 
-                    const scale = 0.3;
-                    const viewport = page.getViewport({ scale });
-                    const canvas = document.createElement('canvas');
-                    canvas.width = viewport.width;
-                    canvas.height = viewport.height;
-                    const ctx = canvas.getContext('2d');
-                    await page.render({ canvasContext: ctx, viewport: viewport }).promise;
-
-                    editorPagesData.push({ originalIndex: originalIndex, imgSrc: canvas.toDataURL() });
+                    editorPagesData.push({ 
+                        buffer: arrayBuffer, 
+                        pageIndex: originalIndex, 
+                        imgSrc: null, 
+                        status: 'pending'
+                    });
                 }
                 renderEditorGrid(); 
             } catch(e) {
@@ -402,13 +599,82 @@
             }
         }
 
+        function renderSidebarList() {
+            const sidebar = document.getElementById('sidebar-file-list');
+            sidebar.innerHTML = '';
+            const otherFiles = mergeFiles.filter(f => f.id !== currentEditingFileId);
+            
+            if (otherFiles.length === 0) {
+                sidebar.innerHTML = '<div class="text-center text-gray-400 text-xs py-10">沒有其他檔案</div>';
+                return;
+            }
+
+            otherFiles.forEach(file => {
+                const item = document.createElement('div');
+                item.className = "sidebar-item bg-white border border-gray-200 p-2 rounded shadow-sm hover:shadow-md flex items-center gap-2 transition";
+                item.draggable = true;
+                item.innerHTML = `
+                    <div class="text-gray-300 cursor-grab px-1"><i class="fas fa-grip-vertical"></i></div>
+                    <img src="${file.thumbnail}" class="w-8 h-10 object-contain bg-gray-50 border rounded pointer-events-none">
+                    <div class="flex-1 min-w-0 pointer-events-none">
+                        <div class="text-xs font-bold text-gray-700 truncate" title="${file.name}">${file.name}</div>
+                        <div class="text-[10px] text-gray-400">${file.pageIndices.length} 頁</div>
+                    </div>
+                `;
+
+                item.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('application/x-nuvex-file-id', file.id);
+                    e.dataTransfer.setData('application/x-nuvex-sort-id', file.id); 
+                    e.dataTransfer.effectAllowed = 'copyMove';
+                    item.style.opacity = '0.5';
+                });
+                item.addEventListener('dragend', () => { item.style.opacity = '1'; });
+                item.addEventListener('dragover', (e) => { e.preventDefault(); item.classList.add('sidebar-target-hover'); });
+                item.addEventListener('dragleave', () => { item.classList.remove('sidebar-target-hover'); });
+
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    item.classList.remove('sidebar-target-hover');
+                    const sourceFileId = e.dataTransfer.getData('application/x-nuvex-sort-id');
+                    if (!sourceFileId) return;
+                    const targetFileId = file.id;
+                    if (sourceFileId === targetFileId) return;
+
+                    const fromIdx = mergeFiles.findIndex(f => f.id === sourceFileId);
+                    const toIdx = mergeFiles.findIndex(f => f.id === targetFileId);
+
+                    if (fromIdx > -1 && toIdx > -1) {
+                        const movedItem = mergeFiles[fromIdx];
+                        mergeFiles.splice(fromIdx, 1);
+                        mergeFiles.splice(toIdx, 0, movedItem);
+                        renderSidebarList();
+                        renderMergeList();
+                    }
+                });
+                sidebar.appendChild(item);
+            });
+        }
+
         function renderEditorGrid() {
             const grid = document.getElementById('page-grid');
             grid.innerHTML = ''; 
+            
             editorPagesData.forEach((pageData, displayIndex) => {
                 const div = document.createElement('div');
                 div.className = "page-card bg-white p-2 rounded shadow border border-gray-200 relative group select-none transition-transform";
                 div.draggable = true;
+                
+                let imgContent = '';
+                if (pageData.status === 'loaded' && pageData.imgSrc) {
+                    imgContent = `<img src="${pageData.imgSrc}" class="w-full h-full object-contain">`;
+                } else {
+                    imgContent = `
+                        <div class="w-full h-full bg-slate-100 flex items-center justify-center text-slate-300 lazy-placeholder" data-idx="${displayIndex}">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    `;
+                }
+
                 div.innerHTML = `
                     <div class="absolute top-1 right-1 z-10">
                         <button onclick="removePageInEditor(${displayIndex})" class="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow hover:bg-red-600 transition text-xs">
@@ -416,22 +682,49 @@
                         </button>
                     </div>
                     <div class="w-full aspect-[1/1.4] bg-gray-100 mb-2 overflow-hidden rounded border border-gray-100 pointer-events-none">
-                        <img src="${pageData.imgSrc}" class="w-full h-full object-contain">
+                        ${imgContent}
                     </div>
-                    <div class="text-center text-xs text-gray-400 font-mono">原始頁 ${pageData.originalIndex + 1}</div>
+                    <div class="text-center text-xs text-gray-400 font-mono">原始頁 ${pageData.pageIndex + 1}</div>
                 `;
+                
+                // 1. 一般排序拖曳 (來源: page_item)
                 div.addEventListener('dragstart', (e) => {
                     e.dataTransfer.setData('text/type', 'page_item');
                     e.dataTransfer.setData('text/index', displayIndex);
                     div.classList.add('dragging-source');
                     isDraggingPage = true;
                 });
-                div.addEventListener('dragover', (e) => { e.preventDefault(); div.classList.add('drag-target-hover'); });
-                div.addEventListener('dragleave', () => { div.classList.remove('drag-target-hover'); });
-                div.addEventListener('drop', (e) => {
+
+                div.addEventListener('dragover', (e) => { 
+                    e.preventDefault(); 
+                    // 區分是 排序 還是 插入
+                    if (e.dataTransfer.getData('application/x-nuvex-file-id')) {
+                        div.classList.add('sidebar-insert-hover'); // 綠色框
+                    } else {
+                        div.classList.add('drag-target-hover'); // 藍色框
+                    }
+                });
+
+                div.addEventListener('dragleave', () => { 
+                    div.classList.remove('drag-target-hover'); 
+                    div.classList.remove('sidebar-insert-hover'); 
+                });
+
+                div.addEventListener('drop', async (e) => {
                     e.preventDefault();
                     div.classList.remove('drag-target-hover');
+                    div.classList.remove('sidebar-insert-hover');
                     isDraggingPage = false;
+                    
+                    // A. 處理側邊欄插入 (Sidebar -> Card)
+                    const sidebarFileId = e.dataTransfer.getData('application/x-nuvex-file-id');
+                    if (sidebarFileId) {
+                        e.stopPropagation(); // 阻止事件冒泡到容器(避免重複觸發)
+                        await handleSidebarFileDrop(sidebarFileId, displayIndex); // 插入到當前位置
+                        return;
+                    }
+
+                    // B. 處理內部排序 (Card -> Card)
                     if(e.dataTransfer.getData('text/type') !== 'page_item') return;
                     const fromIndex = parseInt(e.dataTransfer.getData('text/index'));
                     const toIndex = displayIndex;
@@ -442,34 +735,121 @@
                         renderEditorGrid();
                     }
                 });
+                
                 div.addEventListener('dragend', () => {
                     div.classList.remove('dragging-source');
                     document.querySelectorAll('.drag-target-hover').forEach(el => el.classList.remove('drag-target-hover'));
+                    document.querySelectorAll('.sidebar-insert-hover').forEach(el => el.classList.remove('sidebar-insert-hover'));
                     isDraggingPage = false;
                 });
+                
                 grid.appendChild(div);
+
+                if (pageData.status === 'pending') {
+                    const placeholder = div.querySelector('.lazy-placeholder');
+                    if(placeholder && imageObserver) imageObserver.observe(placeholder);
+                }
             });
             document.getElementById('editor-page-count').innerText = editorPagesData.length;
         }
 
-        function removePageInEditor(index) { editorPagesData.splice(index, 1); renderEditorGrid(); }
-        function saveEditorChanges() {
-            const fileObj = mergeFiles.find(f => f.id === currentEditingFileId);
-            if(fileObj) fileObj.pageIndices = editorPagesData.map(p => p.originalIndex);
-            closeEditor(); renderMergeList(); 
+        async function loadPageThumbnail(idx, imgElement) {
+            const data = editorPagesData[idx];
+            if (!data || data.status === 'loaded') return;
+
+            try {
+                const loadingTask = pdfjsLib.getDocument({ data: data.buffer.slice(0) });
+                const pdf = await loadingTask.promise;
+                const page = await pdf.getPage(data.pageIndex + 1);
+                
+                const scale = 0.3; 
+                const viewport = page.getViewport({ scale });
+                const canvas = document.createElement('canvas');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                const ctx = canvas.getContext('2d');
+                await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+                data.imgSrc = canvas.toDataURL();
+                data.status = 'loaded';
+
+                if (imgElement && imgElement.parentNode) {
+                    imgElement.parentNode.innerHTML = `<img src="${data.imgSrc}" class="w-full h-full object-contain">`;
+                }
+
+            } catch (e) {
+                console.error("Lazy load failed", e);
+            }
         }
+
+        function removePageInEditor(index) { editorPagesData.splice(index, 1); renderEditorGrid(); }
+
+        async function saveEditorChanges() {
+            const fileObj = mergeFiles.find(f => f.id === currentEditingFileId);
+            if (!fileObj) return;
+
+            const btn = document.getElementById('btn-save-editor');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<div class="loader mr-2 w-4 h-4"></div> 處理中...';
+            btn.disabled = true;
+
+            try {
+                const { PDFDocument } = PDFLib;
+                const newPdf = await PDFDocument.create();
+                const loadedPdfs = new Map();
+
+                for (const pageData of editorPagesData) {
+                    let srcPdf = loadedPdfs.get(pageData.buffer);
+                    if (!srcPdf) {
+                        const bufferClone = pageData.buffer.slice(0);
+                        srcPdf = await PDFDocument.load(bufferClone);
+                        loadedPdfs.set(pageData.buffer, srcPdf);
+                    }
+                    const [copiedPage] = await newPdf.copyPages(srcPdf, [pageData.pageIndex]);
+                    newPdf.addPage(copiedPage);
+                }
+
+                const pdfBytes = await newPdf.save();
+                const newBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+                
+                fileObj.blob = newBlob; 
+                fileObj.originalPageCount = editorPagesData.length;
+                fileObj.pageIndices = Array.from({ length: editorPagesData.length }, (_, k) => k);
+                
+                if (editorPagesData.length > 0) {
+                     fileObj.thumbnail = editorPagesData[0].imgSrc;
+                }
+
+                closeEditor();
+                renderMergeList();
+
+            } catch (err) {
+                console.error(err);
+                alert("儲存失敗：" + err.message);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
         function closeEditor() {
             document.getElementById('page-editor-modal').classList.add('hidden');
-            currentEditingFileId = null; editorPagesData = []; isDraggingPage = false; 
+            document.getElementById('editor-drop-overlay').classList.add('hidden');
+            editorDragCounter = 0;
+            currentEditingFileId = null; 
+            editorPagesData = []; 
+            isDraggingPage = false; 
+            if (imageObserver) imageObserver.disconnect();
+            renderMergeList();
         }
 
         // ================= FINAL MERGE EXECUTION =================
         function updateMergeBtnState() {
             const btn = document.getElementById('btn-merge');
-            if (mergeFiles.length < 2) {
+            if (mergeFiles.length < 1) {
                 btn.disabled = true;
                 btn.classList.add('opacity-50', 'cursor-not-allowed');
-                btn.innerHTML = '<span>至少需要 2 個檔案</span>';
+                btn.innerHTML = '<span>請先上傳檔案</span>';
             } else {
                 btn.disabled = false;
                 btn.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -478,21 +858,27 @@
         }
 
         async function executeMerge() {
-            if (mergeFiles.length < 2) return;
+            if (mergeFiles.length < 1) return;
             const btn = document.getElementById('btn-merge');
             const originalText = btn.innerHTML;
             btn.innerHTML = '<div class="loader mr-2"></div> 處理中...';
             btn.disabled = true;
             try {
-                const { PDFDocument } = PDFLib; // 確保 PDFLib 已經 loaded
+                const { PDFDocument } = PDFLib;
                 const mergedPdf = await PDFDocument.create();
+                
                 for (const item of mergeFiles) {
                     if (item.pageIndices.length === 0) continue; 
-                    const arrayBuffer = await item.file.arrayBuffer();
-                    const pdf = await PDFDocument.load(arrayBuffer);
+                    
+                    let arrayBuffer;
+                    if (item.blob) arrayBuffer = await item.blob.arrayBuffer();
+                    else arrayBuffer = await item.file.arrayBuffer();
+
+                    const pdf = await PDFDocument.load(arrayBuffer.slice(0));
                     const copiedPages = await mergedPdf.copyPages(pdf, item.pageIndices);
                     copiedPages.forEach((page) => mergedPdf.addPage(page));
                 }
+                
                 const pdfBytes = await mergedPdf.save();
                 const blob = new Blob([pdfBytes], { type: 'application/pdf' });
                 const url = URL.createObjectURL(blob);
@@ -516,7 +902,6 @@
             }
         }
 
-        // ================= UNLOCK LOGIC =================
         function handleUnlockFile(fileList) {
             if (fileList && fileList[0]) {
                 const f = fileList[0];
