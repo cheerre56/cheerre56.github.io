@@ -1,1 +1,406 @@
-<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>CPK 智能數值生成器</title><style>:root{--primary:#2563eb;--primary-hover:#1d4ed8;--bg-gradient:linear-gradient(135deg,#f8fafc 0%,#e2e8f0 100%);--card-bg:#ffffff;--text-main:#0f172a;--text-secondary:#64748b;--border:#e2e8f0;--radius:12px;--success:#10b981}*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI','Microsoft JhengHei',sans-serif;background:var(--bg-gradient);color:var(--text-main);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:2rem}.container{width:100%;max-width:950px;background:var(--card-bg);border-radius:var(--radius);box-shadow:0 10px 25px -5px rgba(0,0,0,0.1);overflow:hidden;display:grid;grid-template-columns:1fr 1fr;border:1px solid white}@media (max-width:768px){.container{grid-template-columns:1fr}}.panel-control{padding:2rem;border-right:1px solid var(--border);background:#fafafa;display:flex;flex-direction:column;gap:1.25rem}.panel-header h2{color:var(--primary);font-size:1.5rem;margin-bottom:0.5rem}.panel-header p{color:var(--text-secondary);font-size:0.9rem}.form-group label{display:block;font-size:0.85rem;font-weight:600;color:var(--text-secondary);margin-bottom:0.4rem}.input-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}input{width:100%;padding:0.8rem;border:1px solid var(--border);border-radius:8px;font-size:0.95rem;transition:all 0.2s;background:white}input:focus{border-color:var(--primary);outline:none;box-shadow:0 0 0 3px rgba(37,99,235,0.1)}button.btn-generate{width:100%;padding:1rem;background:var(--primary);color:white;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;transition:background 0.2s;margin-top:2.5rem}button.btn-generate:hover{background:var(--primary-hover)}.panel-result{padding:2rem;display:flex;flex-direction:column;background:white;min-height:520px}.stats-card{background:#f1f5f9;border-radius:8px;padding:1rem;margin-bottom:1rem;border:1px solid var(--border);font-size:0.9rem}.stat-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #cbd5e1}.stat-row:last-child{border-bottom:none}.stat-label{color:var(--text-secondary)}.stat-val{font-family:monospace;font-weight:600;color:var(--text-main)}.stat-highlight .stat-val{color:var(--primary)}.result-wrapper{flex-grow:1;display:flex;flex-direction:column;border:1px solid var(--border);border-radius:8px;overflow:hidden}.result-header{display:flex;justify-content:space-between;align-items:center;padding:0.5rem 1rem;background:#f8fafc;border-bottom:1px solid var(--border)}.result-title{font-size:0.85rem;font-weight:600;color:var(--text-secondary)}.copy-btn{background:white;border:1px solid var(--border);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:0.8rem;color:var(--text-main);transition:all 0.2s;display:flex;align-items:center;gap:5px}.copy-btn:hover{border-color:var(--primary);color:var(--primary)}.copy-btn.copied{background:var(--success);color:white;border-color:var(--success)}#resultText{width:100%;flex-grow:1;padding:1rem;border:none;resize:none;font-family:'Consolas','Monaco',monospace;font-size:0.95rem;line-height:1.6;color:var(--text-main);outline:none;background:white}.error-msg{color:#ef4444;font-size:0.85rem;text-align:center;margin-top:10px;min-height:20px}</style></head><body><div class="container">
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPK 智能數值生成器</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --success: #10b981;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 950px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border: 1px solid white;
+        }
+
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+        }
+
+        /* 左側控制面板 */
+        .panel-control {
+            padding: 2rem;
+            border-right: 1px solid var(--border);
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .panel-header h2 { color: var(--primary); font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .panel-header p { color: var(--text-secondary); font-size: 0.9rem; }
+
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.4rem; }
+        
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* 按鈕樣式修正：增加上方間距 */
+        button.btn-generate {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            /* 修改這裡：原本是 auto，改為固定較大的間距 */
+            margin-top: 2.5rem; 
+        }
+        button.btn-generate:hover { background: var(--primary-hover); }
+
+        /* 右側結果面板 */
+        .panel-result {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            min-height: 520px; /* 稍微增加高度以適應左側佈局 */
+        }
+
+        /* 統計卡片 */
+        .stats-card {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px dashed #cbd5e1;
+        }
+        .stat-row:last-child { border-bottom: none; }
+        .stat-label { color: var(--text-secondary); }
+        .stat-val { font-family: monospace; font-weight: 600; color: var(--text-main); }
+        .stat-highlight .stat-val { color: var(--primary); }
+
+        /* 結果輸出區塊 */
+        .result-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: #f8fafc;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .result-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .copy-btn {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: var(--text-main);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .copy-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .copy-btn.copied { background: var(--success); color: white; border-color: var(--success); }
+
+        #resultText {
+            width: 100%;
+            flex-grow: 1; 
+            padding: 1rem;
+            border: none;
+            resize: none;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            outline: none;
+            background: white;
+        }
+
+        .error-msg {
+            color: #ef4444;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="panel-control">
+        <div class="panel-header">
+            <h2>CPK 數值生成器</h2>
+            <p>輸入正負公差，自動模擬量測數據</p>
+        </div>
+        
+        <form id="cpkForm">
+            <div class="form-group">
+                <label>規格中心值 (Standard)</label>
+                <input type="number" id="standard" step="any" required placeholder="例如：10.0">
+            </div>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label>正公差 (+)</label>
+                    <input type="number" id="posTol" step="any" required placeholder="0.1">
+                </div>
+                <div class="form-group">
+                    <label>負公差 (-)</label>
+                    <input type="number" id="negTol" step="any" required placeholder="0.1">
+                </div>
+            </div>
+
+            <div style="border-top: 1px solid var(--border); margin: 1rem 0;"></div>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label>目標 Cpk</label>
+                    <input type="number" id="targetCpk" step="any" value="1.33" required>
+                </div>
+                <div class="form-group">
+                    <label>目標 Ca (%)</label>
+                    <input type="number" id="targetCa" step="any" value="0" placeholder="0">
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label>數據筆數 (N)</label>
+                    <input type="number" id="n" value="32" min="5" required>
+                </div>
+                <div class="form-group">
+                    <label>小數位數</label>
+                    <input type="number" id="decimal" value="3" min="0" max="6" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-generate">生成數據</button>
+            <div id="errorMsg" class="error-msg"></div>
+        </form>
+    </div>
+
+    <div class="panel-result">
+        <div id="statsBox" class="stats-card" style="display: none;">
+            </div>
+        
+        <div class="result-wrapper">
+            <div class="result-header">
+                <span class="result-title">生成結果</span>
+                <button type="button" class="copy-btn" id="copyBtn" onclick="copyToClipboard()">
+                    <span>複製數據</span>
+                </button>
+            </div>
+            <textarea id="resultText" readonly placeholder="點擊左側按鈕生成數據..."></textarea>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- 公差聯動邏輯 ---
+    const posTolInput = document.getElementById('posTol');
+    const negTolInput = document.getElementById('negTol');
+    let isNegTolManuallyChanged = false;
+
+    negTolInput.addEventListener('input', function() {
+        if (this.value !== '') {
+            isNegTolManuallyChanged = true;
+        } else {
+            isNegTolManuallyChanged = false;
+        }
+    });
+
+    posTolInput.addEventListener('input', function() {
+        if (!isNegTolManuallyChanged) {
+            negTolInput.value = this.value;
+        }
+    });
+    // ---------------------------
+
+    const normalRandom = (mean, stdDev) => {
+        let u = 0, v = 0;
+        while(u === 0) u = Math.random();
+        while(v === 0) v = Math.random();
+        return mean + stdDev * Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+    };
+
+    const calculateStats = (arr, USL, LSL) => {
+        const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
+        const stdDev = Math.sqrt(arr.reduce((s, x) => s + (x - mean) ** 2, 0) / (arr.length - 1));
+        
+        const T = USL - LSL;
+        const C = (USL + LSL) / 2;
+        const Ca = ((mean - C) / (T / 2)); 
+        const Cpu = (USL - mean) / (3 * stdDev);
+        const Cpl = (mean - LSL) / (3 * stdDev);
+        const Cpk = Math.min(Cpu, Cpl);
+
+        return { mean, stdDev, Ca: Ca * 100, Cpk };
+    };
+
+    document.getElementById('cpkForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const errorMsg = document.getElementById('errorMsg');
+        errorMsg.textContent = '';
+        const statsBox = document.getElementById('statsBox');
+
+        try {
+            const stdVal = parseFloat(document.getElementById('standard').value);
+            const posTol = parseFloat(document.getElementById('posTol').value);
+            const negTol = parseFloat(document.getElementById('negTol').value);
+            const targetCpk = parseFloat(document.getElementById('targetCpk').value);
+            const targetCa = parseFloat(document.getElementById('targetCa').value);
+            const n = parseInt(document.getElementById('n').value);
+            const decimals = parseInt(document.getElementById('decimal').value);
+
+            if (isNaN(stdVal) || isNaN(posTol) || isNaN(negTol)) throw new Error("請填寫完整的規格數值");
+            if (posTol < 0 || negTol < 0) throw new Error("公差必須為正數 (例如 0.1)");
+
+            const USL = stdVal + posTol;
+            const LSL = stdVal - negTol;
+            const T = USL - LSL;
+            const C = (USL + LSL) / 2;
+
+            const caDecimal = targetCa / 100;
+            const targetMean = C + (caDecimal * (T / 2));
+            const targetSigma = (T * (1 - Math.abs(caDecimal))) / (6 * targetCpk);
+
+            if (targetSigma <= 0) throw new Error("目標設定不合理，無法生成數據");
+
+            let bestValues = [];
+            let minError = Infinity;
+            let bestStats = {};
+            const attempts = 300; 
+
+            for(let i=0; i<attempts; i++) {
+                const tempValues = Array.from({length: n}, () => normalRandom(targetMean, targetSigma));
+                const stats = calculateStats(tempValues, USL, LSL);
+                const error = Math.abs(stats.Cpk - targetCpk) * 2 + Math.abs(stats.Ca - targetCa) / 100;
+                
+                if (error < minError) {
+                    minError = error;
+                    bestValues = tempValues;
+                    bestStats = stats;
+                }
+                if (Math.abs(stats.Cpk - targetCpk) < 0.005 && Math.abs(stats.Ca - targetCa) < 0.2) break;
+            }
+
+            const resultText = bestValues.map(v => v.toFixed(decimals)).join('\n');
+            document.getElementById('resultText').value = resultText;
+
+            statsBox.style.display = 'block';
+            statsBox.innerHTML = `
+                <div class="stat-row stat-highlight">
+                    <span class="stat-label">Cpk (目標/實際)</span>
+                    <span class="stat-val">${targetCpk} / ${bestStats.Cpk.toFixed(3)}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Ca (目標/實際)</span>
+                    <span class="stat-val">${targetCa}% / ${bestStats.Ca.toFixed(2)}%</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">平均值 Mean</span>
+                    <span class="stat-val">${bestStats.mean.toFixed(decimals + 1)}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">標準差 Sigma</span>
+                    <span class="stat-val">${bestStats.stdDev.toFixed(decimals + 2)}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">規格 USL / LSL</span>
+                    <span class="stat-val">${USL} / ${LSL}</span>
+                </div>
+            `;
+
+        } catch (err) {
+            errorMsg.textContent = err.message;
+            statsBox.style.display = 'none';
+        }
+    });
+
+    function copyToClipboard() {
+        const copyText = document.getElementById("resultText");
+        const btn = document.getElementById('copyBtn');
+        
+        if (!copyText.value) return;
+
+        copyText.select();
+        navigator.clipboard.writeText(copyText.value).then(() => {
+            btn.innerHTML = "<span>已複製！</span>";
+            btn.classList.add('copied');
+            
+            setTimeout(() => {
+                btn.innerHTML = "<span>複製數據</span>";
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+</body>
+</html>
