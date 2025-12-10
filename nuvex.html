@@ -1,1 +1,599 @@
-<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><title>New Tab</title><meta name="viewport" content="width=device-width,initial-scale=1.0"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;500;600&display=swap" rel="stylesheet"><style>:root{--bg-gradient:radial-gradient(at 0% 0%，hsla(253，16%，7%，1) 0，transparent 50%)，radial-gradient(at 50% 0%，hsla(225，39%，30%，1) 0，transparent 50%)，radial-gradient(at 100% 0%，hsla(339，49%，30%，1) 0，transparent 50%);--mesh-1:#ff9a9e;--mesh-2:#fad0c4;--mesh-3:#a18cd1;--text-primary:#2d3748;--text-secondary:#718096;--glass-bg:rgba(255，255，255，0.65);--glass-border:rgba(255，255，255，0.5);--glass-shadow:0 8px 32px 0 rgba(31，38，135，0.1);--input-text:#1a202c;--accent:#667eea;--menu-bg:rgba(255，255，255，0.95);--folder-color:#fbbf24;--drag-over-bg:rgba(102，126，234，0.3)}body。dark{--mesh-1:#0f2027;--mesh-2:#203a43;--mesh-3:#2c5364;--text-primary:#ffffff;--text-secondary:#a0aec0;--glass-bg:rgba(20，20，20，0.6);--glass-border:rgba(255，255，255，0.1);--glass-shadow:0 8px 32px 0 rgba(0，0，0，0.3);--input-text:#ffffff;--accent:#a3bffa;--menu-bg:rgba(30，30，30，0.95);--folder-color:#fcd34d;--drag-over-bg:rgba(163,191,250,0.3)}*{box-sizing:border-box;outline:0;user-select:none}body{margin:0;padding:0;font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(-45deg，var(--mesh-1),var(--mesh-2),var(--mesh-3));background-size:400% 400%;animation:gradientBG 15s ease infinite;overflow-y:auto;overflow-x:hidden;padding-bottom:50px}@keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}.top-bar{position:absolute;top:24px;right:24px;z-index:10}.icon-btn{background:var(--glass-bg);backdrop-filter:blur(8px);border:1px solid var(--glass-border);color:var(--text-primary);width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s}.icon-btn:hover{transform:scale(1.1);background:var(--text-primary);color:var(--glass-bg)}.container{width:90%;max-width:700px;display:flex;flex-direction:column;align-items:center;z-index:2;height:auto}.clock-area{text-align:center;margin-bottom:30px;color:var(--text-primary);margin-top:5vh}.clock{font-size:5rem;font-weight:200;line-height:1;letter-spacing:-3px}.greeting{font-size:1rem;opacity:.8;margin-top:5px}.search-wrapper{width:100%;margin-bottom:30px;position:relative;z-index:20}.search-box{width:100%;height:56px;background:var(--glass-bg);backdrop-filter:blur(16px);border:1px solid var(--glass-border);border-radius:20px;box-shadow:var(--glass-shadow);display:flex;align-items:center;padding:0 20px;transition:.3s}.search-box:hover,.search-box:focus-within{transform:translateY(-2px);box-shadow:0 15px 30px rgba(0,0,0,0.15);border-color:var(--accent)}.search-input{flex:1;border:none;background:0 0;font-size:1.1rem;color:var(--input-text);height:100%;margin:0 10px;user-select:auto}.mic-btn{cursor:pointer;color:var(--text-secondary);padding:8px;border-radius:50%;transition:.2s;display:flex;align-items:center}.mic-btn:hover{background:rgba(0,0,0,0.1);color:var(--text-primary)}.ai-wrapper{position:relative;margin-left:8px}.ai-pill{display:flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.2);border:1px solid var(--glass-border);border-radius:20px;text-decoration:none;color:var(--text-primary);font-size:.85rem;font-weight:500;transition:.3s;cursor:pointer}.ai-pill:hover,.ai-pill.active{background:var(--text-primary);color:var(--glass-bg)}.ai-dropdown{position:absolute;top:120%;right:0;width:180px;background:var(--menu-bg);backdrop-filter:blur(16px);border:1px solid var(--glass-border);border-radius:16px;padding:6px;box-shadow:0 10px 40px rgba(0,0,0,0.2);display:none;flex-direction:column;gap:2px;animation:slideDown .2s cubic-bezier(0.16,1,0.3,1);transform-origin:top right}.ai-dropdown.show{display:flex}@keyframes slideDown{from{opacity:0;transform:translateY(-10px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}.ai-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;text-decoration:none;color:var(--text-primary);font-size:.9rem;transition:.2s}.ai-item:hover{background:rgba(128,128,128,0.1)}.ai-item svg{width:18px;height:18px;opacity:.8}.workspace-wrapper{width:100%;display:flex;flex-direction:column;gap:10px}.breadcrumb-bar{display:flex;align-items:center;gap:8px;padding:0 10px;color:var(--text-secondary);font-size:.9rem;font-weight:500;height:30px}.breadcrumb-item{cursor:pointer;transition:.2s;display:flex;align-items:center;padding:4px 8px;border-radius:8px}.breadcrumb-item:hover{background:rgba(255,255,255,0.2);color:var(--text-primary)}.breadcrumb-item.drag-over{background:var(--drag-over-bg);border:1px dashed var(--accent);color:var(--accent)}.breadcrumb-separator{opacity:.5;font-size:.8rem;margin:0}.back-btn{display:flex;align-items:center;gap:4px;padding:4px 10px;background:var(--glass-bg);border-radius:12px;border:1px solid var(--glass-border);cursor:pointer;font-size:.85rem;margin-right:10px}.back-btn:hover{background:var(--text-primary);color:var(--glass-bg)}.shortcut-container{width:100%;height:auto;min-height:120px;background:var(--glass-bg);backdrop-filter:blur(12px);border:1px solid var(--glass-border);border-radius:24px;padding:24px;box-shadow:var(--glass-shadow);transition:all .3s}.links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:16px;width:100%}.link-card{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;border-radius:16px;cursor:pointer;position:relative;transition:all .2s;text-decoration:none;border:2px solid transparent}.link-card:hover{background:rgba(255,255,255,0.2);transform:translateY(-3px)}body.dark .link-card:hover{background:rgba(255,255,255,0.1)}.link-card.drag-over{background:var(--drag-over-bg);border-color:var(--accent);transform:scale(1.05)}.link-icon{width:44px;height:44px;border-radius:12px;margin-bottom:8px;object-fit:cover;box-shadow:0 4px 8px rgba(0,0,0,0.1);pointer-events:none}.folder-icon{width:44px;height:44px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;color:var(--folder-color);pointer-events:none}.folder-icon svg{width:100%;height:100%;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.1))}.link-title{font-size:.8rem;color:var(--text-primary);text-align:center;pointer-events:none;width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.add-btn{border:2px dashed var(--glass-border);display:flex;align-items:center;justify-content:center;border-radius:16px;cursor:pointer;color:var(--text-secondary);transition:.2s;aspect-ratio:1/1;min-height:90px}.add-btn:hover{border-color:var(--text-primary);color:var(--text-primary);background:rgba(255,255,255,0.1)}.add-icon{font-size:28px;font-weight:200}.context-menu{position:absolute;background:var(--menu-bg);backdrop-filter:blur(10px);border:1px solid var(--glass-border);border-radius:12px;padding:6px;min-width:160px;box-shadow:0 10px 30px rgba(0,0,0,0.2);display:none;z-index:1000;animation:menuFade .1s ease-out}@keyframes menuFade{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}.menu-item{padding:10px 12px;border-radius:8px;color:var(--text-primary);font-size:.9rem;cursor:pointer;display:flex;align-items:center;gap:8px;transition:.1s}.menu-item:hover{background:var(--accent);color:#fff}.menu-separator{height:1px;background:rgba(128,128,128,0.2);margin:4px 0}.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(5px);display:flex;justify-content:center;align-items:center;z-index:2000;opacity:0;visibility:hidden;transition:.2s}.modal-overlay.active{opacity:1;visibility:visible}.modal{width:320px;background:var(--glass-bg);padding:24px;border-radius:20px;border:1px solid var(--glass-border)}.modal h3{margin:0 0 16px 0;color:var(--text-primary)}.form-input{width:100%;padding:12px;margin-bottom:12px;border-radius:10px;border:1px solid rgba(128,128,128,0.2);background:rgba(255,255,255,0.5);color:var(--input-text);user-select:auto}.btns{display:flex;justify-content:flex-end;gap:8px}.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer}.btn-save{background:var(--text-primary);color:var(--glass-bg)}.listening{display:none;color:#ff4757;font-weight:600;margin-right:10px}</style></head><body><div class="top-bar"><button class="icon-btn" id="themeBtn" title="切換主題"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button></div><div class="container"><div class="clock-area"><div class="clock" id="clock">00:00</div><div class="greeting" id="greeting">Loading...</div></div><div class="search-wrapper"><form action="https://www.google.com/search" method="get" id="searchForm" class="search-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-secondary)"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg><div id="listenText" class="listening">聆聽中...</div><input type="text" name="q" id="searchInput" class="search-input" placeholder="Search Google..." autocomplete="off" autofocus><div class="mic-btn" id="micBtn" title="語音搜尋"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg></div><div class="ai-wrapper"><div class="ai-pill" id="aiBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/></svg>AI</div><div class="ai-dropdown" id="aiDropdown"><a href="https://chatgpt.com/" target="_blank" class="ai-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/></svg>ChatGPT</a><a href="https://gemini.google.com/" target="_blank" class="ai-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 10.5V8h-2.5v2.5H14v2.5h2.5V15.5H19v-2.5h2.5V10.5H19z"/></svg>Gemini</a><a href="https://claude.ai/" target="_blank" class="ai-item"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>Claude</a><a href="https://x.com/i/grok" target="_blank" class="ai-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v18H3z"/></svg>Grok</a><a href="https://chat.deepseek.com/" target="_blank" class="ai-item"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>DeepSeek</a><a href="https://www.perplexity.ai/" target="_blank" class="ai-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z"/></svg>Perplexity</a></div></div></form></div><div class="workspace-wrapper"><div class="breadcrumb-bar" id="breadcrumbBar" style="display:none"><div class="back-btn" onclick="goUp()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>返回</div><div id="breadcrumbPath" style="display:flex;align-items:center"></div></div><div class="shortcut-container" id="workspace"><div class="links-grid" id="linksGrid"></div></div></div></div><div class="context-menu" id="contextMenu"><div id="menuBgOptions"><div class="menu-item" onclick="openModal('folder')">新增資料夾</div><div class="menu-item" onclick="openModal('link')">新增捷徑</div></div><div id="menuItemOptions" style="display:none"><div class="menu-item" id="ctxEdit">編輯</div><div class="menu-separator"></div><div class="menu-item delete" id="ctxDelete">移除</div></div></div><div class="modal-overlay" id="linkModal"><div class="modal"><h3 id="modalTitle">新增</h3><input type="text" id="itemName" class="form-input" placeholder="名稱"><input type="text" id="itemUrl" class="form-input" placeholder="網址 URL"><div class="btns"><button class="btn" onclick="closeModal()" style="background:transparent;color:var(--text-secondary)">取消</button><button class="btn btn-save" onclick="saveItem()">儲存</button></div></div></div><script>function updateClock(){const n=new Date();document.getElementById('clock').innerText=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;const h=n.getHours();document.getElementById('greeting').innerText=h<12?"Good Morning":h<18?"Good Afternoon":"Good Evening"}setInterval(updateClock,1e3);updateClock();const btn=document.getElementById('themeBtn'),body=document.body;btn.onclick=()=>{body.classList.toggle('dark');localStorage.setItem('theme',body.classList.contains('dark')?'dark':'light')};if(localStorage.getItem('theme')==='dark')body.classList.add('dark');const mic=document.getElementById('micBtn'),input=document.getElementById('searchInput'),listenText=document.getElementById('listenText');if('webkitSpeechRecognition'in window){const r=new webkitSpeechRecognition();r.lang='zh-TW';mic.onclick=()=>{r.start();listenText.style.display='block';input.placeholder=''};r.onresult=e=>{input.value=e.results[0][0].transcript;listenText.style.display='none';setTimeout(()=>document.getElementById('searchForm').submit(),800)};r.onend=()=>{listenText.style.display='none';input.placeholder='Search Google...'}}else{mic.style.display='none'}const aiBtn=document.getElementById('aiBtn'),aiDropdown=document.getElementById('aiDropdown');aiBtn.onclick=e=>{e.stopPropagation();aiDropdown.classList.toggle('show');aiBtn.classList.toggle('active')};document.addEventListener('click',e=>{if(!aiBtn.contains(e.target)&&!aiDropdown.contains(e.target)){aiDropdown.classList.remove('show');aiBtn.classList.remove('active')}});let rootData=JSON.parse(localStorage.getItem('auroraData'))||[{type:'link',name:'Google',url:'https://google.com'},{type:'link',name:'YouTube',url:'https://youtube.com'}];if(rootData.length>0&&!rootData[0].type)rootData=rootData.map(i=>({type:'link',name:i.name,url:i.url}));let currentPath=[],draggedIndex=null,draggedItem=null;const grid=document.getElementById('linksGrid'),workspace=document.getElementById('workspace');function getCurrentArray(){let c=rootData;for(let i of currentPath){c=c[i].children}return c}function render(){grid.innerHTML='';const list=getCurrentArray(),bb=document.getElementById('breadcrumbBar'),bp=document.getElementById('breadcrumbPath');if(currentPath.length>0){bb.style.display='flex';let h=`<div class="breadcrumb-item" onclick="goRoot()" ondrop="dropOnBreadcrumb(event,-1)" ondragover="allowDrop(event)" ondragleave="leaveDrag(event)">Home</div>`;let tp=rootData;currentPath.forEach((idx,i)=>{h+='<span class="breadcrumb-separator">/</span>';const fn=tp[idx].name;if(i<currentPath.length-1){h+=`<div class="breadcrumb-item" onclick="goToLevel(${i})" ondrop="dropOnBreadcrumb(event,${i})" ondragover="allowDrop(event)" ondragleave="leaveDrag(event)">${fn}</div>`}else{h+=`<div class="breadcrumb-item" style="cursor:default;opacity:0.6;">${fn}</div>`}tp=tp[idx].children});bp.innerHTML=h}else{bb.style.display='none'}list.forEach((item,i)=>{const d=document.createElement('div');d.className='link-card';d.draggable=!0;d.dataset.index=i;d.ondragstart=e=>dragStart(e,i);if(item.type==='folder'){d.ondrop=e=>dropOnFolder(e,i);d.ondragover=e=>allowDrop(e);d.ondragleave=e=>leaveDrag(e);d.innerHTML=`<div class="folder-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></div><div class="link-title">${item.name}</div>`;d.onclick=()=>enterFolder(i)}else{const iu=`https://www.google.com/s2/favicons?domain=${new URL(item.url).hostname}&sz=128`;d.innerHTML=`<img src="${iu}" class="link-icon" onerror="this.src='https://www.google.com/s2/favicons?domain=google.com'"><div class="link-title">${item.name}</div>`;d.onclick=()=>location.href=item.url}d.oncontextmenu=e=>{e.preventDefault();e.stopPropagation();showContextMenu(e.pageX,e.pageY,'item',i)};grid.appendChild(d)});const ab=document.createElement('div');ab.className='add-btn';ab.innerHTML='<span class="add-icon">+</span>';ab.onclick=()=>openModal('link');ab.oncontextmenu=e=>{e.preventDefault();e.stopPropagation();showContextMenu(e.pageX,e.pageY,'bg')};grid.appendChild(ab)}function dragStart(e,i){draggedIndex=i;draggedItem=getCurrentArray()[i];e.dataTransfer.effectAllowed="move"}function allowDrop(e){e.preventDefault();e.currentTarget.classList.add('drag-over')}function leaveDrag(e){e.currentTarget.classList.remove('drag-over')}function dropOnFolder(e,ti){e.preventDefault();e.stopPropagation();e.currentTarget.classList.remove('drag-over');if(draggedIndex===null||draggedIndex===ti)return;const l=getCurrentArray(),tf=l[ti];tf.children.push(draggedItem);l.splice(draggedIndex,1);draggedIndex=null;saveAndRender()}function dropOnBreadcrumb(e,li){e.preventDefault();e.stopPropagation();e.currentTarget.classList.remove('drag-over');if(draggedIndex===null)return;let tl=rootData;if(li>-1){let p=currentPath.slice(0,li+1);for(let i of p){tl=tl[i].children}}const cl=getCurrentArray();cl.splice(draggedIndex,1);tl.push(draggedItem);draggedIndex=null;saveAndRender()}function enterFolder(i){currentPath.push(i);render()}function goUp(){currentPath.pop();render()}function goRoot(){currentPath=[];render()}function goToLevel(i){currentPath=currentPath.slice(0,i+1);render()}const menu=document.getElementById('contextMenu'),menuBg=document.getElementById('menuBgOptions'),menuItem=document.getElementById('menuItemOptions');let targetIndex=-1;workspace.oncontextmenu=e=>{e.preventDefault();if(e.target.closest('.link-card')||e.target.closest('.add-btn'))return;showContextMenu(e.pageX,e.pageY,'bg')};function showContextMenu(x,y,t,i=-1){targetIndex=i;menu.style.display='block';if(t==='bg'){menuBg.style.display='block';menuItem.style.display='none'}else{menuBg.style.display='none';menuItem.style.display='block'}const w=window.innerWidth,h=window.innerHeight;menu.style.left=(x+160>w?x-160:x)+'px';menu.style.top=(y+120>h?y-120:y)+'px'}document.addEventListener('click',()=>menu.style.display='none');document.getElementById('ctxDelete').onclick=()=>{if(confirm('確定移除?')){getCurrentArray().splice(targetIndex,1);saveAndRender()}};document.getElementById('ctxEdit').onclick=()=>openModal(getCurrentArray()[targetIndex].type,!0);const modal=document.getElementById('linkModal'),nameInput=document.getElementById('itemName'),urlInput=document.getElementById('itemUrl'),title=document.getElementById('modalTitle');let currentModalType='link',isEditing=!1;function openModal(t,e=!1){currentModalType=t;isEditing=e;modal.classList.add('active');if(t==='folder'){title.innerText=e?"命名資料夾":"新增資料夾";urlInput.style.display='none';nameInput.placeholder="資料夾名稱"}else{title.innerText=e?"編輯捷徑":"新增捷徑";urlInput.style.display='block';nameInput.placeholder="網站名稱"}if(e){const i=getCurrentArray()[targetIndex];nameInput.value=i.name;if(t==='link')urlInput.value=i.url}else{nameInput.value='';urlInput.value=''}nameInput.focus()}function closeModal(){modal.classList.remove('active')}function saveItem(){const n=nameInput.value.trim();const l=getCurrentArray();if(!n)return;if(currentModalType==='folder'){if(isEditing)l[targetIndex].name=n;else l.push({type:'folder',name:n,children:[]})}else{let u=urlInput.value.trim();if(!u)return;if(!u.startsWith('http'))u='https://'+u;if(isEditing){l[targetIndex].name=n;l[targetIndex].url=u}else l.push({type:'link',name:n,url:u})}saveAndRender();closeModal()}function saveAndRender(){localStorage.setItem('auroraData',JSON.stringify(rootData));render()}render();</script></body></html>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>New Tab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* 極光背景 */
+      --bg-gradient: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                     radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                     radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+      
+      --mesh-1: #ff9a9e; --mesh-2: #fad0c4; --mesh-3: #a18cd1;
+      
+      --text-primary: #2d3748;
+      --text-secondary: #718096;
+      --glass-bg: rgba(255, 255, 255, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.5);
+      --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+      --input-text: #1a202c;
+      --accent: #667eea;
+      --menu-bg: rgba(255, 255, 255, 0.95);
+      --folder-color: #fbbf24;
+      --drag-over-bg: rgba(102, 126, 234, 0.3); /* 拖拽時的高亮色 */
+    }
+
+    body.dark {
+      --mesh-1: #0f2027; --mesh-2: #203a43; --mesh-3: #2c5364;
+      --text-primary: #ffffff;
+      --text-secondary: #a0aec0;
+      --glass-bg: rgba(20, 20, 20, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      --input-text: #ffffff;
+      --accent: #a3bffa;
+      --menu-bg: rgba(30, 30, 30, 0.95);
+      --folder-color: #fcd34d;
+      --drag-over-bg: rgba(163, 191, 250, 0.3);
+    }
+
+    * { box-sizing: border-box; outline: none; user-select: none; }
+
+    body {
+      margin: 0; padding: 0; font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; /* 垂直置中 */
+      background: linear-gradient(-45deg, var(--mesh-1), var(--mesh-2), var(--mesh-3));
+      background-size: 400% 400%; animation: gradientBG 15s ease infinite;
+      overflow-y: auto; overflow-x: hidden;
+      padding-bottom: 50px; /* 底部留白 */
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* 頂部按鈕 */
+    .top-bar { position: absolute; top: 24px; right: 24px; z-index: 10; }
+    .icon-btn {
+      background: var(--glass-bg); backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border); color: var(--text-primary);
+      width: 44px; height: 44px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.3s;
+    }
+    .icon-btn:hover { transform: scale(1.1); background: var(--text-primary); color: var(--glass-bg); }
+
+    /* 主容器 */
+    .container {
+      width: 90%; max-width: 700px;
+      display: flex; flex-direction: column; align-items: center;
+      z-index: 2;
+      /* 移除固定高度，改為根據內容自動 */
+      height: auto; 
+    }
+
+    /* 時鐘 */
+    .clock-area { text-align: center; margin-bottom: 30px; color: var(--text-primary); margin-top: 5vh; }
+    .clock { font-size: 5rem; font-weight: 200; line-height: 1; letter-spacing: -3px; }
+    .greeting { font-size: 1rem; opacity: 0.8; margin-top: 5px; }
+
+    /* 搜尋欄 */
+    .search-wrapper { width: 100%; margin-bottom: 30px; position: relative; z-index: 20; }
+    .search-box {
+      width: 100%; height: 56px;
+      background: var(--glass-bg); backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border); border-radius: 20px;
+      box-shadow: var(--glass-shadow); display: flex; align-items: center; padding: 0 20px;
+      transition: 0.3s;
+    }
+    .search-box:hover, .search-box:focus-within { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); border-color: var(--accent); }
+    .search-input { flex: 1; border: none; background: transparent; font-size: 1.1rem; color: var(--input-text); height: 100%; margin: 0 10px; user-select: auto; }
+    .mic-btn { cursor: pointer; color: var(--text-secondary); padding: 8px; border-radius: 50%; transition: 0.2s; display: flex; align-items: center; }
+    .mic-btn:hover { background: rgba(0,0,0,0.1); color: var(--text-primary); }
+
+    /* AI 下拉 */
+    .ai-wrapper { position: relative; margin-left: 8px; }
+    .ai-pill {
+      display: flex; align-items: center; gap: 6px; padding: 6px 14px;
+      background: rgba(255,255,255,0.2); border: 1px solid var(--glass-border);
+      border-radius: 20px; text-decoration: none; color: var(--text-primary);
+      font-size: 0.85rem; font-weight: 500; transition: 0.3s; cursor: pointer;
+    }
+    .ai-pill:hover, .ai-pill.active { background: var(--text-primary); color: var(--glass-bg); }
+    .ai-dropdown {
+      position: absolute; top: 120%; right: 0; width: 180px;
+      background: var(--menu-bg); backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border); border-radius: 16px;
+      padding: 6px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      display: none; flex-direction: column; gap: 2px;
+      animation: slideDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-origin: top right;
+    }
+    .ai-dropdown.show { display: flex; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .ai-item {
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px;
+      text-decoration: none; color: var(--text-primary); font-size: 0.9rem; transition: 0.2s;
+    }
+    .ai-item:hover { background: rgba(128,128,128,0.1); }
+    .ai-item svg { width: 18px; height: 18px; opacity: 0.8; }
+
+    /* 工作區容器 */
+    .workspace-wrapper {
+      width: 100%; display: flex; flex-direction: column; gap: 10px;
+    }
+    
+    /* 麵包屑導航 (可作為拖拽目標) */
+    .breadcrumb-bar {
+      display: flex; align-items: center; gap: 8px; padding: 0 10px;
+      color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; height: 30px;
+    }
+    .breadcrumb-item { 
+      cursor: pointer; transition: 0.2s; display: flex; align-items: center; 
+      padding: 4px 8px; border-radius: 8px;
+    }
+    .breadcrumb-item:hover { background: rgba(255,255,255,0.2); color: var(--text-primary); }
+    /* 拖拽經過麵包屑時 */
+    .breadcrumb-item.drag-over { background: var(--drag-over-bg); border: 1px dashed var(--accent); color: var(--accent); }
+
+    .breadcrumb-separator { opacity: 0.5; font-size: 0.8rem; margin: 0; }
+    .back-btn {
+      display: flex; align-items: center; gap: 4px; padding: 4px 10px;
+      background: var(--glass-bg); border-radius: 12px; border: 1px solid var(--glass-border);
+      cursor: pointer; font-size: 0.85rem; margin-right: 10px;
+    }
+    .back-btn:hover { background: var(--text-primary); color: var(--glass-bg); }
+
+    /* 捷徑內容區 (Auto Height) */
+    .shortcut-container {
+      width: 100%;
+      /* 改回自動高度 */
+      height: auto; min-height: 120px;
+      background: var(--glass-bg); backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border); border-radius: 24px;
+      padding: 24px; box-shadow: var(--glass-shadow);
+      transition: all 0.3s;
+    }
+
+    .links-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); 
+      gap: 16px; width: 100%; 
+    }
+
+    .link-card {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 12px; border-radius: 16px; cursor: pointer; position: relative;
+      transition: all 0.2s; text-decoration: none;
+      border: 2px solid transparent; /* 預留邊框給拖拽狀態 */
+    }
+    .link-card:hover { background: rgba(255,255,255,0.2); transform: translateY(-3px); }
+    body.dark .link-card:hover { background: rgba(255,255,255,0.1); }
+    
+    /* 拖拽目標樣式 */
+    .link-card.drag-over {
+      background: var(--drag-over-bg);
+      border-color: var(--accent);
+      transform: scale(1.05);
+    }
+
+    .link-icon {
+      width: 44px; height: 44px; border-radius: 12px; margin-bottom: 8px;
+      object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: none; /* 防止圖片干擾拖拽 */
+    }
+    .folder-icon {
+      width: 44px; height: 44px; margin-bottom: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--folder-color); pointer-events: none;
+    }
+    .folder-icon svg { width: 100%; height: 100%; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+    .link-title {
+      font-size: 0.8rem; color: var(--text-primary); text-align: center; pointer-events: none;
+      width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* 新增按鈕 (虛線框回歸) */
+    .add-btn {
+      border: 2px dashed var(--glass-border);
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 16px; cursor: pointer; color: var(--text-secondary);
+      transition: 0.2s; aspect-ratio: 1/1; /* 保持方形 */
+      min-height: 90px; /* 確保最小高度與其他卡片一致 */
+    }
+    .add-btn:hover { border-color: var(--text-primary); color: var(--text-primary); background: rgba(255,255,255,0.1); }
+    .add-icon { font-size: 28px; font-weight: 200; }
+
+    /* 右鍵選單 */
+    .context-menu {
+      position: absolute; background: var(--menu-bg); backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border); border-radius: 12px; padding: 6px;
+      min-width: 160px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      display: none; z-index: 1000; animation: menuFade 0.1s ease-out;
+    }
+    @keyframes menuFade { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    .menu-item {
+      padding: 10px 12px; border-radius: 8px; color: var(--text-primary);
+      font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.1s;
+    }
+    .menu-item:hover { background: var(--accent); color: white; }
+    .menu-separator { height: 1px; background: rgba(128,128,128,0.2); margin: 4px 0; }
+    
+    /* 彈窗 */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);
+      display: flex; justify-content: center; align-items: center;
+      z-index: 2000; opacity: 0; visibility: hidden; transition: 0.2s;
+    }
+    .modal-overlay.active { opacity: 1; visibility: visible; }
+    .modal {
+      width: 320px; background: var(--glass-bg); padding: 24px;
+      border-radius: 20px; border: 1px solid var(--glass-border);
+    }
+    .modal h3 { margin: 0 0 16px 0; color: var(--text-primary); }
+    .form-input {
+      width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 10px;
+      border: 1px solid rgba(128,128,128,0.2); background: rgba(255,255,255,0.5);
+      color: var(--input-text); user-select: auto;
+    }
+    .btns { display: flex; justify-content: flex-end; gap: 8px; }
+    .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; }
+    .btn-save { background: var(--text-primary); color: var(--glass-bg); }
+    
+    .listening { display: none; color: #ff4757; font-weight: 600; margin-right: 10px; }
+
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <button class="icon-btn" id="themeBtn" title="切換主題">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+  </div>
+
+  <div class="container">
+    <div class="clock-area">
+      <div class="clock" id="clock">00:00</div>
+      <div class="greeting" id="greeting">Loading...</div>
+    </div>
+
+    <div class="search-wrapper">
+      <form action="https://www.google.com/search" method="get" id="searchForm" class="search-box">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-secondary)"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <div id="listenText" class="listening">聆聽中...</div>
+        <input type="text" name="q" id="searchInput" class="search-input" placeholder="Search Google..." autocomplete="off" autofocus>
+        
+        <div class="mic-btn" id="micBtn" title="語音搜尋">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+        </div>
+
+        <div class="ai-wrapper">
+          <div class="ai-pill" id="aiBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/></svg> 
+            AI
+          </div>
+          <div class="ai-dropdown" id="aiDropdown">
+            <a href="https://chatgpt.com/" target="_blank" class="ai-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/></svg>ChatGPT</a>
+            <a href="https://gemini.google.com/" target="_blank" class="ai-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 10.5V8h-2.5v2.5H14v2.5h2.5V15.5H19v-2.5h2.5V10.5H19z"/></svg>Gemini</a>
+            <a href="https://claude.ai/" target="_blank" class="ai-item"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>Claude</a>
+            <a href="https://x.com/i/grok" target="_blank" class="ai-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v18H3z"/></svg>Grok</a>
+            <a href="https://chat.deepseek.com/" target="_blank" class="ai-item"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>DeepSeek</a>
+            <a href="https://www.perplexity.ai/" target="_blank" class="ai-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z"/></svg>Perplexity</a>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="workspace-wrapper">
+      
+      <div class="breadcrumb-bar" id="breadcrumbBar" style="display:none;">
+        <div class="back-btn" onclick="goUp()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> 
+          返回
+        </div>
+        <div id="breadcrumbPath" style="display:flex; align-items:center;"></div>
+      </div>
+
+      <div class="shortcut-container" id="workspace">
+        <div class="links-grid" id="linksGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="context-menu" id="contextMenu">
+    <div id="menuBgOptions">
+      <div class="menu-item" onclick="openModal('folder')">新增資料夾</div>
+      <div class="menu-item" onclick="openModal('link')">新增捷徑</div>
+    </div>
+    <div id="menuItemOptions" style="display:none;">
+      <div class="menu-item" id="ctxEdit">編輯</div>
+      <div class="menu-separator"></div>
+      <div class="menu-item delete" id="ctxDelete">移除</div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="linkModal">
+    <div class="modal">
+      <h3 id="modalTitle">新增</h3>
+      <input type="text" id="itemName" class="form-input" placeholder="名稱">
+      <input type="text" id="itemUrl" class="form-input" placeholder="網址 URL">
+      <div class="btns">
+        <button class="btn" onclick="closeModal()" style="background:transparent; color:var(--text-secondary)">取消</button>
+        <button class="btn btn-save" onclick="saveItem()">儲存</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- 基礎功能 ---
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock').innerText = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+      const h = now.getHours();
+      document.getElementById('greeting').innerText = h<12?"Good Morning":h<18?"Good Afternoon":"Good Evening";
+    }
+    setInterval(updateClock, 1000); updateClock();
+
+    const btn = document.getElementById('themeBtn'); const body = document.body;
+    btn.onclick = () => { body.classList.toggle('dark'); localStorage.setItem('theme', body.classList.contains('dark')?'dark':'light'); };
+    if(localStorage.getItem('theme')==='dark') body.classList.add('dark');
+
+    const mic = document.getElementById('micBtn'); const input = document.getElementById('searchInput'); const listenText = document.getElementById('listenText');
+    if('webkitSpeechRecognition' in window) {
+      const rec = new webkitSpeechRecognition(); rec.lang = 'zh-TW';
+      mic.onclick = () => { rec.start(); listenText.style.display='block'; input.placeholder=''; };
+      rec.onresult = (e) => { input.value = e.results[0][0].transcript; listenText.style.display='none'; setTimeout(() => document.getElementById('searchForm').submit(), 800); };
+      rec.onend = () => { listenText.style.display='none'; input.placeholder='Search Google...'; };
+    } else { mic.style.display='none'; }
+
+    // AI 選單
+    const aiBtn = document.getElementById('aiBtn'); const aiDropdown = document.getElementById('aiDropdown');
+    aiBtn.onclick = (e) => { e.stopPropagation(); aiDropdown.classList.toggle('show'); aiBtn.classList.toggle('active'); };
+    document.addEventListener('click', (e) => { if (!aiBtn.contains(e.target) && !aiDropdown.contains(e.target)) { aiDropdown.classList.remove('show'); aiBtn.classList.remove('active'); }});
+
+    // --- 資料結構與導航 ---
+    let rootData = JSON.parse(localStorage.getItem('auroraData')) || [
+      {type:'link', name:'Google', url:'https://google.com'},
+      {type:'link', name:'YouTube', url:'https://youtube.com'}
+    ];
+    if(rootData.length > 0 && !rootData[0].type) rootData = rootData.map(item => ({type:'link', name:item.name, url:item.url})); // 舊版相容
+
+    let currentPath = []; 
+    const grid = document.getElementById('linksGrid');
+    const workspace = document.getElementById('workspace');
+    
+    // Drag & Drop 變數
+    let draggedIndex = null;
+    let draggedItem = null;
+
+    function getCurrentArray() {
+      let current = rootData;
+      for (let index of currentPath) {
+        current = current[index].children;
+      }
+      return current;
+    }
+
+    function render() {
+      grid.innerHTML = '';
+      const currentList = getCurrentArray();
+
+      // 渲染麵包屑
+      const breadcrumbBar = document.getElementById('breadcrumbBar');
+      const breadcrumbPath = document.getElementById('breadcrumbPath');
+      if (currentPath.length > 0) {
+        breadcrumbBar.style.display = 'flex';
+        // Root Breadcrumb (可接收拖拽)
+        let html = `
+          <div class="breadcrumb-item" onclick="goRoot()" 
+               ondrop="dropOnBreadcrumb(event, -1)" ondragover="allowDrop(event)" ondragleave="leaveDrag(event)">
+             Home
+          </div>`;
+        
+        let tempPath = rootData;
+        currentPath.forEach((idx, i) => {
+          html += '<span class="breadcrumb-separator">/</span>';
+          const folderName = tempPath[idx].name;
+          // Folder Breadcrumb (可接收拖拽) - 但最後一個不需要，因為已經在當前目錄
+          if (i < currentPath.length - 1) {
+             html += `<div class="breadcrumb-item" onclick="goToLevel(${i})"
+                           ondrop="dropOnBreadcrumb(event, ${i})" ondragover="allowDrop(event)" ondragleave="leaveDrag(event)">
+                        ${folderName}
+                      </div>`;
+          } else {
+             html += `<div class="breadcrumb-item" style="cursor:default; opacity:0.6;">${folderName}</div>`;
+          }
+          tempPath = tempPath[idx].children;
+        });
+        breadcrumbPath.innerHTML = html;
+      } else {
+        breadcrumbBar.style.display = 'none';
+      }
+
+      // 渲染項目
+      currentList.forEach((item, i) => {
+        const div = document.createElement('div');
+        div.className = 'link-card';
+        div.draggable = true; // 開啟拖拽
+        div.dataset.index = i;
+
+        // Drag Events
+        div.ondragstart = (e) => dragStart(e, i);
+        
+        // 如果是資料夾，允許接收 Drop
+        if (item.type === 'folder') {
+            div.ondrop = (e) => dropOnFolder(e, i);
+            div.ondragover = (e) => allowDrop(e);
+            div.ondragleave = (e) => leaveDrag(e);
+            
+            div.innerHTML = `
+                <div class="folder-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></div>
+                <div class="link-title">${item.name}</div>
+            `;
+            div.onclick = () => enterFolder(i);
+        } else {
+            const iconUrl = `https://www.google.com/s2/favicons?domain=${new URL(item.url).hostname}&sz=128`;
+            div.innerHTML = `
+                <img src="${iconUrl}" class="link-icon" onerror="this.src='https://www.google.com/s2/favicons?domain=google.com'">
+                <div class="link-title">${item.name}</div>
+            `;
+            div.onclick = () => location.href = item.url;
+        }
+
+        // 右鍵
+        div.oncontextmenu = (e) => {
+          e.preventDefault(); e.stopPropagation();
+          showContextMenu(e.pageX, e.pageY, 'item', i);
+        };
+        
+        grid.appendChild(div);
+      });
+
+      // 恢復「+」號虛線框
+      const addBtn = document.createElement('div');
+      addBtn.className = 'add-btn';
+      addBtn.innerHTML = '<span class="add-icon">+</span>';
+      addBtn.onclick = () => openModal('link'); // 預設新增連結，也可選資料夾
+      addBtn.oncontextmenu = (e) => { // 右鍵可以選新增資料夾
+          e.preventDefault(); e.stopPropagation();
+          showContextMenu(e.pageX, e.pageY, 'bg');
+      }
+      grid.appendChild(addBtn);
+    }
+
+    // --- Drag & Drop Logic ---
+    function dragStart(e, index) {
+        draggedIndex = index;
+        draggedItem = getCurrentArray()[index];
+        e.dataTransfer.effectAllowed = "move";
+        // 為了讓拖拽時原本的元素看起來還在（或變半透明），不立即刪除
+    }
+
+    function allowDrop(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add('drag-over');
+    }
+
+    function leaveDrag(e) {
+        e.currentTarget.classList.remove('drag-over');
+    }
+
+    // 拖入資料夾
+    function dropOnFolder(e, targetIndex) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.currentTarget.classList.remove('drag-over');
+
+        if (draggedIndex === null || draggedIndex === targetIndex) return;
+
+        const currentList = getCurrentArray();
+        const targetFolder = currentList[targetIndex];
+
+        // 移動邏輯
+        targetFolder.children.push(draggedItem);
+        currentList.splice(draggedIndex, 1);
+        
+        draggedIndex = null;
+        saveAndRender();
+    }
+
+    // 拖到麵包屑 (移出資料夾)
+    function dropOnBreadcrumb(e, levelIndex) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.currentTarget.classList.remove('drag-over');
+        
+        if (draggedIndex === null) return;
+
+        // 目標層級陣列
+        let targetList = rootData;
+        if (levelIndex > -1) { // 不是 Root
+             // 根據路徑找到對應層級的 children
+             let path = currentPath.slice(0, levelIndex + 1);
+             for (let idx of path) {
+                 targetList = targetList[idx].children;
+             }
+        }
+        
+        // 從當前層級移除
+        const currentList = getCurrentArray();
+        currentList.splice(draggedIndex, 1);
+        
+        // 加到目標層級
+        targetList.push(draggedItem);
+        
+        draggedIndex = null;
+        saveAndRender();
+    }
+
+    // --- 導航函數 ---
+    function enterFolder(index) { currentPath.push(index); render(); }
+    function goUp() { currentPath.pop(); render(); }
+    function goRoot() { currentPath = []; render(); }
+    function goToLevel(i) { currentPath = currentPath.slice(0, i + 1); render(); }
+
+    // --- 右鍵與彈窗 (保持不變) ---
+    const menu = document.getElementById('contextMenu');
+    const menuBg = document.getElementById('menuBgOptions');
+    const menuItem = document.getElementById('menuItemOptions');
+    let targetIndex = -1;
+
+    workspace.oncontextmenu = (e) => {
+      e.preventDefault(); if (e.target.closest('.link-card') || e.target.closest('.add-btn')) return;
+      showContextMenu(e.pageX, e.pageY, 'bg');
+    };
+
+    function showContextMenu(x, y, type, index = -1) {
+      targetIndex = index; menu.style.display = 'block';
+      if (type === 'bg') { menuBg.style.display = 'block'; menuItem.style.display = 'none'; }
+      else { menuBg.style.display = 'none'; menuItem.style.display = 'block'; }
+      const w = window.innerWidth, h = window.innerHeight;
+      menu.style.left = (x + 160 > w ? x - 160 : x) + 'px';
+      menu.style.top = (y + 120 > h ? y - 120 : y) + 'px';
+    }
+    document.addEventListener('click', () => menu.style.display = 'none');
+
+    document.getElementById('ctxDelete').onclick = () => { if(confirm('確定移除?')) { getCurrentArray().splice(targetIndex, 1); saveAndRender(); }};
+    document.getElementById('ctxEdit').onclick = () => openModal(getCurrentArray()[targetIndex].type, true);
+
+    const modal = document.getElementById('linkModal');
+    const nameInput = document.getElementById('itemName');
+    const urlInput = document.getElementById('itemUrl');
+    const title = document.getElementById('modalTitle');
+    let currentModalType = 'link'; let isEditing = false;
+
+    function openModal(type, editing = false) {
+      currentModalType = type; isEditing = editing; modal.classList.add('active');
+      if (type === 'folder') { title.innerText = editing?"命名資料夾":"新增資料夾"; urlInput.style.display='none'; nameInput.placeholder="資料夾名稱"; }
+      else { title.innerText = editing?"編輯捷徑":"新增捷徑"; urlInput.style.display='block'; nameInput.placeholder="網站名稱"; }
+      if (editing) { const item = getCurrentArray()[targetIndex]; nameInput.value = item.name; if(type==='link') urlInput.value = item.url; }
+      else { nameInput.value = ''; urlInput.value = ''; }
+      nameInput.focus();
+    }
+    function closeModal() { modal.classList.remove('active'); }
+
+    function saveItem() {
+      const name = nameInput.value.trim(); const list = getCurrentArray(); if (!name) return;
+      if (currentModalType === 'folder') {
+        if (isEditing) list[targetIndex].name = name; else list.push({ type: 'folder', name: name, children: [] });
+      } else {
+        let url = urlInput.value.trim(); if (!url) return; if (!url.startsWith('http')) url = 'https://' + url;
+        if (isEditing) { list[targetIndex].name = name; list[targetIndex].url = url; } else list.push({ type: 'link', name: name, url: url });
+      }
+      saveAndRender(); closeModal();
+    }
+    function saveAndRender() { localStorage.setItem('auroraData', JSON.stringify(rootData)); render(); }
+    
+    render();
+  </script>
+</body>
+</html>
