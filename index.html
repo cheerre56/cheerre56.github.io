@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>naha | Contact</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Space+Grotesk:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-color: #e0e0e0;
+            --accent-color: #888;
+            --cursor-size: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* 隱藏系統鼠標 */
+            text-decoration: none;
+            /* 禁止文字選取 (核心修改) */
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none; /* Standard */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Space Grotesk', sans-serif;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 自定義滑鼠 */
+        .cursor {
+            width: var(--cursor-size);
+            height: var(--cursor-size);
+            border: 1px solid white;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background-color 0.3s, mix-blend-mode 0.3s;
+            mix-blend-mode: difference;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            font-size: 10px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* 為了讓 COPY 字樣顯示清楚，當 hover 時改變游標樣式 */
+        .cursor.active {
+            width: 60px;
+            height: 60px;
+            background-color: white;
+            border: none;
+            mix-blend-mode: difference;
+        }
+        
+        /* 專門給 Email 的游標樣式 */
+        .cursor.copy-mode {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            color: black;
+            mix-blend-mode: normal; /* 不使用反色，確保文字清晰 */
+        }
+        
+        .cursor.copy-mode::after {
+            content: 'COPY';
+        }
+
+        /* 背景流動光影 */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 40%, rgba(50, 40, 100, 0.2), transparent 40%),
+                radial-gradient(circle at 80% 60%, rgba(40, 100, 90, 0.15), transparent 40%);
+            filter: blur(80px);
+            animation: breathe 12s infinite alternate;
+        }
+
+        @keyframes breathe {
+            0% { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(1.1); opacity: 0.9; }
+        }
+
+        nav {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            padding: 2.5rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .logo {
+            font-family: 'Italiana', serif;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+
+        .hero-container {
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            margin-bottom: 2rem;
+        }
+
+        .hero-title {
+            font-size: 13vw;
+            font-family: 'Italiana', serif;
+            line-height: 0.85;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .hero-subtitle {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
+        }
+
+        .contact-section {
+            position: absolute;
+            bottom: 4rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            opacity: 0;
+            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s;
+            width: 100%;
+        }
+
+        .contact-label {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: #555;
+            text-transform: uppercase;
+        }
+
+        .email-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* 調整游標樣式為 pointer 並移除連結的默認行為 */
+        .email-link {
+            color: var(--text-color);
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            position: relative;
+            padding: 5px;
+            transition: color 0.3s;
+            /* 讓滑鼠點擊感應區大一點 */
+        }
+
+        .separator {
+            color: var(--accent-color);
+            font-weight: 300;
+            opacity: 0.5;
+            font-size: 0.9rem;
+        }
+
+        .email-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: 0;
+            left: 50%;
+            background-color: white;
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+
+        .email-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .line {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.04);
+            pointer-events: none;
+        }
+        .v-line { width: 1px; height: 100vh; left: 50%; top: 0; }
+        .h-line { height: 1px; width: 100vw; top: 50%; left: 0; }
+
+        @media (max-width: 768px) {
+            nav { padding: 2rem; }
+            .hero-title { font-size: 18vw; }
+            .contact-section { bottom: 3rem; }
+            .email-container { gap: 0.8rem; }
+            .email-link { font-size: 0.85rem; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="cursor"></div>
+
+    <div class="gradient-bg"></div>
+    <div class="line v-line"></div>
+    <div class="line h-line"></div>
+
+    <nav>
+        <div class="logo" data-hover>naha.</div>
+        <div style="font-size: 0.8rem; letter-spacing: 1px; opacity: 0.7;">EST. 2026</div>
+    </nav>
+
+    <div class="hero-container">
+        <h1 class="hero-title" data-hover>NAHA</h1>
+        <p class="hero-subtitle">Beyond Concepts</p>
+    </div>
+
+    <div class="contact-section">
+        <div class="contact-label">Inquiries</div>
+        <div class="email-container">
+            <span class="email-link copy-link" data-email="nik@naha.one">nik@naha.one</span>
+            <span class="separator">|</span>
+            <span class="email-link copy-link" data-email="admin@naha.one">admin@naha.one</span>
+        </div>
+    </div>
+
+    <script>
+        const cursor = document.querySelector('.cursor');
+        const hoverElements = document.querySelectorAll('[data-hover]');
+        const copyLinks = document.querySelectorAll('.copy-link');
+
+        // 滑鼠移動邏輯
+        document.addEventListener('mousemove', (e) => {
+            requestAnimationFrame(() => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+        });
+
+        // 一般 Hover 效果
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.classList.add('active');
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.classList.remove('active');
+            });
+        });
+
+        // Email 複製邏輯
+        copyLinks.forEach(el => {
+            // 滑鼠移入：游標變成 COPY 模式
+            el.addEventListener('mouseenter', () => {
+                cursor.classList.add('copy-mode');
+            });
+            // 滑鼠移出：復原
+            el.addEventListener('mouseleave', () => {
+                cursor.classList.remove('copy-mode');
+            });
+
+            // 點擊事件：複製文字
+            el.addEventListener('click', () => {
+                const email = el.getAttribute('data-email');
+                
+                // 執行複製
+                copyToClipboard(email);
+
+                // 視覺回饋：將文字改成 "COPIED"
+                const originalText = el.innerText;
+                el.innerText = 'COPIED';
+                
+                // 1秒後變回原本的 Email
+                setTimeout(() => {
+                    el.innerText = originalText;
+                }, 1000);
+            });
+        });
+
+        // 複製功能的輔助函式 (兼容性寫法)
+        function copyToClipboard(text) {
+            // 優先嘗試現代 API
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text);
+            } else {
+                // 如果是在本地檔案 (file://) 開啟，使用舊版方法確保可運行
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";
+                textArea.style.left = "-9999px";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                } catch (err) {
+                    console.error('Copy failed', err);
+                }
+                document.body.removeChild(textArea);
+            }
+        }
+    </script>
+</body>
+</html>
