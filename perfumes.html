@@ -25,13 +25,14 @@
             cursor: none;
             -webkit-user-select: none;
             user-select: none;
+            -webkit-tap-highlight-color: transparent; /* 移除手機點擊藍框 */
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-sub);
             font-family: 'Space Grotesk', sans-serif;
-            overflow: hidden; /* 電腦版隱藏卷軸 */
+            overflow: hidden;
             opacity: 0;
             transition: opacity 1s ease;
             height: 100vh;
@@ -41,8 +42,7 @@
 
         body.loaded { opacity: 1; }
 
-        /* --- 優化 1: 背景結構調整 --- */
-        /* bg-container 負責 JS 的視差移動 */
+        /* --- 背景結構 --- */
         .bg-container {
             position: fixed;
             top: 0; left: 0;
@@ -52,7 +52,6 @@
             pointer-events: none;
         }
 
-        /* gradient-bg 負責 CSS 的呼吸動畫 */
         .gradient-bg {
             width: 100%; height: 100%;
             background: 
@@ -60,7 +59,7 @@
                 radial-gradient(circle at 80% 60%, rgba(40, 120, 110, 0.12), transparent 50%);
             filter: blur(60px);
             animation: breathe 12s infinite alternate ease-in-out;
-            will-change: transform, opacity; /* 效能優化 */
+            will-change: transform, opacity;
         }
 
         @keyframes breathe {
@@ -68,6 +67,7 @@
             100% { transform: scale(1.1); opacity: 0.9; }
         }
 
+        /* --- 游標 (僅桌面) --- */
         @media (hover: hover) and (pointer: fine) {
             .cursor {
                 width: var(--cursor-size);
@@ -78,7 +78,7 @@
                 pointer-events: none;
                 z-index: 9999;
                 transform: translate(-50%, -50%);
-                transition: width 0.3s, height 0.3s, background-color 0.3s, opacity 0.3s;
+                transition: width 0.3s, height 0.3s, background-color 0.3s;
                 mix-blend-mode: difference;
                 backdrop-filter: blur(1px);
             }
@@ -98,7 +98,6 @@
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            /* 讓導航列背景更融合 */
             background: linear-gradient(to bottom, rgba(5,5,5,0.8), transparent); 
         }
 
@@ -109,18 +108,7 @@
             color: var(--text-main);
             position: relative;
         }
-        .logo::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
-            transition: width 0.4s ease;
-        }
-        .logo:hover::after { width: 100%; }
-
+        
         .nav-back { 
             font-size: 0.75rem; 
             letter-spacing: 0.15em; 
@@ -128,22 +116,10 @@
             text-decoration: none; 
             text-transform: uppercase; 
             font-weight: 300;
-            transition: all 0.3s ease;
-            position: relative;
+            transition: opacity 0.3s ease;
         }
-        .nav-back::after {
-            content: '';
-            position: absolute;
-            bottom: -4px; left: 0; width: 0; height: 1px;
-            background: var(--accent-gold);
-            transition: width 0.3s ease;
-        }
-        .nav-back:hover { 
-            color: var(--text-main);
-            letter-spacing: 0.2em;
-        }
-        .nav-back:hover::after { width: 100%; }
 
+        /* --- 主內容區 --- */
         .main-wrapper {
             display: flex;
             align-items: center;
@@ -153,7 +129,6 @@
             max-width: 1700px;
             margin: 0 auto;
             flex: 1;
-            /* height: calc(100vh - 120px); 移除寫死的高度，避免在大螢幕或特定比例跑版 */
             min-height: 100vh; 
         }
 
@@ -163,7 +138,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* 保留 transform 給 JS 控制 */
             will-change: transform; 
         }
 
@@ -176,10 +150,10 @@
             border-radius: 24px;
             box-shadow: 
                 0 25px 60px rgba(0, 0, 0, 0.6),
-                0 0 0 1px rgba(255, 255, 255, 0.08), /* 稍微增強邊框亮度 */
+                0 0 0 1px rgba(255, 255, 255, 0.08), 
                 inset 0 1px 0 rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
-            transform: translateX(-3vw); /* 這是你的初始位移 */
+            transform: translateX(-3vw);
             transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
 
@@ -190,67 +164,43 @@
 
         .image-badge {
             position: absolute;
-            top: 18px;
-            right: 18px;
-            width: 32px;
-            height: 32px;
+            top: 18px; right: 18px;
+            width: 32px; height: 32px;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             backdrop-filter: blur(5px);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 更有彈性的動畫 */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 3;
         }
         .image-badge::before {
             content: '●';
             color: var(--accent-gold);
-            font-size: 10px; /* 稍微調小一點，更精緻 */
+            font-size: 10px;
             line-height: 1;
         }
         .image-wrapper:hover .image-badge {
-            transform: scale(1.1) rotate(90deg); /* 加入旋轉 */
+            transform: scale(1.1) rotate(90deg);
             background: rgba(197, 163, 103, 0.2);
             border-color: var(--accent-gold);
         }
 
-        .image-wrapper::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -120%;
-            width: 60%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); /* 增加亮度 */
-            transform: skewX(-20deg);
-            z-index: 2;
-            pointer-events: none;
-            animation: shine 8s infinite 1.5s;
-        }
-
         .product-img {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             object-fit: cover;
-            object-position: center;
             display: block;
             opacity: 0.92;
             transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             filter: saturate(1.05) contrast(1.02);
         }
-
         .image-wrapper:hover .product-img {
-            transform: scale(1.05); /* 移除 rotate，保持端莊 */
+            transform: scale(1.05);
             opacity: 1;
             filter: saturate(1.1) contrast(1.05) brightness(1.05);
         }
 
-        @keyframes shine {
-            0% { left: -120%; opacity: 0; }
-            15% { left: 100%; opacity: 1; }
-            100% { left: 100%; opacity: 0; }
-        }
-
+        /* --- 文案區 --- */
         .content-side {
             flex: 1;
             display: flex;
@@ -285,7 +235,7 @@
             color: var(--text-main); 
             margin-bottom: 8px; 
             animation-delay: 0.5s;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5); /* 優化陰影 */
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .slogan { 
@@ -305,148 +255,195 @@
             padding-left: 28px;
             position: relative;
         }
+        /* 發光線動畫僅在桌面顯示 */
         .narrative-block::before {
             content: '';
             position: absolute;
-            left: -2px; /* 修正位置以覆蓋邊框 */
-            top: 0;
-            bottom: 0;
-            width: 2px;
+            left: -2px; top: 0; bottom: 0; width: 2px;
             background: linear-gradient(to bottom, transparent, var(--accent-gold), transparent);
             opacity: 0;
             animation: glowLine 3s ease-in-out 2s infinite alternate;
         }
         @keyframes glowLine {
             0% { opacity: 0.2; box-shadow: 0 0 0 var(--accent-gold); }
-            100% { opacity: 1; box-shadow: 0 0 10px var(--accent-gold); } /* 增加發光感 */
+            100% { opacity: 1; box-shadow: 0 0 10px var(--accent-gold); }
         }
 
         .narrative-zh { 
             font-family: 'Noto Sans TC', sans-serif;
-            font-size: 1.02rem; 
-            line-height: 1.65; 
-            color: var(--bright-desc);
-            margin-bottom: 10px; 
-            font-weight: 300; 
-            letter-spacing: 0.015em;
+            font-size: 1.02rem; line-height: 1.65; 
+            color: var(--bright-desc); margin-bottom: 10px; 
+            font-weight: 300; letter-spacing: 0.015em;
         }
         .narrative-en { 
-            font-size: 0.82rem; 
-            line-height: 1.45; 
-            color: var(--bright-desc);
-            font-family: 'Italiana', serif; 
-            letter-spacing: 0.03em;
-            font-style: italic;
-            opacity: 0.8;
+            font-size: 0.82rem; line-height: 1.45; 
+            color: var(--bright-desc); font-family: 'Italiana', serif; 
+            letter-spacing: 0.03em; font-style: italic; opacity: 0.8;
         }
 
+        /* --- 香調表 (Desktop) --- */
         .pyramid-section {
             opacity: 0;
             animation: fadeUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards 1.1s;
             max-width: 600px;
         }
-
         .pyramid-header {
             font-family: 'Italiana', serif;
-            font-size: 1.35rem; 
-            color: var(--text-main);
-            margin-bottom: 1.2rem;
-            letter-spacing: 0.05em;
-            position: relative;
+            font-size: 1.35rem; color: var(--text-main);
+            margin-bottom: 1.2rem; letter-spacing: 0.05em;
         }
-        
-        .pyramid-list { position: relative; }
-
         .pyramid-item {
-            display: grid;
-            grid-template-columns: 110px 1fr;
-            padding: 14px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.04);
+            display: grid; grid-template-columns: 110px 1fr;
+            padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
             transition: all 0.3s ease;
-            position: relative;
         }
         .pyramid-item:hover { 
-            border-color: rgba(197, 163, 103, 0.4);
-            padding-left: 10px;
-            background: linear-gradient(90deg, rgba(255,255,255,0.02), transparent); /* Hover 時增加微弱背景 */
+            border-color: rgba(197, 163, 103, 0.4); padding-left: 10px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.02), transparent);
         }
-
         .pyramid-item h4 {
-            font-size: 0.78rem; 
-            letter-spacing: 0.2em;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            font-weight: 400;
-            padding-top: 2px;
+            font-size: 0.78rem; letter-spacing: 0.2em; color: var(--text-dim);
+            text-transform: uppercase; font-weight: 400; padding-top: 2px;
         }
-
         .pyramid-item.top h4 { color: #f0f0f0; }
         .pyramid-item.heart h4 { color: var(--accent-gold); }
         .pyramid-item.base h4 { color: #b0b0b0; }
-
         .note-info { display: flex; flex-direction: column; gap: 4px; }
         .note-info .ing { color: var(--text-sub); font-size: 0.97rem; letter-spacing: 0.02em; font-weight: 300; }
-        .note-info .exp { color: var(--bright-exp); font-size: 0.77rem; font-style: italic; opacity: 0.9; letter-spacing: 0.01em; }
+        .note-info .exp { color: var(--bright-exp); font-size: 0.77rem; font-style: italic; opacity: 0.9; }
 
-        @keyframes fadeUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 
-        /* --- 優化 2: 手機版 RWD 體驗 --- */
+        /* =========================================
+           MOBILE OPTIMIZATION (App-like Experience)
+           ========================================= */
         @media (max-width: 1024px) {
-            body { 
-                overflow-y: auto; /* 允許手機捲動 */
-                height: auto;
-                display: block;
+            body { overflow-y: auto; height: auto; display: block; }
+            nav { 
+                padding: 1.5rem 6%; 
+                background: rgba(5,5,5,0.85); 
+                backdrop-filter: blur(15px);
             }
-            nav { padding: 1.5rem 5%; background: rgba(5,5,5,0.95); /* 手機版導航欄不透明，防止文字重疊 */ }
+            .logo { font-size: 1.4rem; }
+            
             .main-wrapper { 
                 flex-direction: column; 
-                padding: 100px 5% 60px; /* 增加底部空間 */
-                gap: 40px;
-                min-height: auto; /* 自動高度 */
+                padding: 100px 6% 80px; 
+                gap: 40px; 
             }
-            .visual-side { 
-                width: 100%; 
-                margin-bottom: 20px;
-            }
+
+            /* 1. 視覺沉浸化：圖片放大並置中 */
+            .visual-side { width: 100%; margin-bottom: 10px; }
             .image-wrapper { 
-                max-width: 280px; 
-                aspect-ratio: 1 / 1.35;
-                transform: translateX(0); /* 手機版移除位移 */
+                max-width: 100%; 
+                width: 85%; /* 稍微縮一點，讓它有留白 */
+                aspect-ratio: 3 / 4;
+                transform: translateX(0); 
+                box-shadow: 0 20px 80px rgba(0,0,0,0.8); /* 更強的陰影 */
+                margin: 0 auto;
             }
-            .image-wrapper:hover {
-                transform: scale(1.02); /* 手機版只需縮放 */
+            
+            /* 2. 排版雜誌化：文字置中，層次分明 */
+            .content-side { width: 100%; text-align: center; }
+            .header-section { margin-bottom: 2.5rem; }
+            .product-meta { justify-content: center; opacity: 0.8; margin-bottom: 15px; }
+            
+            .header-section h1 { 
+                font-size: 3.8rem; 
+                line-height: 1.1; 
+                margin-bottom: 15px; 
             }
-            .image-badge { width: 28px; height: 28px; top: 12px; right: 12px; }
-            .content-side { width: 100%; }
-            .header-section h1 { font-size: 3.5rem; } /* 手機字體微調 */
+            
             .narrative-block { 
                 border-left: none; 
                 padding-left: 0; 
-                margin-bottom: 2rem;
+                margin-bottom: 3.5rem;
+                padding: 0 5%; /* 增加左右留白，防止文字太寬難讀 */
             }
-            .narrative-block::before { display: none; /* 手機版移除發光線，保持簡潔 */ }
-            .pyramid-item { grid-template-columns: 85px 1fr; padding: 12px 0; }
+            .narrative-block::before { display: none; }
+            .narrative-zh { font-size: 1rem; line-height: 1.7; color: #eee; }
+
+            /* 3. 資訊卡片化：橫向滑動 (Swipe) */
+            .pyramid-section { width: 100%; max-width: 100%; }
+            .pyramid-header { 
+                text-align: center; 
+                margin-bottom: 20px; 
+                font-size: 1rem; 
+                letter-spacing: 0.2em;
+                opacity: 0.7;
+            }
+            .pyramid-header::after { display: none; } /* 移除裝飾線 */
+
+            /* 將列表改為橫向滑動容器 */
+            .pyramid-list {
+                display: flex;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory; /* 強制對齊 */
+                gap: 20px;
+                padding-bottom: 20px; /* 預留捲軸空間 (雖然隱藏但以防萬一) */
+                margin: 0 -6%; /* 負 margin 讓卡片可以滑到螢幕邊緣 */
+                padding: 0 6% 30px; /* 增加 padding 讓最左最右卡片能被完整看到 */
+                -ms-overflow-style: none;  /* IE/Edge 隱藏捲軸 */
+                scrollbar-width: none;  /* Firefox 隱藏捲軸 */
+            }
+            .pyramid-list::-webkit-scrollbar { display: none; /* Chrome/Safari 隱藏捲軸 */ }
+
+            /* 個別卡片樣式 */
+            .pyramid-item {
+                display: flex;
+                flex-direction: column;
+                flex: 0 0 260px; /* 固定卡片寬度 */
+                scroll-snap-align: center; /* 滑動停止時對齊中央 */
+                background: rgba(255,255,255,0.03);
+                border: 1px solid rgba(255,255,255,0.08);
+                border-radius: 16px;
+                padding: 25px;
+                text-align: left;
+                position: relative;
+            }
+            
+            /* 卡片內的排版 */
+            .pyramid-item h4 {
+                font-size: 0.8rem;
+                margin-bottom: 10px;
+                opacity: 0.9;
+            }
+            
+            /* 讓卡片有點擊感 */
+            .pyramid-item:active {
+                background: rgba(255,255,255,0.06);
+                transform: scale(0.98);
+            }
+
+            /* 加入滑動提示 (Optional: 微弱的箭頭或漸層) */
+            .pyramid-section::after {
+                content: '← SWIPE →';
+                display: block;
+                text-align: center;
+                font-size: 0.6rem;
+                letter-spacing: 2px;
+                color: var(--text-dim);
+                margin-top: -10px;
+                opacity: 0.5;
+            }
         }
     </style>
 </head>
 <body>
 
     <div class="cursor"></div>
-    
     <div class="bg-container">
         <div class="gradient-bg"></div>
     </div>
 
     <nav>
-        <div class="logo" data-hover>naha.</div>
-        <a href="index.html" class="nav-back" data-hover>Back to Collection</a>
+        <div class="logo">naha.</div>
+        <a href="index.html" class="nav-back">Back</a>
     </nav>
 
     <main class="main-wrapper">
         <div class="visual-side">
-            <div class="image-wrapper" data-hover>
+            <div class="image-wrapper">
                 <div class="image-badge"></div>
                 <img src="https://i.meee.com.tw/IiCsU8D.png" alt="Naha Seraphina Eau de Parfum" class="product-img">
             </div>
@@ -462,7 +459,7 @@
                 <p class="slogan reveal-text">Light of Seraphina / 光之呼吸</p>
             </div>
 
-            <div class="narrative-block reveal-text" data-hover>
+            <div class="narrative-block reveal-text">
                 <div class="narrative-zh">
                     這是一場關於「光」的感官盛宴。Seraphina 捕捉了清晨第一縷陽光穿透薄霧的瞬間，沒有木質的沉重，只有如羽翼般輕盈的純淨。
                 </div>
@@ -474,22 +471,22 @@
             <section class="pyramid-section">
                 <h2 class="pyramid-header">Composition</h2>
                 <div class="pyramid-list">
-                    <div class="pyramid-item top" data-hover>
-                        <h4>Top</h4>
+                    <div class="pyramid-item top">
+                        <h4>Top Notes</h4>
                         <div class="note-info">
                             <span class="ing">Aldehydes, Pear, Petitgrain</span>
                             <span class="exp">晨曦清冷：冰川空氣般的乾淨</span>
                         </div>
                     </div>
-                    <div class="pyramid-item heart" data-hover>
-                        <h4>Heart</h4>
+                    <div class="pyramid-item heart">
+                        <h4>Heart Notes</h4>
                         <div class="note-info">
                             <span class="ing">Tuberose, Orange Blossom</span>
                             <span class="exp">優雅羽翼：絲緞般的白花質感</span>
                         </div>
                     </div>
-                    <div class="pyramid-item base" data-hover>
-                        <h4>Base</h4>
+                    <div class="pyramid-item base">
+                        <h4>Base Notes</h4>
                         <div class="note-info">
                             <span class="ing">White Musk, Ambroxan</span>
                             <span class="exp">永恆餘溫：宛如體香的通透層次</span>
@@ -505,45 +502,37 @@
             document.body.classList.add('loaded'); 
         });
 
-        const cursor = document.querySelector('.cursor');
-        // 抓取新的背景容器
-        const bgContainer = document.querySelector('.bg-container');
-        const visualSide = document.querySelector('.visual-side');
-        
+        // 桌面版動畫邏輯 (手機版不需要，保持純淨)
         const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
         if (!isTouchDevice) {
-            // 優化 3: 統一使用單一監聽器 + requestAnimationFrame
-            let mouseX = 0;
-            let mouseY = 0;
+            const cursor = document.querySelector('.cursor');
+            const bgContainer = document.querySelector('.bg-container');
+            const visualSide = document.querySelector('.visual-side');
             
-            // 只負責更新數據
+            let mouseX = 0, mouseY = 0;
+            
             document.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
             });
 
-            // 負責渲染畫面 (60fps)
             function animate() {
-                // 1. 游標跟隨
                 cursor.style.left = mouseX + 'px';
                 cursor.style.top = mouseY + 'px';
 
-                // 2. 背景視差 (移動的是 container，不影響內部的 scale 動畫)
-                const bgX = (mouseX / window.innerWidth - 0.5) * 15; // 加大一點移動幅度
+                const bgX = (mouseX / window.innerWidth - 0.5) * 15;
                 const bgY = (mouseY / window.innerHeight - 0.5) * 15;
                 bgContainer.style.transform = `translate(${bgX}px, ${bgY}px)`;
 
-                // 3. 圖片視差
                 const imgX = (mouseX / window.innerWidth - 0.5) * 8;
                 const imgY = (mouseY / window.innerHeight - 0.5) * 8;
                 visualSide.style.transform = `translate(${imgX}px, ${imgY}px)`;
 
                 requestAnimationFrame(animate);
             }
-            animate(); // 啟動動畫循環
+            animate();
 
-            // Hover 效果保持不變
             document.querySelectorAll('[data-hover]').forEach(el => {
                 el.addEventListener('mouseenter', () => cursor.classList.add('active'));
                 el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
