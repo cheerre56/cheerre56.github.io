@@ -31,7 +31,7 @@
             background-color: var(--bg-color);
             color: var(--text-sub);
             font-family: 'Space Grotesk', sans-serif;
-            overflow: hidden;
+            overflow: hidden; /* 電腦版隱藏卷軸 */
             opacity: 0;
             transition: opacity 1s ease;
             height: 100vh;
@@ -41,21 +41,31 @@
 
         body.loaded { opacity: 1; }
 
-        .gradient-bg {
+        /* --- 優化 1: 背景結構調整 --- */
+        /* bg-container 負責 JS 的視差移動 */
+        .bg-container {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
             z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        /* gradient-bg 負責 CSS 的呼吸動畫 */
+        .gradient-bg {
+            width: 100%; height: 100%;
             background: 
-                radial-gradient(circle at 20% 40%, rgba(70, 60, 150, 0.15), transparent 50%),
-                radial-gradient(circle at 80% 60%, rgba(40, 120, 110, 0.1), transparent 50%);
+                radial-gradient(circle at 20% 40%, rgba(70, 60, 150, 0.18), transparent 50%),
+                radial-gradient(circle at 80% 60%, rgba(40, 120, 110, 0.12), transparent 50%);
             filter: blur(60px);
             animation: breathe 12s infinite alternate ease-in-out;
+            will-change: transform, opacity; /* 效能優化 */
         }
 
         @keyframes breathe {
             0% { transform: scale(1); opacity: 0.6; }
-            100% { transform: scale(1.08); opacity: 0.9; }
+            100% { transform: scale(1.1); opacity: 0.9; }
         }
 
         @media (hover: hover) and (pointer: fine) {
@@ -88,9 +98,8 @@
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            backdrop-filter: blur(20px);
-            background: rgba(5, 5, 5, 0.1);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            /* 讓導航列背景更融合 */
+            background: linear-gradient(to bottom, rgba(5,5,5,0.8), transparent); 
         }
 
         .logo { 
@@ -144,7 +153,8 @@
             max-width: 1700px;
             margin: 0 auto;
             flex: 1;
-            height: calc(100vh - 120px);
+            /* height: calc(100vh - 120px); 移除寫死的高度，避免在大螢幕或特定比例跑版 */
+            min-height: 100vh; 
         }
 
         .visual-side {
@@ -153,7 +163,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%;
+            /* 保留 transform 給 JS 控制 */
+            will-change: transform; 
         }
 
         .image-wrapper {
@@ -165,15 +176,16 @@
             border-radius: 24px;
             box-shadow: 
                 0 25px 60px rgba(0, 0, 0, 0.6),
-                0 0 0 1px rgba(255, 255, 255, 0.06),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                0 0 0 1px rgba(255, 255, 255, 0.08), /* 稍微增強邊框亮度 */
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
-            transform: translateX(-3vw);
-            transition: transform 0.4s ease;
+            transform: translateX(-3vw); /* 這是你的初始位移 */
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
 
         .image-wrapper:hover {
             transform: translateX(-3vw) scale(1.02);
+            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.15);
         }
 
         .image-badge {
@@ -182,26 +194,26 @@
             right: 18px;
             width: 32px;
             height: 32px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 更有彈性的動畫 */
             z-index: 3;
         }
         .image-badge::before {
             content: '●';
             color: var(--accent-gold);
-            font-size: 16px;
+            font-size: 10px; /* 稍微調小一點，更精緻 */
             line-height: 1;
         }
         .image-wrapper:hover .image-badge {
-            transform: scale(1.2);
-            background: rgba(197, 163, 103, 0.3);
-            box-shadow: 0 0 20px rgba(197, 163, 103, 0.4);
+            transform: scale(1.1) rotate(90deg); /* 加入旋轉 */
+            background: rgba(197, 163, 103, 0.2);
+            border-color: var(--accent-gold);
         }
 
         .image-wrapper::before {
@@ -209,7 +221,7 @@
             position: absolute;
             top: 0; left: -120%;
             width: 60%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); /* 增加亮度 */
             transform: skewX(-20deg);
             z-index: 2;
             pointer-events: none;
@@ -228,9 +240,9 @@
         }
 
         .image-wrapper:hover .product-img {
-            transform: scale(1.03) rotateY(5deg) rotateX(2deg);
+            transform: scale(1.05); /* 移除 rotate，保持端莊 */
             opacity: 1;
-            filter: saturate(1.1) contrast(1.05) brightness(1.02);
+            filter: saturate(1.1) contrast(1.05) brightness(1.05);
         }
 
         @keyframes shine {
@@ -244,13 +256,10 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding-top: 0;
             max-width: 700px;
         }
 
-        .header-section { 
-            margin-bottom: 1.8rem; 
-        }
+        .header-section { margin-bottom: 1.8rem; }
         
         .reveal-text {
             opacity: 0;
@@ -276,7 +285,7 @@
             color: var(--text-main); 
             margin-bottom: 8px; 
             animation-delay: 0.5s;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5); /* 優化陰影 */
         }
 
         .slogan { 
@@ -299,7 +308,7 @@
         .narrative-block::before {
             content: '';
             position: absolute;
-            left: 0;
+            left: -2px; /* 修正位置以覆蓋邊框 */
             top: 0;
             bottom: 0;
             width: 2px;
@@ -308,8 +317,8 @@
             animation: glowLine 3s ease-in-out 2s infinite alternate;
         }
         @keyframes glowLine {
-            0% { opacity: 0; transform: scaleY(0.5); }
-            100% { opacity: 1; transform: scaleY(1); }
+            0% { opacity: 0.2; box-shadow: 0 0 0 var(--accent-gold); }
+            100% { opacity: 1; box-shadow: 0 0 10px var(--accent-gold); } /* 增加發光感 */
         }
 
         .narrative-zh { 
@@ -328,6 +337,7 @@
             font-family: 'Italiana', serif; 
             letter-spacing: 0.03em;
             font-style: italic;
+            opacity: 0.8;
         }
 
         .pyramid-section {
@@ -344,17 +354,7 @@
             letter-spacing: 0.05em;
             position: relative;
         }
-        .pyramid-header::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 40px;
-            height: 1px;
-            background: var(--accent-gold);
-            opacity: 0.6;
-        }
-
+        
         .pyramid-list { position: relative; }
 
         .pyramid-item {
@@ -365,24 +365,11 @@
             transition: all 0.3s ease;
             position: relative;
         }
-        .pyramid-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 4px;
-            height: 4px;
-            background: var(--accent-gold);
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
         .pyramid-item:hover { 
             border-color: rgba(197, 163, 103, 0.4);
             padding-left: 10px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.02), transparent); /* Hover 時增加微弱背景 */
         }
-        .pyramid-item:hover::before { opacity: 1; }
 
         .pyramid-item h4 {
             font-size: 0.78rem; 
@@ -391,7 +378,6 @@
             text-transform: uppercase;
             font-weight: 400;
             padding-top: 2px;
-            position: relative;
         }
 
         .pyramid-item.top h4 { color: #f0f0f0; }
@@ -399,64 +385,59 @@
         .pyramid-item.base h4 { color: #b0b0b0; }
 
         .note-info { display: flex; flex-direction: column; gap: 4px; }
-        .note-info .ing { 
-            color: var(--text-sub); 
-            font-size: 0.97rem; 
-            letter-spacing: 0.02em; 
-            font-weight: 300;
-        }
-        .note-info .exp { 
-            color: var(--bright-exp); 
-            font-size: 0.77rem; 
-            font-style: italic; 
-            opacity: 0.9;
-            letter-spacing: 0.01em;
-        }
+        .note-info .ing { color: var(--text-sub); font-size: 0.97rem; letter-spacing: 0.02em; font-weight: 300; }
+        .note-info .exp { color: var(--bright-exp); font-size: 0.77rem; font-style: italic; opacity: 0.9; letter-spacing: 0.01em; }
 
         @keyframes fadeUp {
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* --- 優化 2: 手機版 RWD 體驗 --- */
         @media (max-width: 1024px) {
-            body { overflow: hidden; }
-            nav { padding: 1.5rem 5%; }
+            body { 
+                overflow-y: auto; /* 允許手機捲動 */
+                height: auto;
+                display: block;
+            }
+            nav { padding: 1.5rem 5%; background: rgba(5,5,5,0.95); /* 手機版導航欄不透明，防止文字重疊 */ }
             .main-wrapper { 
                 flex-direction: column; 
-                padding: 70px 5% 40px; 
-                gap: 35px;
-                height: calc(100vh - 100px);
-                justify-content: center;
+                padding: 100px 5% 60px; /* 增加底部空間 */
+                gap: 40px;
+                min-height: auto; /* 自動高度 */
             }
             .visual-side { 
-                flex: 0 0 auto; 
-                width: 85%; 
+                width: 100%; 
+                margin-bottom: 20px;
             }
             .image-wrapper { 
                 max-width: 280px; 
                 aspect-ratio: 1 / 1.35;
-                transform: translateX(0);
+                transform: translateX(0); /* 手機版移除位移 */
             }
-            .image-badge { width: 28px; height: 28px; top: 16px; right: 16px; }
-            .image-badge::before { font-size: 14px; }
+            .image-wrapper:hover {
+                transform: scale(1.02); /* 手機版只需縮放 */
+            }
+            .image-badge { width: 28px; height: 28px; top: 12px; right: 12px; }
             .content-side { width: 100%; }
+            .header-section h1 { font-size: 3.5rem; } /* 手機字體微調 */
             .narrative-block { 
                 border-left: none; 
                 padding-left: 0; 
-                margin-bottom: 1.8rem;
-                border-bottom: 1px solid rgba(255,255,255,0.05);
-                padding-bottom: 1.2rem;
+                margin-bottom: 2rem;
             }
-            .narrative-zh { font-size: 0.98rem; line-height: 1.6; }
-            .narrative-en { font-size: 0.8rem; }
+            .narrative-block::before { display: none; /* 手機版移除發光線，保持簡潔 */ }
             .pyramid-item { grid-template-columns: 85px 1fr; padding: 12px 0; }
-            .pyramid-header { font-size: 1.25rem; }
         }
     </style>
 </head>
 <body>
 
     <div class="cursor"></div>
-    <div class="gradient-bg"></div>
+    
+    <div class="bg-container">
+        <div class="gradient-bg"></div>
+    </div>
 
     <nav>
         <div class="logo" data-hover>naha.</div>
@@ -467,7 +448,7 @@
         <div class="visual-side">
             <div class="image-wrapper" data-hover>
                 <div class="image-badge"></div>
-                <img src="https://i.meee.com.tw/IiCsU8D.png" alt="Naha Seraphina Eau de Parfum bottle in ethereal morning light" class="product-img">
+                <img src="https://i.meee.com.tw/IiCsU8D.png" alt="Naha Seraphina Eau de Parfum" class="product-img">
             </div>
         </div>
 
@@ -525,33 +506,47 @@
         });
 
         const cursor = document.querySelector('.cursor');
+        // 抓取新的背景容器
+        const bgContainer = document.querySelector('.bg-container');
+        const visualSide = document.querySelector('.visual-side');
+        
         const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
         if (!isTouchDevice) {
+            // 優化 3: 統一使用單一監聽器 + requestAnimationFrame
+            let mouseX = 0;
+            let mouseY = 0;
+            
+            // 只負責更新數據
             document.addEventListener('mousemove', (e) => {
-                requestAnimationFrame(() => {
-                    cursor.style.left = e.clientX + 'px';
-                    cursor.style.top = e.clientY + 'px';
-                });
+                mouseX = e.clientX;
+                mouseY = e.clientY;
             });
 
+            // 負責渲染畫面 (60fps)
+            function animate() {
+                // 1. 游標跟隨
+                cursor.style.left = mouseX + 'px';
+                cursor.style.top = mouseY + 'px';
+
+                // 2. 背景視差 (移動的是 container，不影響內部的 scale 動畫)
+                const bgX = (mouseX / window.innerWidth - 0.5) * 15; // 加大一點移動幅度
+                const bgY = (mouseY / window.innerHeight - 0.5) * 15;
+                bgContainer.style.transform = `translate(${bgX}px, ${bgY}px)`;
+
+                // 3. 圖片視差
+                const imgX = (mouseX / window.innerWidth - 0.5) * 8;
+                const imgY = (mouseY / window.innerHeight - 0.5) * 8;
+                visualSide.style.transform = `translate(${imgX}px, ${imgY}px)`;
+
+                requestAnimationFrame(animate);
+            }
+            animate(); // 啟動動畫循環
+
+            // Hover 效果保持不變
             document.querySelectorAll('[data-hover]').forEach(el => {
                 el.addEventListener('mouseenter', () => cursor.classList.add('active'));
                 el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
-            });
-
-            document.addEventListener('mousemove', (e) => {
-                const bg = document.querySelector('.gradient-bg');
-                const x = (e.clientX / window.innerWidth - 0.5) * 8;
-                const y = (e.clientY / window.innerHeight - 0.5) * 8;
-                bg.style.transform = `translate(${x}px, ${y}px) scale(1.02)`;
-            });
-
-            document.addEventListener('mousemove', (e) => {
-                const visualSide = document.querySelector('.visual-side');
-                const x = (e.clientX / window.innerWidth - 0.5) * 5;
-                const y = (e.clientY / window.innerHeight - 0.5) * 5;
-                visualSide.style.transform = `translate(${x}px, ${y}px)`;
             });
         }
     </script>
