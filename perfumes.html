@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>naha. | SERAPHINA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Space+Grotesk:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-main: #ffffff;
+            --text-sub: #b0b0b0;
+            --text-dim: #666;
+            --accent-gold: #c5a367;
+            --cursor-size: 20px;
+            --bright-desc: #e0e0e0;
+            --bright-exp: #999999;
+        }
+
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            cursor: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-sub);
+            font-family: 'Space Grotesk', sans-serif;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 1s ease;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.loaded { opacity: 1; }
+
+        .gradient-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 40%, rgba(70, 60, 150, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 60%, rgba(40, 120, 110, 0.1), transparent 50%);
+            filter: blur(60px);
+            animation: breathe 12s infinite alternate ease-in-out;
+        }
+
+        @keyframes breathe {
+            0% { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(1.08); opacity: 0.9; }
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .cursor {
+                width: var(--cursor-size);
+                height: var(--cursor-size);
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                border-radius: 50%;
+                position: fixed;
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%);
+                transition: width 0.3s, height 0.3s, background-color 0.3s, opacity 0.3s;
+                mix-blend-mode: difference;
+                backdrop-filter: blur(1px);
+            }
+            .cursor.active { 
+                width: 45px; height: 45px; 
+                background: rgba(255, 255, 255, 0.15); 
+                border: 1px solid rgba(197, 163, 103, 0.5);
+                backdrop-filter: blur(5px);
+            }
+        }
+
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 1.8rem 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            background: rgba(5, 5, 5, 0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo { 
+            font-family: 'Italiana', serif; 
+            font-size: 1.55rem; 
+            letter-spacing: 0.1em; 
+            color: var(--text-main);
+            position: relative;
+        }
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+            transition: width 0.4s ease;
+        }
+        .logo:hover::after { width: 100%; }
+
+        .nav-back { 
+            font-size: 0.75rem; 
+            letter-spacing: 0.15em; 
+            color: var(--text-sub); 
+            text-decoration: none; 
+            text-transform: uppercase; 
+            font-weight: 300;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .nav-back::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 0; width: 0; height: 1px;
+            background: var(--accent-gold);
+            transition: width 0.3s ease;
+        }
+        .nav-back:hover { 
+            color: var(--text-main);
+            letter-spacing: 0.2em;
+        }
+        .nav-back:hover::after { width: 100%; }
+
+        .main-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 6% 50px;
+            gap: 5vw;
+            max-width: 1700px;
+            margin: 0 auto;
+            flex: 1;
+            height: calc(100vh - 120px);
+        }
+
+        .visual-side {
+            flex: 0 0 38%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .image-wrapper {
+            width: 100%;
+            max-width: 360px;
+            aspect-ratio: 2.8 / 4;
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            box-shadow: 
+                0 25px 60px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(255, 255, 255, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transform: translateX(-3vw);
+            transition: transform 0.4s ease;
+        }
+
+        .image-wrapper:hover {
+            transform: translateX(-3vw) scale(1.02);
+        }
+
+        .image-badge {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            z-index: 3;
+        }
+        .image-badge::before {
+            content: '●';
+            color: var(--accent-gold);
+            font-size: 16px;
+            line-height: 1;
+        }
+        .image-wrapper:hover .image-badge {
+            transform: scale(1.2);
+            background: rgba(197, 163, 103, 0.3);
+            box-shadow: 0 0 20px rgba(197, 163, 103, 0.4);
+        }
+
+        .image-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -120%;
+            width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transform: skewX(-20deg);
+            z-index: 2;
+            pointer-events: none;
+            animation: shine 8s infinite 1.5s;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            opacity: 0.92;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: saturate(1.05) contrast(1.02);
+        }
+
+        .image-wrapper:hover .product-img {
+            transform: scale(1.03) rotateY(5deg) rotateX(2deg);
+            opacity: 1;
+            filter: saturate(1.1) contrast(1.05) brightness(1.02);
+        }
+
+        @keyframes shine {
+            0% { left: -120%; opacity: 0; }
+            15% { left: 100%; opacity: 1; }
+            100% { left: 100%; opacity: 0; }
+        }
+
+        .content-side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-top: 0;
+            max-width: 700px;
+        }
+
+        .header-section { 
+            margin-bottom: 1.8rem; 
+        }
+        
+        .reveal-text {
+            opacity: 0;
+            transform: translateY(25px);
+            animation: fadeUp 1.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .product-meta { 
+            display: flex; gap: 24px; 
+            font-size: 0.72rem; 
+            color: var(--accent-gold); 
+            letter-spacing: 0.2em; 
+            text-transform: uppercase; 
+            margin-bottom: 12px;
+            animation-delay: 0.3s;
+        }
+
+        .header-section h1 { 
+            font-family: 'Italiana', serif; 
+            font-size: clamp(4rem, 7vw, 5.5rem); 
+            line-height: 0.95; 
+            letter-spacing: -0.02em;
+            color: var(--text-main); 
+            margin-bottom: 8px; 
+            animation-delay: 0.5s;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .slogan { 
+            font-size: 0.88rem; 
+            color: var(--text-sub); 
+            letter-spacing: 0.25em; 
+            text-transform: uppercase; 
+            font-weight: 300;
+            animation-delay: 0.7s;
+        }
+
+        .narrative-block { 
+            margin-bottom: 2.2rem; 
+            max-width: 580px; 
+            animation-delay: 0.9s;
+            border-left: 2px solid rgba(197, 163, 103, 0.3);
+            padding-left: 28px;
+            position: relative;
+        }
+        .narrative-block::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, var(--accent-gold), transparent);
+            opacity: 0;
+            animation: glowLine 3s ease-in-out 2s infinite alternate;
+        }
+        @keyframes glowLine {
+            0% { opacity: 0; transform: scaleY(0.5); }
+            100% { opacity: 1; transform: scaleY(1); }
+        }
+
+        .narrative-zh { 
+            font-family: 'Noto Sans TC', sans-serif;
+            font-size: 1.02rem; 
+            line-height: 1.65; 
+            color: var(--bright-desc);
+            margin-bottom: 10px; 
+            font-weight: 300; 
+            letter-spacing: 0.015em;
+        }
+        .narrative-en { 
+            font-size: 0.82rem; 
+            line-height: 1.45; 
+            color: var(--bright-desc);
+            font-family: 'Italiana', serif; 
+            letter-spacing: 0.03em;
+            font-style: italic;
+        }
+
+        .pyramid-section {
+            opacity: 0;
+            animation: fadeUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards 1.1s;
+            max-width: 600px;
+        }
+
+        .pyramid-header {
+            font-family: 'Italiana', serif;
+            font-size: 1.35rem; 
+            color: var(--text-main);
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.05em;
+            position: relative;
+        }
+        .pyramid-header::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 1px;
+            background: var(--accent-gold);
+            opacity: 0.6;
+        }
+
+        .pyramid-list { position: relative; }
+
+        .pyramid-item {
+            display: grid;
+            grid-template-columns: 110px 1fr;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .pyramid-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 4px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .pyramid-item:hover { 
+            border-color: rgba(197, 163, 103, 0.4);
+            padding-left: 10px;
+        }
+        .pyramid-item:hover::before { opacity: 1; }
+
+        .pyramid-item h4 {
+            font-size: 0.78rem; 
+            letter-spacing: 0.2em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            font-weight: 400;
+            padding-top: 2px;
+            position: relative;
+        }
+
+        .pyramid-item.top h4 { color: #f0f0f0; }
+        .pyramid-item.heart h4 { color: var(--accent-gold); }
+        .pyramid-item.base h4 { color: #b0b0b0; }
+
+        .note-info { display: flex; flex-direction: column; gap: 4px; }
+        .note-info .ing { 
+            color: var(--text-sub); 
+            font-size: 0.97rem; 
+            letter-spacing: 0.02em; 
+            font-weight: 300;
+        }
+        .note-info .exp { 
+            color: var(--bright-exp); 
+            font-size: 0.77rem; 
+            font-style: italic; 
+            opacity: 0.9;
+            letter-spacing: 0.01em;
+        }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 1024px) {
+            body { overflow: hidden; }
+            nav { padding: 1.5rem 5%; }
+            .main-wrapper { 
+                flex-direction: column; 
+                padding: 70px 5% 40px; 
+                gap: 35px;
+                height: calc(100vh - 100px);
+                justify-content: center;
+            }
+            .visual-side { 
+                flex: 0 0 auto; 
+                width: 85%; 
+            }
+            .image-wrapper { 
+                max-width: 280px; 
+                aspect-ratio: 1 / 1.35;
+                transform: translateX(0);
+            }
+            .image-badge { width: 28px; height: 28px; top: 16px; right: 16px; }
+            .image-badge::before { font-size: 14px; }
+            .content-side { width: 100%; }
+            .narrative-block { 
+                border-left: none; 
+                padding-left: 0; 
+                margin-bottom: 1.8rem;
+                border-bottom: 1px solid rgba(255,255,255,0.05);
+                padding-bottom: 1.2rem;
+            }
+            .narrative-zh { font-size: 0.98rem; line-height: 1.6; }
+            .narrative-en { font-size: 0.8rem; }
+            .pyramid-item { grid-template-columns: 85px 1fr; padding: 12px 0; }
+            .pyramid-header { font-size: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor"></div>
+    <div class="gradient-bg"></div>
+
+    <nav>
+        <div class="logo" data-hover>naha.</div>
+        <a href="index.html" class="nav-back" data-hover>Back to Collection</a>
+    </nav>
+
+    <main class="main-wrapper">
+        <div class="visual-side">
+            <div class="image-wrapper" data-hover>
+                <div class="image-badge"></div>
+                <img src="https://i.meee.com.tw/IiCsU8D.png" alt="Naha Seraphina Eau de Parfum bottle in ethereal morning light" class="product-img">
+            </div>
+        </div>
+
+        <div class="content-side">
+            <div class="header-section">
+                <div class="product-meta reveal-text">
+                    <span>No.01</span>
+                    <span>Eau de Parfum</span>
+                </div>
+                <h1 class="reveal-text">SERAPHINA</h1>
+                <p class="slogan reveal-text">Light of Seraphina / 光之呼吸</p>
+            </div>
+
+            <div class="narrative-block reveal-text" data-hover>
+                <div class="narrative-zh">
+                    這是一場關於「光」的感官盛宴。Seraphina 捕捉了清晨第一縷陽光穿透薄霧的瞬間，沒有木質的沉重，只有如羽翼般輕盈的純淨。
+                </div>
+                <div class="narrative-en">
+                    Weightless, pure, and ethereal—the shimmering light deep within your soul.
+                </div>
+            </div>
+
+            <section class="pyramid-section">
+                <h2 class="pyramid-header">Composition</h2>
+                <div class="pyramid-list">
+                    <div class="pyramid-item top" data-hover>
+                        <h4>Top</h4>
+                        <div class="note-info">
+                            <span class="ing">Aldehydes, Pear, Petitgrain</span>
+                            <span class="exp">晨曦清冷：冰川空氣般的乾淨</span>
+                        </div>
+                    </div>
+                    <div class="pyramid-item heart" data-hover>
+                        <h4>Heart</h4>
+                        <div class="note-info">
+                            <span class="ing">Tuberose, Orange Blossom</span>
+                            <span class="exp">優雅羽翼：絲緞般的白花質感</span>
+                        </div>
+                    </div>
+                    <div class="pyramid-item base" data-hover>
+                        <h4>Base</h4>
+                        <div class="note-info">
+                            <span class="ing">White Musk, Ambroxan</span>
+                            <span class="exp">永恆餘溫：宛如體香的通透層次</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        window.addEventListener('load', () => { 
+            document.body.classList.add('loaded'); 
+        });
+
+        const cursor = document.querySelector('.cursor');
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+        if (!isTouchDevice) {
+            document.addEventListener('mousemove', (e) => {
+                requestAnimationFrame(() => {
+                    cursor.style.left = e.clientX + 'px';
+                    cursor.style.top = e.clientY + 'px';
+                });
+            });
+
+            document.querySelectorAll('[data-hover]').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('active'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                const bg = document.querySelector('.gradient-bg');
+                const x = (e.clientX / window.innerWidth - 0.5) * 8;
+                const y = (e.clientY / window.innerHeight - 0.5) * 8;
+                bg.style.transform = `translate(${x}px, ${y}px) scale(1.02)`;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                const visualSide = document.querySelector('.visual-side');
+                const x = (e.clientX / window.innerWidth - 0.5) * 5;
+                const y = (e.clientY / window.innerHeight - 0.5) * 5;
+                visualSide.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        }
+    </script>
+</body>
+</html>
