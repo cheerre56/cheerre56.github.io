@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>naha | Contact</title>
+    <title>Naha Parfums | Beyond Scents</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Space+Grotesk:wght@300;400&display=block" rel="stylesheet">
@@ -15,7 +15,6 @@
             --cursor-size: 20px;
         }
 
-        /* 重點2: 初始狀態讓整個網頁內容隱藏 (opacity: 0) */
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -27,90 +26,65 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            opacity: 0; /* 先隱藏 */
-            transition: opacity 1.5s ease-out; /* 設置淡入轉場 */
+            opacity: 0;
+            transition: opacity 1.5s ease-out;
         }
 
-        /* 當 JS 偵測載入完成後，會加上這個 class 讓畫面浮現 */
-        body.loaded {
-            opacity: 1;
-        }
+        body.loaded { opacity: 1; }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            cursor: none;
+            margin: 0; padding: 0; box-sizing: border-box;
             text-decoration: none;
             -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
             user-select: none;
         }
 
-        .cursor {
-            width: var(--cursor-size);
-            height: var(--cursor-size);
-            border: 1px solid white;
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s, background-color 0.3s, mix-blend-mode 0.3s;
-            mix-blend-mode: difference;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: black;
-            font-size: 10px;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-
-        .cursor.active {
-            width: 60px;
-            height: 60px;
-            background-color: white;
-            border: none;
-            mix-blend-mode: difference;
-        }
-        
-        .cursor.copy-mode {
-            width: 50px;
-            height: 50px;
-            background-color: white;
-            color: black;
-            mix-blend-mode: normal;
-        }
-        
-        .cursor.copy-mode::after {
-            content: 'COPY';
+        /* 只有在非觸控裝置才顯示自訂游標 */
+        @media (hover: hover) and (pointer: fine) {
+            * { cursor: none; }
+            .cursor {
+                width: var(--cursor-size);
+                height: var(--cursor-size);
+                border: 1px solid white;
+                border-radius: 50%;
+                position: fixed;
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%);
+                transition: width 0.3s, height 0.3s, background-color 0.3s;
+                mix-blend-mode: difference;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: black;
+                font-size: 10px;
+                font-weight: bold;
+            }
+            .cursor.active { width: 60px; height: 60px; background-color: white; border: none; }
+            .cursor.copy-mode { width: 50px; height: 50px; background-color: white; color: black; mix-blend-mode: normal; }
+            .cursor.copy-mode::after { content: 'COPY'; }
         }
 
         .gradient-bg {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             z-index: -1;
             background: 
-                radial-gradient(circle at 20% 40%, rgba(50, 40, 100, 0.2), transparent 40%),
-                radial-gradient(circle at 80% 60%, rgba(40, 100, 90, 0.15), transparent 40%);
-            filter: blur(80px);
-            animation: breathe 12s infinite alternate;
+                radial-gradient(circle at 20% 40%, rgba(70, 60, 150, 0.25), transparent 50%),
+                radial-gradient(circle at 80% 60%, rgba(40, 120, 110, 0.2), transparent 50%);
+            filter: blur(60px);
+            animation: breathe 10s infinite alternate;
         }
 
         @keyframes breathe {
             0% { transform: scale(1); opacity: 0.6; }
-            100% { transform: scale(1.1); opacity: 0.9; }
+            100% { transform: scale(1.2); opacity: 1; }
         }
 
         nav {
             position: absolute;
-            top: 0;
-            width: 100%;
+            top: 0; width: 100%;
             padding: 2.5rem 4rem;
             display: flex;
             justify-content: space-between;
@@ -118,26 +92,16 @@
             z-index: 10;
         }
 
-        .logo {
-            font-family: 'Italiana', serif;
-            font-size: 1.5rem;
-            letter-spacing: 2px;
-        }
+        .logo { font-family: 'Italiana', serif; font-size: 1.5rem; letter-spacing: 2px; }
 
-        .hero-container {
-            text-align: center;
-            position: relative;
-            z-index: 5;
-            margin-bottom: 2rem;
-        }
+        .hero-container { text-align: center; position: relative; z-index: 5; }
 
         .hero-title {
             font-size: 13vw;
             font-family: 'Italiana', serif;
             line-height: 0.85;
             opacity: 0;
-            transform: translateY(40px);
-            /* 動畫延遲執行，確保 body 淡入後才開始跑 */
+            transform: translateY(30px);
             animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s;
         }
 
@@ -145,69 +109,39 @@
             margin-top: 1.5rem;
             font-size: 0.9rem;
             color: var(--accent-color);
-            letter-spacing: 0.3em;
+            letter-spacing: 0.4em;
             text-transform: uppercase;
             opacity: 0;
             animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.7s;
         }
-
-        .contact-section {
+        
+        /* 新增的香水連結樣式 */
+        .perfume-link {
             position: absolute;
-            bottom: 4rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-            opacity: 0;
-            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 1s;
-            width: 100%;
-        }
-
-        .contact-label {
-            font-size: 0.7rem;
+            bottom: 4rem; /* 與 contact-section 相同的底部位置 */
+            font-size: 1rem;
             letter-spacing: 2px;
-            color: #555;
-            text-transform: uppercase;
-        }
-
-        .email-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .email-link {
             color: var(--text-color);
-            font-size: 0.95rem;
-            letter-spacing: 1px;
-            position: relative;
-            padding: 5px;
-            transition: color 0.3s;
+            text-transform: uppercase;
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.2s;
+            z-index: 6; /* 確保在其他元素之上 */
         }
 
-        .separator {
-            color: var(--accent-color);
-            font-weight: 300;
-            opacity: 0.5;
-            font-size: 0.9rem;
+        .perfume-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: white;
+            transform: translateY(-5px);
         }
-
-        .email-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 1px;
-            bottom: 0;
-            left: 50%;
-            background-color: white;
-            transition: width 0.3s ease, left 0.3s ease;
-        }
-
-        .email-link:hover::after {
-            width: 100%;
-            left: 0;
+        /* 手機點擊效果 */
+        .perfume-link:active {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(0);
         }
 
         @keyframes fadeUp {
@@ -216,123 +150,94 @@
 
         .line {
             position: absolute;
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.03);
             pointer-events: none;
         }
         .v-line { width: 1px; height: 100vh; left: 50%; top: 0; }
         .h-line { height: 1px; width: 100vw; top: 50%; left: 0; }
 
-        @media (max-width: 768px) {
-            nav { padding: 2rem; }
-            .hero-title { font-size: 18vw; }
-            .contact-section { bottom: 3rem; }
-            .email-container { gap: 0.8rem; }
-            .email-link { font-size: 0.85rem; }
+        /* 全屏過渡層 */
+        .transition-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: #000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s ease-in-out, visibility 0s 0.8s;
+            z-index: 10000;
+        }
+        .transition-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.8s ease-in-out;
         }
 
+        /* 手機版細節調整 */
+        @media (max-width: 768px) {
+            nav { padding: 2rem; }
+            .hero-title { font-size: 22vw; }
+            .hero-subtitle { font-size: 0.7rem; letter-spacing: 0.3em; }
+            .perfume-link { bottom: 5rem; font-size: 0.9rem; padding: 8px 15px; }
+        }
     </style>
 </head>
 <body>
 
     <div class="cursor"></div>
-
     <div class="gradient-bg"></div>
     <div class="line v-line"></div>
     <div class="line h-line"></div>
 
     <nav>
         <div class="logo" data-hover>naha.</div>
-        <div style="font-size: 0.8rem; letter-spacing: 1px; opacity: 0.7;">EST. 2026</div>
+        <div style="font-size: 0.7rem; letter-spacing: 1px; opacity: 0.5;">EST. 2026</div>
     </nav>
 
     <div class="hero-container">
         <h1 class="hero-title" data-hover>NAHA</h1>
-        <p class="hero-subtitle">Beyond Concepts</p>
+        <p class="hero-subtitle">Parfums - Beyond Scents</p>
     </div>
 
-    <div class="contact-section">
-        <div class="contact-label">Inquiries</div>
-        <div class="email-container">
-            <span class="email-link copy-link" data-email="nik@naha.one">nik@naha.one</span>
-            <span class="separator">|</span>
-            <span class="email-link copy-link" data-email="admin@naha.one">admin@naha.one</span>
-        </div>
-    </div>
+    <a href="perfumes.html" class="perfume-link" data-hover id="discoverPerfume">
+        Discover Seraphina
+    </a>
+
+    <div class="transition-overlay" id="transitionOverlay"></div>
 
     <script>
-        // 重點3: 字體載入偵測腳本
-        // 等待所有字體都載入完成後，才讓 body 顯示出來
-        document.fonts.ready.then(function () {
-            document.body.classList.add('loaded');
-        });
+        // 字體載入偵測
+        document.fonts.ready.then(() => document.body.classList.add('loaded'));
+        setTimeout(() => { if (!document.body.classList.contains('loaded')) document.body.classList.add('loaded'); }, 2000);
 
-        // 雙重保險：萬一字體載入太久（超過2秒），還是強制顯示，避免畫面永遠全黑
-        setTimeout(() => {
-            if (!document.body.classList.contains('loaded')) {
-                document.body.classList.add('loaded');
-            }
-        }, 2000);
-
-
-        /* --- 原本的互動邏輯 --- */
+        // 游標邏輯
         const cursor = document.querySelector('.cursor');
-        const hoverElements = document.querySelectorAll('[data-hover]');
-        const copyLinks = document.querySelectorAll('.copy-link');
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-        document.addEventListener('mousemove', (e) => {
-            requestAnimationFrame(() => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
-            });
-        });
-
-        hoverElements.forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursor.classList.add('active');
-            });
-            el.addEventListener('mouseleave', () => {
-                cursor.classList.remove('active');
-            });
-        });
-
-        copyLinks.forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursor.classList.add('copy-mode');
-            });
-            el.addEventListener('mouseleave', () => {
-                cursor.classList.remove('copy-mode');
+        if (!isTouchDevice) {
+            document.addEventListener('mousemove', (e) => {
+                requestAnimationFrame(() => {
+                    cursor.style.left = e.clientX + 'px';
+                    cursor.style.top = e.clientY + 'px';
+                });
             });
 
-            el.addEventListener('click', () => {
-                const email = el.getAttribute('data-email');
-                copyToClipboard(email);
-                const originalText = el.innerText;
-                el.innerText = 'COPIED';
-                setTimeout(() => {
-                    el.innerText = originalText;
-                }, 1000);
+            document.querySelectorAll('[data-hover]').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('active'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
             });
-        });
-
-        function copyToClipboard(text) {
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text);
-            } else {
-                const textArea = document.createElement("textarea");
-                textArea.value = text;
-                textArea.style.position = "fixed";
-                textArea.style.left = "-9999px";
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                try {
-                    document.execCommand('copy');
-                } catch (err) {
-                    console.error('Copy failed', err);
-                }
-                document.body.removeChild(textArea);
-            }
         }
+        
+        // 過場動畫邏輯
+        document.getElementById('discoverPerfume').addEventListener('click', function(e) {
+            e.preventDefault(); // 阻止默認跳轉
+            const overlay = document.getElementById('transitionOverlay');
+            overlay.classList.add('active'); // 激活過渡層
+
+            setTimeout(() => {
+                window.location.href = this.href; // 過渡動畫結束後跳轉
+            }, 800); // 與 CSS 中的 transition-duration 保持一致
+        });
     </script>
 </body>
 </html>
