@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Naha Parfums | Beyond Scents</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Space+Grotesk:wght@300;400&display=swap" rel="stylesheet">
@@ -10,99 +10,93 @@
         :root {
             --bg-color: #050505;
             --text-color: #e0e0e0;
+            --accent-color: #888;
             --accent-gold: #c5a367;
         }
 
-        /* --- 全局重置與游標強制鎖定 --- */
+        /* --- 全局重置 --- */
         html, body {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
-            overflow: hidden; /* 禁止原生捲動，交給容器 */
-            background-color: var(--bg-color);
-            cursor: none !important; /* 第一道防線 */
+            background-color: transparent; 
+            overflow: hidden; 
         }
 
-        /* 強制所有元素繼承隱藏游標，並禁止選取文字 */
         *, *::before, *::after {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-            cursor: none !important; /* 核心修復：強制隱藏 */
-            -webkit-user-select: none; /* 禁止選取文字 */
-            user-select: none;
+            cursor: none !important;
+            -webkit-user-select: none; user-select: none;
         }
 
         body {
             color: var(--text-color);
             font-family: 'Space Grotesk', sans-serif;
             -webkit-font-smoothing: antialiased;
-            opacity: 0; /* 預設隱藏，配合 Loading 動畫 */
-            transition: opacity 1.5s ease-out;
+            opacity: 0; transition: opacity 1.0s ease-out; /* 進場稍微快一點 */
         }
-
         body.loaded { opacity: 1; }
 
-        /* --- 背景氛圍 (呼吸燈) --- */
-        /* 優化：使用 transform 減少重繪負擔 */
+        /* =========================================
+           1. 背景特效 (調整：清晰度 & 速度)
+           ========================================= */
         .gradient-bg {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
             z-index: -1;
-            background: 
-                radial-gradient(circle at 20% 40%, rgba(70, 60, 150, 0.22), transparent 50%),
-                radial-gradient(circle at 80% 60%, rgba(40, 120, 110, 0.18), transparent 50%);
-            filter: blur(80px); /* 稍微增加模糊度讓過渡更柔和 */
-            will-change: transform, opacity; /* 效能優化 */
-            animation: breathe 10s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: var(--bg-color); 
+            background-image: 
+                radial-gradient(circle at 20% 40%, rgba(70, 60, 150, 0.35), transparent 45%), /* 稍微增加透明度，更顯色 */
+                radial-gradient(circle at 80% 60%, rgba(40, 120, 110, 0.3), transparent 45%);
+            
+            /* 調整 1: 減少模糊，讓形狀更清晰 (原 60px) */
+            filter: blur(3px); 
+            
+            /* 調整 2: 加快速度 (原 10s -> 6s)，讓消散感更明顯 */
+            animation: breathe 2s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+            
+            will-change: transform, opacity;
         }
 
-        @keyframes breathe {
-            0% { transform: scale(1) translateZ(0); opacity: 0.5; }
-            100% { transform: scale(1.15) translateZ(0); opacity: 0.8; }
-        }
-
-        /* --- 滾動容器 (Scroll Snap) --- */
+        /* =========================================
+           2. 滾動容器設定
+           ========================================= */
         .main-scroll-container {
-            height: 100vh; /* fallback */
-            height: 100dvh; /* Mobile優化 */
+            height: 100vh; height: 100dvh; 
             width: 100vw;
             overflow-y: scroll;
             scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
             -ms-overflow-style: none; scrollbar-width: none;
-            will-change: scroll-position; /* 告訴瀏覽器這裡會動 */
         }
         .main-scroll-container::-webkit-scrollbar { display: none; }
 
-        /* --- 通用區塊 --- */
         section {
             height: 100vh; height: 100dvh;
             width: 100vw;
             scroll-snap-align: start;
             position: relative;
             overflow: hidden;
-            /* 讓子元素置中的通用設定 */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
         }
 
-        /* --- 導覽列 --- */
+        /* =========================================
+           3. 導覽列
+           ========================================= */
         nav {
             position: fixed;
             top: 0; width: 100%;
             padding: 2.5rem 4rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; justify-content: space-between; align-items: center;
             z-index: 100;
             mix-blend-mode: difference;
-            pointer-events: none; /* 讓點擊穿透 */
+            pointer-events: none;
         }
         .logo { 
             font-family: 'Italiana', serif; font-size: 1.5rem; letter-spacing: 2px; color: white; 
-            pointer-events: auto; /* 恢復可點擊 */
+            pointer-events: auto; 
         }
         .est { font-size: 0.7rem; letter-spacing: 1px; opacity: 0.6; color: white; }
 
@@ -116,70 +110,59 @@
         .hero-title {
             font-size: 13vw; font-family: 'Italiana', serif; line-height: 0.85;
             opacity: 0; transform: translateY(30px);
-            animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s;
-            text-align: center;
-            pointer-events: auto;
-            text-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s;
+            text-align: center; pointer-events: auto;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
+        
         .hero-subtitle {
-            margin-top: 1.5rem; font-size: 0.9rem; color: #aaa;
+            margin-top: 1.5rem; font-size: 0.9rem; color: var(--accent-color);
             letter-spacing: 0.4em; text-transform: uppercase;
             opacity: 0; transform: translateY(30px);
-            animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s;
+            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.7s;
         }
 
-        /* 滑動提示 */
         .scroll-hint {
             position: absolute; bottom: 4rem;
             display: flex; flex-direction: column; align-items: center; gap: 10px;
-            opacity: 0; animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.0s;
+            opacity: 0; animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.2s;
             pointer-events: auto;
         }
-        .scroll-text { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+        .scroll-text { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
         .scroll-line {
-            width: 1px; height: 50px; background: linear-gradient(to bottom, white, transparent);
-            animation: flowLine 2s infinite ease-in-out; 
+            width: 1px; height: 40px; background: rgba(255,255,255,0.3);
+            animation: growLine 2s infinite ease-in-out; transform-origin: top;
         }
 
         /* =========================================
            PAGE 2: COLLECTIONS
            ========================================= */
         .collection-section {
-            flex-direction: row; /* 確保橫向排列 */
-            background-color: #000;
+            flex-direction: row;
+            background-color: transparent;
         }
 
         .chapter {
-            flex: 1;
-            height: 100%;
+            flex: 1; height: 100%;
             position: relative;
-            border-right: 1px solid rgba(255,255,255,0.08);
-            /* 效能優化：使用 will-change 和 3d transform */
-            will-change: flex;
-            transform: translateZ(0);
-            transition: flex 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-            overflow: hidden;
-            pointer-events: auto;
-            
+            border-right: 1px solid rgba(255,255,255,0.1);
+            transition: flex 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            overflow: hidden; pointer-events: auto;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
-            background-color: #0a0a0a;
+            background-color: rgba(5, 5, 5, 0.5); 
+            backdrop-filter: blur(3px);
         }
         .chapter:last-child { border-right: none; }
 
-        /* 互動效果 */
         .chapter:hover { flex: 2.5; }
         .collection-section:hover .chapter:not(:hover) { opacity: 0.4; }
 
-        /* 背景圖 */
         .bg-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-size: cover; background-position: center;
+            background-size: cover; background-position: center center;
             opacity: 0.5;
-            /* 分離屬性以提升 FPS */
-            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
-                        opacity 0.6s ease, 
-                        filter 0.6s ease;
+            transition: transform 1.2s ease, opacity 0.8s ease, filter 0.8s ease;
             filter: grayscale(80%) brightness(0.6);
             z-index: 0;
             will-change: transform;
@@ -188,78 +171,61 @@
             opacity: 1; transform: scale(1.05); filter: grayscale(0%) brightness(1);
         }
 
-        /* 文字內容 */
         .content {
             text-align: center; z-index: 2; position: relative;
-            transform: translateY(20px); 
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.05s;
-            mix-blend-mode: normal;
+            transform: translateY(20px); transition: transform 0.6s ease 0.1s;
         }
         .chapter:hover .content { transform: translateY(0); }
 
-        .ch-num { 
-            font-family: 'Italiana', serif; font-size: 0.9rem; letter-spacing: 3px; 
-            color: var(--accent-gold); margin-bottom: 1rem; display: block; opacity: 0.9; 
-        }
-        .ch-title { 
-            font-family: 'Italiana', serif; font-size: 3.5vw; text-transform: uppercase; 
-            letter-spacing: 0.02em; margin-bottom: 0.8rem; white-space: nowrap; color: white; 
-            text-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
-        .ch-desc { 
-            font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; 
-            opacity: 0; transform: translateY(20px); 
-            transition: all 0.5s ease 0.1s; 
-            color: rgba(255,255,255,0.8); 
-        }
+        .ch-num { font-family: 'Italiana', serif; font-size: 0.9rem; letter-spacing: 3px; color: var(--accent-gold); margin-bottom: 1rem; display: block; opacity: 0.9; }
+        .ch-title { font-family: 'Italiana', serif; font-size: 3.5vw; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; white-space: nowrap; color: white; text-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .ch-desc { font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; opacity: 0; transform: translateY(20px); transition: all 0.6s ease 0.1s; color: rgba(255,255,255,0.8); }
         .chapter:hover .ch-desc { opacity: 1; transform: translateY(0); }
 
-        /* 遮罩 */
         .chapter::after {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.9));
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8));
             z-index: 1; pointer-events: none;
         }
 
-        /* --- 圖片 URL --- */
-        /* Ch1 (左): Luminescence - 花香 */
+        /* 圖片 URL */
         .c1 .bg-overlay { background-image: url('https://images.unsplash.com/photo-1606041008023-472dfb5e530f?q=80&w=2688&auto=format&fit=crop'); }
-        /* Ch2 (中): Silhouette - 木質 */
         .c2 .bg-overlay { background-image: url('https://images.unsplash.com/photo-1445217143695-467124038776?q=80&w=2726&auto=format&fit=crop'); }
-        /* Ch3 (右): Obsidian - 水母/深海發光 */
-        /* 使用了一張極度類似您上傳的水母圖：深黑背景、透明發光體、優雅的觸鬚 */
         .c3 .bg-overlay { background-image: url('https://images.unsplash.com/photo-1548685913-fe6678babe8d?q=80&w=2688&auto=format&fit=crop'); }
 
-        /* --- 動畫 Keyframes --- */
         @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-        @keyframes flowLine {
-            0% { transform: translateY(-100%); opacity: 0; }
-            50% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(100%); opacity: 0; }
+        @keyframes growLine {
+            0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
+            50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+            51% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+            100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
         }
 
-        /* --- 轉場遮罩 --- */
         .transition-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-color: #000; opacity: 0; visibility: hidden;
             transition: opacity 0.8s ease; z-index: 9999;
-            cursor: none !important;
         }
         .transition-overlay.active { opacity: 1; visibility: visible; }
 
-        /* --- RWD --- */
         @media (max-width: 768px) {
             nav { padding: 2rem; }
             .hero-title { font-size: 20vw; }
+            .hero-subtitle { font-size: 0.7rem; letter-spacing: 0.3em; }
+
             .collection-section { flex-direction: column; }
-            .chapter { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
-            .ch-title { font-size: 2.5rem; }
-            .chapter:hover { flex: 1.5; } /* 手機版展開幅度小一點 */
+            
+            .chapter { 
+                border-right: none; 
+                border-bottom: 1px solid rgba(255,255,255,0.1); 
+                flex: 1 !important; 
+            }
+            .ch-title { font-size: 2rem; }
+            .ch-desc { opacity: 0.8; transform: translateY(0); margin-top: 5px; }
             .content { transform: translateY(0); }
-            .ch-desc { opacity: 0.8; transform: translateY(0); }
+            .bg-overlay { opacity: 0.7; }
         }
-        
-        /* --- 自訂游標邏輯 (僅桌面) --- */
+
         @media (hover: hover) and (pointer: fine) {
             .cursor {
                 width: 20px; height: 20px; 
@@ -268,16 +234,13 @@
                 position: fixed; pointer-events: none; z-index: 10000;
                 transform: translate(-50%, -50%); 
                 mix-blend-mode: difference;
-                transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
-                            height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                            background-color 0.3s;
+                transition: width 0.3s, height 0.3s, background-color 0.3s;
             }
-            /* 互動放大效果 */
             .cursor.active { 
                 width: 60px; height: 60px;
                 background-color: white;
                 opacity: 0.1;
-                border-color: transparent;
+                border: none;
             }
         }
     </style>
@@ -305,7 +268,6 @@
         </section>
 
         <section class="collection-section">
-            
             <div class="chapter c1" onclick="navigateTo('chapter_luminescence.html')">
                 <div class="bg-overlay"></div>
                 <div class="content">
@@ -332,18 +294,15 @@
                     <p class="ch-desc">The Oriental Series</p>
                 </div>
             </div>
-
         </section>
 
     </div>
 
     <script>
-        // 1. 載入動畫：防止圖片閃爍
         window.addEventListener('load', () => {
             document.body.classList.add('loaded');
         });
 
-        // 2. 頁面跳轉
         function navigateTo(url) {
             if(url === '#') return;
             const overlay = document.getElementById('overlay');
@@ -351,22 +310,17 @@
             setTimeout(() => { window.location.href = url; }, 800);
         }
 
-        // 3. 游標邏輯
         const cursor = document.querySelector('.cursor');
-        // 偵測是否為觸控裝置
         const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
         
         if (!isTouchDevice && cursor) {
-            
-            // 使用 requestAnimationFrame 優化游標移動效能
-            let mouseX = 0;
-            let mouseY = 0;
+            let mouseX = 0, mouseY = 0;
             
             document.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
             });
-
+            
             function updateCursor() {
                 cursor.style.left = mouseX + 'px';
                 cursor.style.top = mouseY + 'px';
@@ -374,9 +328,7 @@
             }
             updateCursor();
 
-            // Hover 效果監聽
-            const interactiveElements = document.querySelectorAll('[data-hover], .chapter');
-            interactiveElements.forEach(el => {
+            document.querySelectorAll('[data-hover], .chapter').forEach(el => {
                 el.addEventListener('mouseenter', () => cursor.classList.add('active'));
                 el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
             });
