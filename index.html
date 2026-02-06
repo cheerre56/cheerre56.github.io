@@ -5,239 +5,290 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Naha Parfums | Beyond Scents</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Space+Grotesk:wght@300;400&display=block" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Space+Grotesk:wght@300;400&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #050505;
             --text-color: #e0e0e0;
-            --accent-color: #888;
-            --cursor-size: 20px;
+            --accent-gold: #c5a367;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: 'Space Grotesk', sans-serif;
             overflow: hidden;
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 1.5s ease-out;
-        }
-
-        body.loaded { opacity: 1; }
-
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            text-decoration: none;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        /* 只有在非觸控裝置才顯示自訂游標 */
-        @media (hover: hover) and (pointer: fine) {
-            * { cursor: none; }
-            .cursor {
-                width: var(--cursor-size);
-                height: var(--cursor-size);
-                border: 1px solid white;
-                border-radius: 50%;
-                position: fixed;
-                pointer-events: none;
-                z-index: 9999;
-                transform: translate(-50%, -50%);
-                transition: width 0.3s, height 0.3s, background-color 0.3s;
-                mix-blend-mode: difference;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: black;
-                font-size: 10px;
-                font-weight: bold;
-            }
-            .cursor.active { width: 60px; height: 60px; background-color: white; border: none; }
-            .cursor.copy-mode { width: 50px; height: 50px; background-color: white; color: black; mix-blend-mode: normal; }
-            .cursor.copy-mode::after { content: 'COPY'; }
-        }
-
-        .gradient-bg {
-            position: fixed;
-            top: 0; left: 0;
             width: 100vw; height: 100vh;
-            z-index: -1;
-            background: 
-                radial-gradient(circle at 20% 40%, rgba(70, 60, 150, 0.25), transparent 50%),
-                radial-gradient(circle at 80% 60%, rgba(40, 120, 110, 0.2), transparent 50%);
-            filter: blur(60px);
-            animation: breathe 10s infinite alternate;
+            -webkit-font-smoothing: antialiased;
         }
 
-        @keyframes breathe {
-            0% { transform: scale(1); opacity: 0.6; }
-            100% { transform: scale(1.2); opacity: 1; }
+        /* --- 核心滾動容器 (兩頁結構) --- */
+        .main-scroll-container {
+            height: 100vh;
+            width: 100vw;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory; /* 強制分頁 */
+            scroll-behavior: smooth;
+            -ms-overflow-style: none; scrollbar-width: none;
+        }
+        .main-scroll-container::-webkit-scrollbar { display: none; }
+
+        /* --- 通用區塊 --- */
+        section {
+            height: 100vh; width: 100vw;
+            scroll-snap-align: start; /* 每一頁吸附頂部 */
+            position: relative;
+            overflow: hidden;
         }
 
+        /* --- 導覽列 (固定在上層) --- */
         nav {
-            position: absolute;
+            position: fixed;
             top: 0; width: 100%;
             padding: 2.5rem 4rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 10;
-        }
-
-        .logo { font-family: 'Italiana', serif; font-size: 1.5rem; letter-spacing: 2px; }
-
-        .hero-container { text-align: center; position: relative; z-index: 5; }
-
-        .hero-title {
-            font-size: 13vw;
-            font-family: 'Italiana', serif;
-            line-height: 0.85;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s;
-        }
-
-        .hero-subtitle {
-            margin-top: 1.5rem;
-            font-size: 0.9rem;
-            color: var(--accent-color);
-            letter-spacing: 0.4em;
-            text-transform: uppercase;
-            opacity: 0;
-            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.7s;
-        }
-        
-        /* 新增的香水連結樣式 */
-        .perfume-link {
-            position: absolute;
-            bottom: 4rem; /* 與 contact-section 相同的底部位置 */
-            font-size: 1rem;
-            letter-spacing: 2px;
-            color: var(--text-color);
-            text-transform: uppercase;
-            padding: 10px 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            opacity: 0;
-            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.2s;
-            z-index: 6; /* 確保在其他元素之上 */
-        }
-
-        .perfume-link:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            border-color: white;
-            transform: translateY(-5px);
-        }
-        /* 手機點擊效果 */
-        .perfume-link:active {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(0);
-        }
-
-        @keyframes fadeUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .line {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.03);
+            z-index: 100;
+            mix-blend-mode: difference;
             pointer-events: none;
         }
-        .v-line { width: 1px; height: 100vh; left: 50%; top: 0; }
-        .h-line { height: 1px; width: 100vw; top: 50%; left: 0; }
+        .logo { font-family: 'Italiana', serif; font-size: 1.5rem; letter-spacing: 2px; color: white; pointer-events: auto; }
+        .est { font-size: 0.7rem; letter-spacing: 1px; opacity: 0.6; color: white; }
 
-        /* 全屏過渡層 */
-        .transition-overlay {
-            position: fixed;
-            top: 0; left: 0;
+        /* =========================================
+           PAGE 1: HERO (品牌首頁)
+           ========================================= */
+        .hero-section {
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+        }
+
+        .hero-title {
+            font-size: 13vw; font-family: 'Italiana', serif; line-height: 0.85;
+            opacity: 0; transform: translateY(30px);
+            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s;
+            text-align: center;
+        }
+        .hero-subtitle {
+            margin-top: 1.5rem; font-size: 0.9rem; color: #888;
+            letter-spacing: 0.4em; text-transform: uppercase;
+            opacity: 0; transform: translateY(30px);
+            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.7s;
+        }
+
+        /* 滑動提示 */
+        .scroll-hint {
+            position: absolute; bottom: 4rem;
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            opacity: 0; animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.2s;
+        }
+        .scroll-text { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+        .scroll-line {
+            width: 1px; height: 40px; background: rgba(255,255,255,0.3);
+            animation: growLine 2s infinite ease-in-out; transform-origin: top;
+        }
+
+        /* =========================================
+           PAGE 2: COLLECTIONS (三欄選擇)
+           ========================================= */
+        .collection-section {
+            display: flex; /* 橫向排列三個章節 */
             width: 100vw; height: 100vh;
-            background-color: #000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.8s ease-in-out, visibility 0s 0.8s;
-            z-index: 10000;
-        }
-        .transition-overlay.active {
-            opacity: 1;
-            visibility: visible;
-            transition: opacity 0.8s ease-in-out;
         }
 
-        /* 手機版細節調整 */
+        .chapter {
+            flex: 1; /* 預設均等 */
+            position: relative;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            transition: flex 0.8s cubic-bezier(0.25, 1, 0.5, 1); /* 流暢縮放 */
+            overflow: hidden;
+            cursor: pointer;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            background-color: #0a0a0a;
+        }
+        .chapter:last-child { border-right: none; }
+
+        /* 互動效果 */
+        .chapter:hover { flex: 2.5; } /* 滑鼠指到的變大 */
+        .collection-section:hover .chapter:not(:hover) { opacity: 0.5; } /* 其他變暗 */
+
+        /* 背景圖片層 */
+        .bg-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            opacity: 0.5;
+            transition: transform 1.2s ease, opacity 0.8s ease, filter 0.8s ease;
+            filter: grayscale(80%) brightness(0.6);
+            z-index: 0;
+        }
+        .chapter:hover .bg-overlay {
+            opacity: 1; transform: scale(1.05); filter: grayscale(0%) brightness(0.9);
+        }
+
+        /* 文字內容層 */
+        .content {
+            text-align: center; z-index: 2; position: relative;
+            transform: translateY(20px); transition: transform 0.6s ease 0.1s;
+        }
+        .chapter:hover .content { transform: translateY(0); }
+
+        .ch-num {
+            font-family: 'Italiana', serif; font-size: 0.9rem; letter-spacing: 3px;
+            color: var(--accent-gold); margin-bottom: 1rem; display: block; opacity: 0.8;
+        }
+        .ch-title {
+            font-family: 'Italiana', serif; font-size: 3vw; text-transform: uppercase;
+            letter-spacing: 0.05em; margin-bottom: 0.5rem; white-space: nowrap; color: white;
+            text-shadow: 0 5px 30px rgba(0,0,0,0.8);
+        }
+        .ch-desc {
+            font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+            opacity: 0; transform: translateY(20px); transition: all 0.6s ease 0.1s;
+            color: rgba(255,255,255,0.9);
+        }
+        .chapter:hover .ch-desc { opacity: 1; transform: translateY(0); }
+
+        /* 遮罩 */
+        .chapter::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.8));
+            z-index: 1; pointer-events: none;
+        }
+
+        /* --- 圖片設定 --- */
+        /* Ch1 (左): Luminescence - 花香/光 */
+        .c1 .bg-overlay { background-image: url('https://images.unsplash.com/photo-1606041008023-472dfb5e530f?q=80&w=2688&auto=format&fit=crop'); }
+        /* Ch2 (中): Silhouette - 木質/森林 */
+        .c2 .bg-overlay { background-image: url('https://images.unsplash.com/photo-1445217143695-467124038776?q=80&w=2726&auto=format&fit=crop'); }
+        /* Ch3 (右): Obsidian - 東方/水母 */
+        .c3 .bg-overlay { background-image: url('image_0.png'); }
+
+        /* --- 動畫 Keyframes --- */
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes growLine {
+            0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
+            50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+            51% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+            100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+        }
+
+        /* --- 轉場黑屏 --- */
+        .transition-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #000; opacity: 0; visibility: hidden;
+            transition: opacity 0.8s ease; z-index: 9999;
+        }
+        .transition-overlay.active { opacity: 1; visibility: visible; }
+
+        /* --- 手機版 RWD --- */
         @media (max-width: 768px) {
             nav { padding: 2rem; }
-            .hero-title { font-size: 22vw; }
-            .hero-subtitle { font-size: 0.7rem; letter-spacing: 0.3em; }
-            .perfume-link { bottom: 5rem; font-size: 0.9rem; padding: 8px 15px; }
+            .hero-title { font-size: 20vw; }
+            
+            /* 手機版改為垂直堆疊 */
+            .collection-section { flex-direction: column; }
+            .chapter { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+            
+            .ch-title { font-size: 2rem; }
+            .ch-desc { opacity: 0.8; transform: none; margin-top: 5px; }
+            .chapter:hover { flex: 1.5; } /* 手機版展開幅度小一點 */
+            .content { transform: translateY(0); }
+        }
+        
+        /* 自訂游標 */
+        @media (hover: hover) and (pointer: fine) {
+            * { cursor: none; }
+            .cursor {
+                width: 20px; height: 20px; border: 1px solid white; border-radius: 50%;
+                position: fixed; pointer-events: none; z-index: 10000;
+                transform: translate(-50%, -50%); mix-blend-mode: difference;
+                transition: transform 0.2s;
+            }
+            .cursor.active { transform: translate(-50%, -50%) scale(2.5); background: white; opacity: 0.2; }
         }
     </style>
 </head>
 <body>
 
     <div class="cursor"></div>
-    <div class="gradient-bg"></div>
-    <div class="line v-line"></div>
-    <div class="line h-line"></div>
+    <div class="transition-overlay" id="overlay"></div>
 
     <nav>
-        <div class="logo" data-hover>naha.</div>
-        <div style="font-size: 0.7rem; letter-spacing: 1px; opacity: 0.5;">EST. 2026</div>
+        <div class="logo">naha.</div>
+        <div class="est">EST. 2026</div>
     </nav>
 
-    <div class="hero-container">
-        <h1 class="hero-title" data-hover>NAHA</h1>
-        <p class="hero-subtitle">Parfums - Beyond Scents</p>
+    <div class="main-scroll-container">
+        
+        <section class="hero-section">
+            <h1 class="hero-title">NAHA</h1>
+            <p class="hero-subtitle">Parfums - Beyond Scents</p>
+            <div class="scroll-hint">
+                <span class="scroll-text">Scroll</span>
+                <div class="scroll-line"></div>
+            </div>
+        </section>
+
+        <section class="collection-section">
+            
+            <div class="chapter c1" onclick="navigateTo('chapter_luminescence.html')">
+                <div class="bg-overlay"></div>
+                <div class="content">
+                    <span class="ch-num">Chapter I</span>
+                    <h2 class="ch-title">Luminescence</h2>
+                    <p class="ch-desc">The Floral Series</p>
+                </div>
+            </div>
+
+            <div class="chapter c2" onclick="navigateTo('#')"> <div class="bg-overlay"></div>
+                <div class="content">
+                    <span class="ch-num">Chapter II</span>
+                    <h2 class="ch-title">Silhouette</h2>
+                    <p class="ch-desc">The Woody Series</p>
+                </div>
+            </div>
+
+            <div class="chapter c3" onclick="navigateTo('#')"> <div class="bg-overlay"></div>
+                <div class="content">
+                    <span class="ch-num">Chapter III</span>
+                    <h2 class="ch-title">Obsidian</h2>
+                    <p class="ch-desc">The Oriental Series</p>
+                </div>
+            </div>
+
+        </section>
+
     </div>
 
-    <a href="perfumes.html" class="perfume-link" data-hover id="discoverPerfume">
-        Discover Seraphina
-    </a>
-
-    <div class="transition-overlay" id="transitionOverlay"></div>
-
     <script>
-        // 字體載入偵測
-        document.fonts.ready.then(() => document.body.classList.add('loaded'));
-        setTimeout(() => { if (!document.body.classList.contains('loaded')) document.body.classList.add('loaded'); }, 2000);
+        // 頁面跳轉
+        function navigateTo(url) {
+            if(url === '#') return;
+            const overlay = document.getElementById('overlay');
+            overlay.classList.add('active');
+            setTimeout(() => { window.location.href = url; }, 800);
+        }
 
-        // 游標邏輯
+        // 游標效果
         const cursor = document.querySelector('.cursor');
         const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-        if (!isTouchDevice) {
+        if (!isTouchDevice && cursor) {
             document.addEventListener('mousemove', (e) => {
                 requestAnimationFrame(() => {
                     cursor.style.left = e.clientX + 'px';
                     cursor.style.top = e.clientY + 'px';
                 });
             });
-
-            document.querySelectorAll('[data-hover]').forEach(el => {
+            document.querySelectorAll('.chapter').forEach(el => {
                 el.addEventListener('mouseenter', () => cursor.classList.add('active'));
                 el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
             });
         }
-        
-        // 過場動畫邏輯
-        document.getElementById('discoverPerfume').addEventListener('click', function(e) {
-            e.preventDefault(); // 阻止默認跳轉
-            const overlay = document.getElementById('transitionOverlay');
-            overlay.classList.add('active'); // 激活過渡層
-
-            setTimeout(() => {
-                window.location.href = this.href; // 過渡動畫結束後跳轉
-            }, 800); // 與 CSS 中的 transition-duration 保持一致
-        });
     </script>
 </body>
 </html>
