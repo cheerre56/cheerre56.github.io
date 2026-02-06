@@ -33,12 +33,12 @@
             color: var(--text-color);
             font-family: 'Space Grotesk', sans-serif;
             -webkit-font-smoothing: antialiased;
-            opacity: 0; transition: opacity 1.0s ease-out; /* 進場稍微快一點 */
+            opacity: 0; transition: opacity 1.0s ease-out;
         }
         body.loaded { opacity: 1; }
 
         /* =========================================
-           1. 背景特效 (調整：清晰度 & 速度)
+           1. 背景特效
            ========================================= */
         .gradient-bg {
             position: fixed;
@@ -47,9 +47,14 @@
             z-index: -1;
             background-color: var(--bg-color); 
             background-image: 
-                radial-gradient(circle at 20% 40%, rgba(70, 60, 150, 0.35), transparent 45%), /* 稍微增加透明度，更顯色 */
+                radial-gradient(circle at 20% 40%, rgba(70, 60, 150, 0.35), transparent 45%),
                 radial-gradient(circle at 80% 60%, rgba(40, 120, 110, 0.3), transparent 45%);
-            
+            filter: blur(1px); 
+        }
+
+        @keyframes breathe {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.3); opacity: 0.9; }
         }
 
         /* =========================================
@@ -66,9 +71,7 @@
         .main-scroll-container::-webkit-scrollbar { display: none; }
 
         section {
-            height: 100vh; height: 100dvh;
             width: 100vw;
-            scroll-snap-align: start;
             position: relative;
             overflow: hidden;
             display: flex; flex-direction: column;
@@ -97,6 +100,8 @@
            PAGE 1: HERO
            ========================================= */
         .hero-section {
+            height: 100vh; height: 100dvh;
+            scroll-snap-align: start;
             background: transparent;
         }
 
@@ -131,6 +136,9 @@
            PAGE 2: COLLECTIONS
            ========================================= */
         .collection-section {
+            /* 桌面預設：全屏，吸附，橫向排列 */
+            height: 100vh; height: 100dvh;
+            scroll-snap-align: start;
             flex-direction: row;
             background-color: transparent;
         }
@@ -201,18 +209,30 @@
         }
         .transition-overlay.active { opacity: 1; visibility: visible; }
 
+        /* =========================================
+           4. 手機版 RWD 修正 (解決圖片變醜的問題)
+           ========================================= */
         @media (max-width: 768px) {
             nav { padding: 2rem; }
             .hero-title { font-size: 20vw; }
             .hero-subtitle { font-size: 0.7rem; letter-spacing: 0.3em; }
 
-            .collection-section { flex-direction: column; }
+            /* 修改容器：高度自動，允許滑動，取消強制吸附 */
+            .collection-section { 
+                height: auto; 
+                flex-direction: column; 
+                scroll-snap-align: none;
+            }
             
+            /* 修改章節：給予固定高度，圖片不再被壓扁 */
             .chapter { 
+                width: 100%;
+                height: 60vh; /* 每一張卡片佔 60% 螢幕高，比例更海報化 */
+                flex: none !important; /* 禁用 Flex 伸縮，防止被壓縮 */
                 border-right: none; 
                 border-bottom: 1px solid rgba(255,255,255,0.1); 
-                flex: 1 !important; 
             }
+            
             .ch-title { font-size: 2rem; }
             .ch-desc { opacity: 0.8; transform: translateY(0); margin-top: 5px; }
             .content { transform: translateY(0); }
