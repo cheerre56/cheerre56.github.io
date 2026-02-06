@@ -50,13 +50,6 @@
                 radial-gradient(circle at 20% 40%, rgba(70, 60, 150, 0.35), transparent 45%), /* 稍微增加透明度，更顯色 */
                 radial-gradient(circle at 80% 60%, rgba(40, 120, 110, 0.3), transparent 45%);
             
-            /* 調整 1: 減少模糊，讓形狀更清晰 (原 60px) */
-            filter: blur(3px); 
-            
-            /* 調整 2: 加快速度 (原 10s -> 6s)，讓消散感更明顯 */
-            animation: breathe 2s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
-            
-            will-change: transform, opacity;
         }
 
         /* =========================================
