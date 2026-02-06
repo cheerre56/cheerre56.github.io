@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>naha. | Chapter I: Luminescence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Space+Grotesk:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-main: #ffffff;
+            --text-sub: #a0a0a0;
+            --accent: #c5a367;
+            --cursor-size: 20px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Space Grotesk', sans-serif;
+            overflow: hidden; /* 防止預設滾動，交給 slider-container */
+            opacity: 0;
+            transition: opacity 1.2s ease-out;
+        }
+
+        body.loaded { opacity: 1; }
+
+        /* --- 氛圍背景 (找回絲滑感的核心) --- */
+        .bg-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .gradient-bg {
+            width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 20% 40%, rgba(70, 60, 150, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 60%, rgba(40, 120, 110, 0.12), transparent 50%);
+            filter: blur(80px);
+            animation: breathe 10s infinite alternate ease-in-out;
+        }
+        @keyframes breathe {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        /* --- 自訂游標 (僅桌面) --- */
+        @media (hover: hover) and (pointer: fine) {
+            * { cursor: none; }
+            .cursor {
+                width: var(--cursor-size);
+                height: var(--cursor-size);
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                border-radius: 50%;
+                position: fixed;
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%);
+                transition: width 0.3s, height 0.3s, background-color 0.3s;
+                mix-blend-mode: difference;
+                backdrop-filter: blur(2px);
+            }
+            .cursor.active { 
+                width: 50px; height: 50px; 
+                background: rgba(255, 255, 255, 0.1);
+                border-color: var(--accent);
+            }
+        }
+
+        /* --- 核心：Scroll Snap 容器 --- */
+        .slider-container {
+            height: 100vh;
+            width: 100vw;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .slider-container::-webkit-scrollbar { display: none; }
+
+        /* 每一頁 (Slide) */
+        .slide {
+            height: 100vh;
+            width: 100vw;
+            scroll-snap-align: start;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* --- 導覽列 --- */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 1.8rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            mix-blend-mode: difference;
+        }
+        .logo { font-family: 'Italiana', serif; font-size: 1.4rem; color: white; text-decoration: none; }
+        .chapter-name { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: #ccc; opacity: 0.7; }
+        .close-btn { color: white; text-decoration: none; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; transition: 0.3s; border-bottom: 1px solid transparent;}
+        .close-btn:hover { border-color: white; }
+
+        /* --- 頁面指示器 --- */
+        .indicators {
+            position: fixed;
+            right: 2rem; top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column; gap: 15px; z-index: 100;
+        }
+        .dot {
+            width: 6px; height: 6px; background: rgba(255,255,255,0.2);
+            border-radius: 50%; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .dot.active { background: var(--accent); transform: scale(1.8); }
+
+        /* --- 內容佈局 --- */
+        .slide-content {
+            display: flex;
+            width: 100%; max-width: 1400px; height: 80%;
+            align-items: center; padding: 0 5%; gap: 6%;
+        }
+
+        /* 左側圖片區 */
+        .visual-area {
+            flex: 1; height: 100%; position: relative;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .img-frame {
+            width: 100%; max-width: 420px; aspect-ratio: 3/4.2;
+            overflow: hidden;
+            border-radius: 120px 120px 0 0;
+            border: 1px solid rgba(255,255,255,0.08);
+            position: relative;
+            /* 圖片預設狀態：稍微縮小且透明 */
+            opacity: 0; 
+            transform: scale(0.95) translateY(20px);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .img-frame img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: saturate(0.9) contrast(1.1);
+        }
+
+        /* 當 Slide 激活時的圖片動畫 */
+        .slide.active .img-frame {
+            opacity: 1; transform: scale(1) translateY(0);
+        }
+
+        /* 右側文字區 */
+        .text-area { flex: 1; padding-left: 1rem; }
+        
+        /* 文字預設狀態：隱藏並下移 */
+        .reveal {
+            opacity: 0; transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        /* 當 Slide 激活時的文字動畫 (延遲播放) */
+        .slide.active .reveal { opacity: 1; transform: translateY(0); }
+        .slide.active .delay-1 { transition-delay: 0.2s; }
+        .slide.active .delay-2 { transition-delay: 0.3s; }
+        .slide.active .delay-3 { transition-delay: 0.5s; }
+        .slide.active .delay-4 { transition-delay: 0.7s; }
+
+        .perfume-no { 
+            font-size: 0.75rem; letter-spacing: 0.25em; 
+            color: var(--accent); margin-bottom: 1.2rem; display: block; 
+            text-transform: uppercase;
+        }
+        .perfume-name {
+            font-family: 'Italiana', serif; font-size: 5.5rem;
+            line-height: 0.9; margin-bottom: 1.8rem;
+            background: linear-gradient(45deg, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .perfume-desc {
+            font-family: 'Noto Sans TC', sans-serif;
+            font-size: 0.95rem; line-height: 1.8;
+            color: var(--text-sub); max-width: 460px;
+            margin-bottom: 2.5rem; font-weight: 300; letter-spacing: 0.02em;
+        }
+        .notes-grid {
+            display: grid; grid-template-columns: auto 1fr;
+            gap: 12px 25px; border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 1.8rem; width: fit-content;
+        }
+        .note-row { display: contents; }
+        .note-label { 
+            font-size: 0.65rem; text-transform: uppercase; 
+            color: #666; letter-spacing: 0.15em; padding-top: 2px;
+        }
+        .note-val { font-size: 0.9rem; color: #d0d0d0; font-family: 'Italiana', serif; letter-spacing: 0.02em;}
+
+        /* RWD Mobile */
+        @media (max-width: 1024px) {
+            nav { padding: 1.5rem; }
+            .indicators { right: 1rem; }
+            .slide-content {
+                flex-direction: column; height: 100%;
+                padding: 85px 8% 40px; gap: 30px;
+                text-align: center; justify-content: flex-start;
+            }
+            .visual-area { flex: 0 0 auto; width: 100%; height: 42vh; }
+            .img-frame { height: 100%; width: auto; aspect-ratio: 3/4; margin: 0 auto; border-radius: 150px 150px 0 0; }
+            
+            .text-area { padding-left: 0; display: flex; flex-direction: column; align-items: center; width: 100%; }
+            .perfume-name { font-size: 3.2rem; margin-bottom: 1rem; }
+            .perfume-desc { 
+                font-size: 0.85rem; margin-bottom: 1.5rem; 
+                display: -webkit-box; -webkit-line-clamp: 3; 
+                -webkit-box-orient: vertical; overflow: hidden;
+            }
+            .notes-grid {
+                display: flex; flex-wrap: wrap; justify-content: center;
+                gap: 15px; border-top: none; padding-top: 0;
+            }
+            .note-row { display: flex; flex-direction: column; gap: 4px; }
+            
+            /* 手機版滑動提示 */
+            .scroll-hint {
+                position: absolute; bottom: 25px; left: 50%;
+                transform: translateX(-50%); font-size: 0.6rem;
+                opacity: 0.4; letter-spacing: 3px;
+                animation: floatUp 2s infinite;
+            }
+        }
+        @keyframes floatUp {
+            0%, 100% { transform: translate(-50%, 0); opacity: 0.4; }
+            50% { transform: translate(-50%, -10px); opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor"></div>
+    
+    <div class="bg-container">
+        <div class="gradient-bg"></div>
+    </div>
+
+    <nav>
+        <a href="collections.html" class="logo" data-hover>naha.</a>
+        <div class="chapter-name">Ch.I Luminescence</div>
+        <a href="collections.html" class="close-btn" data-hover>Close</a>
+    </nav>
+
+    <div class="indicators">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+    </div>
+
+    <div class="slider-container" id="slider">
+        
+        <section class="slide" id="slide1">
+            <div class="slide-content">
+                <div class="visual-area">
+                    <div class="img-frame" data-hover>
+                        <img src="https://i.meee.com.tw/IiCsU8D.png" alt="Seraphina">
+                    </div>
+                </div>
+                <div class="text-area">
+                    <span class="perfume-no reveal delay-1">NO.01</span>
+                    <h1 class="perfume-name reveal delay-2">Seraphina</h1>
+                    <p class="perfume-desc reveal delay-3">
+                        捕捉清晨第一縷陽光穿透薄霧的瞬間。沒有木質的沉重，只有如羽翼般輕盈的純淨。
+                        <br><br>
+                        Weightless, pure, and ethereal.
+                    </p>
+                    <div class="notes-grid reveal delay-4">
+                        <div class="note-row"><span class="note-label">Top</span> <span class="note-val">Aldehydes, Pear</span></div>
+                        <div class="note-row"><span class="note-label">Heart</span> <span class="note-val">Tuberose, Orange Blossom</span></div>
+                        <div class="note-row"><span class="note-label">Base</span> <span class="note-val">White Musk, Ambroxan</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-hint">SCROLL</div>
+        </section>
+
+        <section class="slide" id="slide2">
+            <div class="slide-content">
+                <div class="visual-area">
+                    <div class="img-frame" data-hover>
+                        <img src="https://images.unsplash.com/photo-1595456206002-c423d6a2dc5a?q=80&w=800&auto=format&fit=crop" alt="Aurelia">
+                    </div>
+                </div>
+                <div class="text-area">
+                    <span class="perfume-no reveal delay-1">NO.02</span>
+                    <h1 class="perfume-name reveal delay-2">Aurelia</h1>
+                    <p class="perfume-desc reveal delay-3">
+                        午後金色光暈灑落的溫暖餘暉。金合歡與蜂蜜交織出的流動光影，是記憶中最柔軟的一刻。
+                        <br><br>
+                        Golden hour bottled in time.
+                    </p>
+                    <div class="notes-grid reveal delay-4">
+                        <div class="note-row"><span class="note-label">Top</span> <span class="note-val">Bergamot, Honey</span></div>
+                        <div class="note-row"><span class="note-label">Heart</span> <span class="note-val">Mimosa, Jasmine</span></div>
+                        <div class="note-row"><span class="note-label">Base</span> <span class="note-val">Sandalwood, Vanilla</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // 1. 頁面載入淡入效果
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+            // 手動觸發第一個 slide 的動畫
+            checkSlides(); 
+        });
+
+        // 2. 游標邏輯
+        const cursor = document.querySelector('.cursor');
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+        if (!isTouchDevice && cursor) {
+            document.addEventListener('mousemove', (e) => {
+                requestAnimationFrame(() => {
+                    cursor.style.left = e.clientX + 'px';
+                    cursor.style.top = e.clientY + 'px';
+                });
+            });
+            document.querySelectorAll('[data-hover]').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('active'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
+            });
+        }
+
+        // 3. Intersection Observer (偵測滑動，觸發動畫)
+        const slider = document.getElementById('slider');
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+
+        // 定義觀察器選項
+        const observerOptions = {
+            root: slider,
+            threshold: 0.5 // 當 50% 的 slide 出現時觸發
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // 加入 active class 觸發 CSS 動畫
+                    entry.target.classList.add('active');
+                    
+                    // 更新右側點點
+                    const index = Array.from(slides).indexOf(entry.target);
+                    dots.forEach(d => d.classList.remove('active'));
+                    if(dots[index]) dots[index].classList.add('active');
+                } else {
+                    // 可選：滑開時移除 active，這樣滑回來會重新播放動畫
+                    // 如果希望動畫只播一次，把下面這行註解掉
+                    entry.target.classList.remove('active');
+                }
+            });
+        }, observerOptions);
+
+        slides.forEach(slide => observer.observe(slide));
+
+        // 備用：手動檢查函式 (for initial load)
+        function checkSlides() {
+            slides.forEach((slide, index) => {
+                const rect = slide.getBoundingClientRect();
+                if (rect.top >= 0 && rect.top < window.innerHeight / 2) {
+                    slide.classList.add('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
