@@ -14,96 +14,83 @@
             --accent-gold: #c5a367;
         }
 
-        /* --- 全局重置 --- */
+        /* --- 1. 全局設定 --- */
         html, body {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
-            background-color: transparent; 
-            overflow: hidden; /* 隱藏原生捲軸，交給內部容器接管 */
-            overscroll-behavior: none; /* 防止 iOS 橡皮筋效果 */
+            background-color: var(--bg-color);
+            overflow: hidden; /* 隱藏原生捲軸 */
+            overscroll-behavior: none; /* iOS 防回彈 */
         }
 
         *, *::before, *::after {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-            cursor: none; 
             -webkit-user-select: none; user-select: none;
         }
 
         body {
             color: var(--text-color);
             font-family: 'Space Grotesk', sans-serif;
-            -webkit-font-smoothing: antialiased;
             opacity: 0; transition: opacity 1.0s ease-out;
         }
         body.loaded { opacity: 1; }
 
-        /* =========================================
-           背景特效
-           ========================================= */
+        /* --- 2. 背景與轉場特效 --- */
         .gradient-bg {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: -1;
-            background-color: var(--bg-color); 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1; pointer-events: none;
             background-image: 
                 radial-gradient(circle at 20% 40%, rgba(70, 60, 150, 0.35), transparent 45%),
                 radial-gradient(circle at 80% 60%, rgba(40, 120, 110, 0.3), transparent 45%);
-            filter: blur(1px); 
+            filter: blur(1px); will-change: transform;
         }
 
-        /* =========================================
-           核心滾動容器 (PPT 模式關鍵)
-           ========================================= */
+        .transition-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000; opacity: 0; visibility: hidden;
+            transition: opacity 0.8s ease; z-index: 9999; pointer-events: none;
+        }
+        .transition-overlay.active { opacity: 1; visibility: visible; pointer-events: auto; }
+
+        /* --- 3. 滾動容器 (PPT 模式核心) --- */
         .main-scroll-container {
-            height: 100vh; height: 100dvh; /* 支援手機動態高度 */
+            height: 100vh; height: 100dvh; /* 支援動態視窗高度 */
             width: 100vw;
             overflow-y: scroll;
             scroll-snap-type: y mandatory; /* 強制吸附 */
             scroll-behavior: smooth;
-            -ms-overflow-style: none; scrollbar-width: none;
+            scrollbar-width: none;
         }
         .main-scroll-container::-webkit-scrollbar { display: none; }
 
         section {
             width: 100vw;
-            height: 100vh; height: 100dvh; /* 確保每一頁都是滿屏 */
+            height: 100vh; height: 100dvh;
             position: relative;
             overflow: hidden;
             display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            scroll-snap-align: start; /* 每一頁的開頭都要吸附 */
-            scroll-snap-stop: always; /* 防止滑太大力一次跳過好幾頁 */
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
         }
 
-        /* =========================================
-           導覽列
-           ========================================= */
+        /* --- 4. 導覽列 --- */
         nav {
-            position: fixed;
-            top: 0; width: 100%;
-            padding: 2.5rem 4rem;
+            position: fixed; top: 0; width: 100%; padding: 2.5rem 4rem;
             display: flex; justify-content: space-between; align-items: center;
-            z-index: 100;
-            mix-blend-mode: difference;
-            pointer-events: none;
+            z-index: 100; mix-blend-mode: difference; pointer-events: none;
         }
-        .logo { 
-            font-family: 'Italiana', serif; font-size: 1.5rem; letter-spacing: 2px; color: white; 
-            pointer-events: auto; 
-        }
+        .logo { font-family: 'Italiana', serif; font-size: 1.5rem; letter-spacing: 2px; color: white; pointer-events: auto; }
         .est { font-size: 0.7rem; letter-spacing: 1px; opacity: 0.6; color: white; }
 
-        /* =========================================
-           PAGE 1: HERO
-           ========================================= */
+        /* --- 5. Hero 區塊 --- */
+        .hero-section { justify-content: center; align-items: center; }
+        
         .hero-title {
             font-size: 13vw; font-family: 'Italiana', serif; line-height: 0.85;
             opacity: 0; transform: translateY(30px);
             animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s;
-            text-align: center; pointer-events: auto;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center; text-shadow: 0 10px 30px rgba(0,0,0,0.3); pointer-events: auto;
         }
         .hero-subtitle {
             margin-top: 1.5rem; font-size: 0.9rem; color: var(--accent-color);
@@ -112,7 +99,7 @@
             animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.7s;
         }
         .scroll-hint {
-            position: absolute; bottom: 4rem;
+            position: absolute; bottom: 4rem; left: 50%; transform: translateX(-50%);
             display: flex; flex-direction: column; align-items: center; gap: 10px;
             opacity: 0; animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.2s;
             pointer-events: auto;
@@ -123,132 +110,91 @@
             animation: growLine 2s infinite ease-in-out; transform-origin: top;
         }
 
-        /* =========================================
-           PAGE 2: COLLECTIONS
-           ========================================= */
-        .collection-section {
-            flex-direction: row; /* 電腦版橫向排列 */
-            background-color: transparent;
-        }
+        /* --- 6. Collection 區塊 (核心邏輯) --- */
+        /* 預設電腦版：橫向 Flex */
+        .collection-section { flex-direction: row; }
 
         .chapter {
             flex: 1; height: 100%;
-            position: relative;
+            position: relative; overflow: hidden;
             border-right: 1px solid rgba(255,255,255,0.1);
             transition: flex 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-            overflow: hidden; pointer-events: auto;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
-            background-color: rgba(5, 5, 5, 0.5); 
-            backdrop-filter: blur(3px);
+            background: rgba(5,5,5,0.5); backdrop-filter: blur(3px);
+            cursor: pointer;
         }
         .chapter:last-child { border-right: none; }
 
-        @media (hover: hover) {
-            .chapter:hover { flex: 2.5; }
-            .collection-section:hover .chapter:not(:hover) { opacity: 0.4; }
-        }
-
         .bg-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-size: cover; background-position: center center;
-            opacity: 0.5;
+            background-size: cover; background-position: center;
+            opacity: 0.5; filter: grayscale(80%) brightness(0.6);
             transition: transform 1.2s ease, opacity 0.8s ease, filter 0.8s ease;
-            filter: grayscale(80%) brightness(0.6);
-            z-index: 0;
-            will-change: transform;
+            z-index: 0; will-change: transform;
         }
-        .chapter:hover .bg-overlay {
-            opacity: 1; transform: scale(1.05); filter: grayscale(0%) brightness(1);
-        }
+        .chapter:hover .bg-overlay { opacity: 1; transform: scale(1.05); filter: grayscale(0%) brightness(1); }
 
-        .content {
-            text-align: center; z-index: 2; position: relative;
-            transform: translateY(20px); transition: transform 0.6s ease 0.1s;
-        }
+        .content { z-index: 2; text-align: center; transform: translateY(20px); transition: transform 0.6s ease 0.1s; pointer-events: none; }
         .chapter:hover .content { transform: translateY(0); }
 
-        .ch-num { font-family: 'Italiana', serif; font-size: 0.9rem; letter-spacing: 3px; color: var(--accent-gold); margin-bottom: 1rem; display: block; opacity: 0.9; }
-        .ch-title { font-family: 'Italiana', serif; font-size: 3.5vw; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; white-space: nowrap; color: white; text-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-        .ch-desc { font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; opacity: 0; transform: translateY(20px); transition: all 0.6s ease 0.1s; color: rgba(255,255,255,0.8); }
+        .ch-num { font-family: 'Italiana', serif; color: var(--accent-gold); letter-spacing: 3px; display: block; margin-bottom: 0.5rem; }
+        .ch-title { font-family: 'Italiana', serif; font-size: 3.5vw; text-transform: uppercase; color: white; margin: 0; text-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .ch-desc { font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.8); opacity: 0; transform: translateY(10px); transition: all 0.6s ease 0.1s; margin-top: 10px; display: block; }
         .chapter:hover .ch-desc { opacity: 1; transform: translateY(0); }
 
-        .chapter::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8));
-            z-index: 1; pointer-events: none;
-        }
-
+        /* 圖片資源 */
         .c1 .bg-overlay { background-image: url('https://images.unsplash.com/photo-1606041008023-472dfb5e530f?q=80&w=2688&auto=format&fit=crop'); }
         .c2 .bg-overlay { background-image: url('https://images.unsplash.com/photo-1445217143695-467124038776?q=80&w=2726&auto=format&fit=crop'); }
         .c3 .bg-overlay { background-image: url('https://images.unsplash.com/photo-1548685913-fe6678babe8d?q=80&w=2688&auto=format&fit=crop'); }
 
+        /* --- 7. 電腦版專屬互動 (Hover) --- */
+        @media (hover: hover) and (pointer: fine) {
+            * { cursor: none; } /* 隱藏系統游標 */
+            
+            .cursor {
+                width: 20px; height: 20px; 
+                border: 1px solid rgba(255,255,255,0.8); border-radius: 50%;
+                position: fixed; pointer-events: none; z-index: 10000;
+                transform: translate(-50%, -50%); mix-blend-mode: difference;
+                transition: width 0.3s, height 0.3s, background-color 0.3s;
+                will-change: transform;
+            }
+            .cursor.active { width: 60px; height: 60px; background-color: white; opacity: 0.1; border: none; }
+
+            .chapter:hover { flex: 2.5; }
+            .collection-section:hover .chapter:not(:hover) { opacity: 0.4; }
+        }
+
+        /* --- 8. 手機版 RWD (PPT 模式) --- */
+        @media (max-width: 768px) {
+            nav { padding: 1.5rem 2rem; }
+            .hero-title { font-size: 20vw; }
+            .hero-subtitle { font-size: 0.7rem; letter-spacing: 0.3em; }
+
+            /* 轉為直向，高度鎖死 100dvh */
+            .collection-section { flex-direction: column; }
+
+            .chapter { 
+                width: 100%; flex: 1; /* 均分高度 (各33.3%) */
+                border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+
+            /* 手機版字體微調 */
+            .ch-title { font-size: 2rem; margin-bottom: 0; }
+            .ch-num { font-size: 0.7rem; margin-bottom: 0.2rem; }
+            .ch-desc { font-size: 0.6rem; opacity: 0.7; transform: translateY(0); margin-top: 5px; }
+            .content { transform: translateY(0); }
+            .bg-overlay { opacity: 0.6; }
+        }
+
+        /* 動畫 Keyframes */
         @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
         @keyframes growLine {
             0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
             50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
             51% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
             100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
-        }
-
-        .transition-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: #000; opacity: 0; visibility: hidden;
-            transition: opacity 0.8s ease; z-index: 9999;
-        }
-        .transition-overlay.active { opacity: 1; visibility: visible; }
-
-        /* =========================================
-           手機版 RWD 修正 (強制 PPT 模式)
-           ========================================= */
-        @media (max-width: 768px) {
-            *, *::before, *::after { cursor: auto !important; }
-
-            nav { padding: 1.5rem 2rem; }
-            .hero-title { font-size: 20vw; }
-            .hero-subtitle { font-size: 0.7rem; letter-spacing: 0.3em; }
-
-            /* Page 2: 這裡改為直向排列，但總高度仍鎖死為 100vh */
-            .collection-section { 
-                flex-direction: column; 
-            }
-            
-            /* 讓三個 Chapter 均分這 100vh 的空間 (33.33% 每個) */
-            .chapter { 
-                width: 100%;
-                flex: 1 !important; /* 強制均分高度 */
-                height: auto; /* 重置高度 */
-                border-right: none; 
-                border-bottom: 1px solid rgba(255,255,255,0.1); 
-            }
-
-            /* 因為高度變矮了，字體要縮小一點以免太擁擠 */
-            .ch-title { font-size: 1.8rem; margin-bottom: 0.2rem; }
-            .ch-num { font-size: 0.7rem; margin-bottom: 0.5rem; }
-            .ch-desc { 
-                font-size: 0.6rem; 
-                opacity: 0.7; transform: translateY(0); margin-top: 2px; 
-            }
-            .content { transform: translateY(0); }
-            .bg-overlay { opacity: 0.6; }
-        }
-
-        @media (hover: hover) and (pointer: fine) {
-            .cursor {
-                width: 20px; height: 20px; 
-                border: 1px solid rgba(255,255,255,0.8); 
-                border-radius: 50%;
-                position: fixed; pointer-events: none; z-index: 10000;
-                transform: translate(-50%, -50%); 
-                mix-blend-mode: difference;
-                transition: width 0.3s, height 0.3s, background-color 0.3s;
-            }
-            .cursor.active { 
-                width: 60px; height: 60px;
-                background-color: white;
-                opacity: 0.1;
-                border: none;
-            }
         }
     </style>
 </head>
@@ -306,10 +252,10 @@
     </div>
 
     <script>
-        window.addEventListener('load', () => {
-            document.body.classList.add('loaded');
-        });
+        // 頁面載入動畫
+        window.addEventListener('load', () => document.body.classList.add('loaded'));
 
+        // 頁面跳轉轉場
         function navigateTo(url) {
             if(url === '#') return;
             const overlay = document.getElementById('overlay');
@@ -317,24 +263,31 @@
             setTimeout(() => { window.location.href = url; }, 800);
         }
 
+        // 自定義游標邏輯 (僅在非觸控裝置運行)
         const cursor = document.querySelector('.cursor');
-        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-        
-        if (!isTouchDevice && cursor) {
+        const isTouch = matchMedia('(hover: none)').matches;
+
+        if (!isTouch && cursor) {
             let mouseX = 0, mouseY = 0;
-            
+            let cursorX = 0, cursorY = 0;
+
             document.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
             });
-            
-            function updateCursor() {
-                cursor.style.left = mouseX + 'px';
-                cursor.style.top = mouseY + 'px';
-                requestAnimationFrame(updateCursor);
-            }
-            updateCursor();
 
+            function animateCursor() {
+                // 簡單的平滑插值算法 (Lerp)
+                const speed = 0.2;
+                cursorX += (mouseX - cursorX) * speed;
+                cursorY += (mouseY - cursorY) * speed;
+                
+                cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+
+            // Hover 效果監聽
             document.querySelectorAll('[data-hover], .chapter').forEach(el => {
                 el.addEventListener('mouseenter', () => cursor.classList.add('active'));
                 el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
