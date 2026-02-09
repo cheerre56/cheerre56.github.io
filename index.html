@@ -7,6 +7,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Space+Grotesk:wght@300;400&display=swap" rel="stylesheet">
     <style>
+        /* ========================================= 
+           CSS 變數定義 - 顏色主題
+           ========================================= */
         :root {
             --bg-color: #050505;
             --text-color: #e0e0e0;
@@ -14,259 +17,497 @@
             --accent-gold: #c5a367;
         }
 
-        /* --- 全局重置 --- */
+        /* ========================================= 
+           全局重置 - 移除預設邊距、內邊距和邊框
+           ========================================= */
         html, body {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
+            margin: 0; 
+            padding: 0;
+            border: 0;
+            width: 100%; 
+            height: 100%;
             background-color: transparent; 
-            overflow: hidden;
-            overscroll-behavior: none;
+            overflow: hidden; /* 隱藏原生捲軸 */
+            overscroll-behavior: none; /* 防止 iOS 橡皮筋效果 */
         }
 
+        /* ✅ 修正白框問題 - 移除所有邊框和外邊距 */
         *, *::before, *::after {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+            border: 0;
         }
 
-        /* ✅ 禁用不必要的文本選擇 */
+        /* ========================================= 
+           文本選擇限制 - 禁用特定元素的文本選擇
+           ========================================= */
         nav, .ch-num, .ch-title, .est, .hero-title, .scroll-text {
             -webkit-user-select: none; 
             user-select: none;
         }
 
+        /* ========================================= 
+           Body 樣式 - 主體背景和過渡效果
+           ========================================= */
         body {
             color: var(--text-color);
             font-family: 'Space Grotesk', sans-serif;
-            -webkit-font-smoothing: antialiased;
+            -webkit-font-smoothing: antialiased; /* 字體平滑渲染 */
             opacity: 0; 
-            transition: opacity 1.0s ease-out;
+            transition: opacity 1.0s ease-out; /* 頁面載入淡入效果 */
         }
-        body.loaded { opacity: 1; }
+        body.loaded { 
+            opacity: 1; /* 載入完成後顯示 */
+        }
 
-        /* =========================================
-           背景特效
+        /* ========================================= 
+           背景特效 - 漸層光效
            ========================================= */
         .gradient-bg {
             position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: -1;
+            top: 0; 
+            left: 0;
+            width: 100vw; 
+            height: 100vh;
+            z-index: -1; /* 置於最底層 */
             background-color: var(--bg-color); 
             background-image: 
                 radial-gradient(circle at 20% 40%, rgba(70, 60, 150, 0.35), transparent 45%),
                 radial-gradient(circle at 80% 60%, rgba(40, 120, 110, 0.3), transparent 45%);
-            filter: blur(1px);
-            will-change: filter;
-            backface-visibility: hidden;
+            filter: blur(1px); /* 柔和模糊效果 */
+            will-change: filter; /* GPU 加速 */
+            backface-visibility: hidden; /* 性能優化 */
         }
 
-        /* =========================================
-           核心滾動容器 (PPT 模式關鍵)
+        /* ========================================= 
+           核心滾動容器 - PPT 滾動模式
            ========================================= */
         .main-scroll-container {
-            height: 100vh; height: 100dvh;
+            height: 100vh; 
+            height: 100dvh; /* 支援手機動態高度 */
             width: 100vw;
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory;
-            scroll-behavior: smooth;
-            -ms-overflow-style: none; 
-            scrollbar-width: none;
-            contain: layout style paint;
+            overflow-y: scroll; /* 啟用垂直滾動 */
+            scroll-snap-type: y mandatory; /* 強制吸附各頁面 */
+            scroll-behavior: smooth; /* 平滑滾動 */
+            -ms-overflow-style: none; /* 隱藏 IE/Edge 捲軸 */
+            scrollbar-width: none; /* 隱藏 Firefox 捲軸 */
+            contain: layout style paint; /* CSS containment 性能優化 */
         }
-        .main-scroll-container::-webkit-scrollbar { display: none; }
+        .main-scroll-container::-webkit-scrollbar { 
+            display: none; /* 隱藏 Chrome/Safari 捲軸 */
+        }
 
+        /* ========================================= 
+           Section 頁面容器 - 每一頁設置
+           ========================================= */
         section {
             width: 100vw;
-            height: 100vh; height: 100dvh;
+            height: 100vh; 
+            height: 100dvh; /* 確保每頁都是滿屏 */
             position: relative;
             overflow: hidden;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center;
+            scroll-snap-align: start; /* 每頁開頭都要吸附 */
+            scroll-snap-stop: always; /* 防止滑太快跳過多頁 */
         }
 
-        /* =========================================
-           導覽列
+        /* ========================================= 
+           導覽列 - 頂部固定菜單
            ========================================= */
         nav {
             position: fixed;
-            top: 0; width: 100%;
+            top: 0; 
+            width: 100%;
             padding: 2.5rem 4rem;
-            display: flex; justify-content: space-between; align-items: center;
-            z-index: 100;
-            mix-blend-mode: difference;
-            pointer-events: none;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            z-index: 100; /* 置於頁面最上層 */
+            mix-blend-mode: difference; /* 混合模式 */
+            pointer-events: none; /* 不攔截滑鼠事件 */
         }
+        
         .logo { 
-            font-family: 'Italiana', serif; font-size: 1.5rem; letter-spacing: 2px; color: white; 
-            pointer-events: auto; 
+            font-family: 'Italiana', serif; 
+            font-size: 1.5rem; 
+            letter-spacing: 2px; 
+            color: white; 
+            pointer-events: auto; /* 允許點擊 */
         }
-        .est { font-size: 0.7rem; letter-spacing: 1px; opacity: 0.6; color: white; }
+        
+        .est { 
+            font-size: 0.7rem; 
+            letter-spacing: 1px; 
+            opacity: 0.6; 
+            color: white; 
+        }
 
-        /* =========================================
-           PAGE 1: HERO
+        /* ========================================= 
+           首頁 - 標題動畫
            ========================================= */
         .hero-title {
-            font-size: 13vw; font-family: 'Italiana', serif; line-height: 0.85;
-            opacity: 0; transform: translateY(30px);
-            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s;
-            text-align: center; pointer-events: auto;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            font-size: 13vw; 
+            font-family: 'Italiana', serif; 
+            line-height: 0.85;
+            opacity: 0; 
+            transform: translateY(30px); /* 初始位置向下 */
+            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s; /* 淡入動畫 */
+            text-align: center; 
+            pointer-events: auto;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.3); /* 陰影效果 */
         }
+        
         .hero-subtitle {
-            margin-top: 1.5rem; font-size: 0.9rem; color: var(--accent-color);
-            letter-spacing: 0.4em; text-transform: uppercase;
-            opacity: 0; transform: translateY(30px);
-            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.7s;
+            margin-top: 1.5rem; 
+            font-size: 0.9rem; 
+            color: var(--accent-color);
+            letter-spacing: 0.4em; 
+            text-transform: uppercase;
+            opacity: 0; 
+            transform: translateY(30px);
+            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.7s; /* 延遲 0.2 秒 */
         }
+        
         .scroll-hint {
-            position: absolute; bottom: 4rem;
-            display: flex; flex-direction: column; align-items: center; gap: 10px;
-            opacity: 0; animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.2s;
+            position: absolute; 
+            bottom: 4rem;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 10px;
+            opacity: 0; 
+            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.2s; /* 延遲 0.7 秒 */
             pointer-events: auto;
         }
-        .scroll-text { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+        
+        .scroll-text { 
+            font-size: 0.7rem; 
+            letter-spacing: 3px; 
+            text-transform: uppercase; 
+            color: rgba(255,255,255,0.5); 
+        }
+        
         .scroll-line {
-            width: 1px; height: 40px; background: rgba(255,255,255,0.3);
-            animation: growLine 2s infinite ease-in-out; transform-origin: top;
+            width: 1px; 
+            height: 40px; 
+            background: rgba(255,255,255,0.3);
+            animation: growLine 2s infinite ease-in-out; /* 無限伸縮動畫 */
+            transform-origin: top; /* 從上往下伸縮 */
         }
 
-        /* =========================================
-           PAGE 2: COLLECTIONS
+        /* ========================================= 
+           第二頁 - 系列選擇容器
            ========================================= */
         .collection-section {
-            flex-direction: row;
+            flex-direction: row; /* 桌面版橫向排列 */
             background-color: transparent;
         }
 
+        /* ========================================= 
+           Chapter 卡片 - 每個系列卡片
+           ========================================= */
         .chapter {
-            flex: 1; height: 100%;
+            flex: 1; 
+            height: 100%;
             position: relative;
             border-right: 1px solid rgba(255,255,255,0.1);
-            transition: flex 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-            overflow: hidden; pointer-events: auto;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            background-color: rgba(5, 5, 5, 0.5); 
-            backdrop-filter: blur(3px);
-            cursor: pointer;
+            transition: flex 0.8s cubic-bezier(0.25, 1, 0.5, 1); /* 寬度過渡 */
+            overflow: hidden; 
+            pointer-events: auto;
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center;
+            background-color: rgba(5, 5, 5, 0.5); /* 半透明背景 */
+            backdrop-filter: blur(3px); /* 毛玻璃效果 */
+            cursor: pointer; /* 滑鼠指標 */
         }
-        .chapter:last-child { border-right: none; }
+        .chapter:last-child { 
+            border-right: none; /* 最後一個卡片無右邊框 */
+        }
 
+        /* ========================================= 
+           卡片懸停效果 - 只在桌面設備啟用
+           ========================================= */
         @media (hover: hover) {
-            .chapter:hover { flex: 2.5; }
-            .collection-section:hover .chapter:not(:hover) { opacity: 0.4; }
+            .chapter:hover { 
+                flex: 2.5; /* 懸停時寬度變大 */
+            }
+            .collection-section:hover .chapter:not(:hover) { 
+                opacity: 0.4; /* 未懸停卡片變暗 */
+            }
         }
 
+        /* ========================================= 
+           背景圖片層 - 系列圖片
+           ========================================= */
         .bg-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-size: cover; background-position: center center;
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background-size: cover; /* 覆蓋整個區域 */
+            background-position: center center; /* 中心對齊 */
             background-repeat: no-repeat;
-            opacity: 0.5;
-            transition: filter 0.8s ease, opacity 0.8s ease;
-            filter: saturate(0.2) brightness(0.6);
+            opacity: 0.5; /* 初始透明度 */
+            transition: filter 0.8s ease, opacity 0.8s ease; /* 過渡效果 */
+            filter: saturate(0.2) brightness(0.6); /* 降低飽和度和亮度 */
             z-index: 0;
-            will-change: transform;
-            backface-visibility: hidden;
+            will-change: transform; /* GPU 加速 */
+            backface-visibility: hidden; /* 性能優化 */
         }
         .chapter:hover .bg-overlay {
-            opacity: 1; 
-            filter: saturate(1) brightness(1);
+            opacity: 1; /* 懸停時顯示完全 */
+            filter: saturate(1) brightness(1); /* 恢復原色 */
         }
 
+        /* ========================================= 
+           卡片內容層 - 文字和標題
+           ========================================= */
         .content {
-            text-align: center; z-index: 2; position: relative;
-            transform: translateY(20px); transition: transform 0.6s ease 0.1s;
+            text-align: center; 
+            z-index: 2; /* 置於圖片上方 */
+            position: relative;
+            transform: translateY(20px); /* 初始向下偏移 */
+            transition: transform 0.6s ease 0.1s; /* 過渡效果 */
         }
-        .chapter:hover .content { transform: translateY(0); }
+        .chapter:hover .content { 
+            transform: translateY(0); /* 懸停時回到正常位置 */
+        }
 
-        .ch-num { font-family: 'Italiana', serif; font-size: 0.9rem; letter-spacing: 3px; color: var(--accent-gold); margin-bottom: 1rem; display: block; opacity: 0.9; }
-        .ch-title { font-family: 'Italiana', serif; font-size: 3.5vw; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; white-space: nowrap; color: white; text-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-        .ch-desc { font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; opacity: 0; transform: translateY(20px); transition: all 0.6s ease 0.1s; color: rgba(255,255,255,0.8); }
-        .chapter:hover .ch-desc { opacity: 1; transform: translateY(0); }
+        /* ========================================= 
+           卡片文字樣式 - 編號、標題、描述
+           ========================================= */
+        .ch-num { 
+            font-family: 'Italiana', serif; 
+            font-size: 0.9rem; 
+            letter-spacing: 3px; 
+            color: var(--accent-gold); 
+            margin-bottom: 1rem; 
+            display: block; 
+            opacity: 0.9; 
+        }
+        
+        .ch-title { 
+            font-family: 'Italiana', serif; 
+            font-size: 3.5vw; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
+            margin-bottom: 0.5rem; 
+            white-space: nowrap; /* 防止換行 */
+            color: white; 
+            text-shadow: 0 10px 30px rgba(0,0,0,0.8); 
+        }
+        
+        .ch-desc { 
+            font-size: 0.75rem; 
+            letter-spacing: 0.3em; 
+            text-transform: uppercase; 
+            opacity: 0; /* 初始隱藏 */
+            transform: translateY(20px); /* 初始向下 */
+            transition: all 0.6s ease 0.1s; 
+            color: rgba(255,255,255,0.8); 
+        }
+        .chapter:hover .ch-desc { 
+            opacity: 1; /* 懸停時顯示 */
+            transform: translateY(0); /* 回到正常位置 */
+        }
 
+        /* ========================================= 
+           卡片覆蓋層 - 暗化漸層效果
+           ========================================= */
         .chapter::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8));
-            z-index: 1; pointer-events: none;
+            content: ''; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8)); /* 上淺下深 */
+            z-index: 1; /* 置於圖片上方 */
+            pointer-events: none; /* 不攔截滑鼠事件 */
         }
 
-        /* ✅ 響應式圖片大小優化 */
-        .c1 .bg-overlay { background-image: url('https://images.unsplash.com/photo-1606041008023-472dfb5e530f?q=80&w=2688&auto=format&fit=crop'); }
-        .c2 .bg-overlay { background-image: url('https://images.unsplash.com/photo-1445217143695-467124038776?q=80&w=2726&auto=format&fit=crop'); }
-        .c3 .bg-overlay { background-image: url('https://images.unsplash.com/photo-1548685913-fe6678babe8d?q=80&w=2688&auto=format&fit=crop'); }
+        /* ========================================= 
+           背景圖片 URL - 三個系列的圖片
+           ========================================= */
+        .c1 .bg-overlay { 
+            background-image: url('https://images.unsplash.com/photo-1606041008023-472dfb5e530f?q=80&w=2688&auto=format&fit=crop'); 
+        }
+        .c2 .bg-overlay { 
+            background-image: url('https://images.unsplash.com/photo-1445217143695-467124038776?q=80&w=2726&auto=format&fit=crop'); 
+        }
+        .c3 .bg-overlay { 
+            background-image: url('https://images.unsplash.com/photo-1548685913-fe6678babe8d?q=80&w=2688&auto=format&fit=crop'); 
+        }
 
-        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+        /* ========================================= 
+           動畫定義 - 淡入上升動畫
+           ========================================= */
+        @keyframes fadeUp { 
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            } 
+        }
+        
+        /* ========================================= 
+           動畫定義 - 上下伸縮線動畫
+           ========================================= */
         @keyframes growLine {
-            0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
-            50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
-            51% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
-            100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+            0% { 
+                transform: scaleY(0); 
+                transform-origin: top; 
+                opacity: 0; 
+            }
+            50% { 
+                transform: scaleY(1); 
+                transform-origin: top; 
+                opacity: 1; 
+            }
+            51% { 
+                transform: scaleY(1); 
+                transform-origin: bottom; 
+                opacity: 1; 
+            }
+            100% { 
+                transform: scaleY(0); 
+                transform-origin: bottom; 
+                opacity: 0; 
+            }
         }
 
+        /* ========================================= 
+           頁面過渡層 - 導航淡出效果
+           ========================================= */
         .transition-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: #000; opacity: 0; visibility: hidden;
-            transition: opacity 0.8s ease; z-index: 9999;
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100vw; 
+            height: 100vh;
+            background-color: #000; 
+            opacity: 0; 
+            visibility: hidden;
+            transition: opacity 0.8s ease; 
+            z-index: 9999; /* 置於最頂層 */
         }
-        .transition-overlay.active { opacity: 1; visibility: visible; }
+        .transition-overlay.active { 
+            opacity: 1; /* 導航時淡黑 */
+            visibility: visible;
+        }
 
-        /* =========================================
-           手機版 RWD 修正 (強制 PPT 模式)
+        /* ========================================= 
+           平板設備適配 (1024px 以下)
            ========================================= */
         @media (max-width: 1024px) {
-            /* ✅ 平板優化：更小的圖片 */
-            .c1 .bg-overlay { background-image: url('https://images.unsplash.com/photo-1606041008023-472dfb5e530f?q=80&w=1440&auto=format&fit=crop'); }
-            .c2 .bg-overlay { background-image: url('https://images.unsplash.com/photo-1445217143695-467124038776?q=80&w=1440&auto=format&fit=crop'); }
-            .c3 .bg-overlay { background-image: url('https://images.unsplash.com/photo-1548685913-fe6678babe8d?q=80&w=1440&auto=format&fit=crop'); }
+            /* 更小的圖片以優化加載 */
+            .c1 .bg-overlay { 
+                background-image: url('https://images.unsplash.com/photo-1606041008023-472dfb5e530f?q=80&w=1440&auto=format&fit=crop'); 
+            }
+            .c2 .bg-overlay { 
+                background-image: url('https://images.unsplash.com/photo-1445217143695-467124038776?q=80&w=1440&auto=format&fit=crop'); 
+            }
+            .c3 .bg-overlay { 
+                background-image: url('https://images.unsplash.com/photo-1548685913-fe6678babe8d?q=80&w=1440&auto=format&fit=crop'); 
+            }
         }
 
+        /* ========================================= 
+           手機設備適配 (768px 以下)
+           ========================================= */
         @media (max-width: 768px) {
-            nav { padding: 1.5rem 2rem; }
-            .hero-title { font-size: 20vw; }
-            .hero-subtitle { font-size: 0.7rem; letter-spacing: 0.3em; }
+            /* 導覽列 - 縮小邊距 */
+            nav { 
+                padding: 1.5rem 2rem; 
+            }
+            
+            /* 首頁標題 - 更大的字體以適應手機 */
+            .hero-title { 
+                font-size: 20vw; 
+            }
+            
+            .hero-subtitle { 
+                font-size: 0.7rem; 
+                letter-spacing: 0.3em; 
+            }
 
+            /* 系列卡片 - 改為縱向排列 */
             .collection-section { 
-                flex-direction: column; 
+                flex-direction: column; /* 從橫向改為縱向 */
             }
             
             .chapter { 
                 width: 100%;
-                flex: 1 !important;
+                flex: 1 !important; /* 強制均分高度 */
                 height: auto;
-                border-right: none; 
-                border-bottom: 1px solid rgba(255,255,255,0.1); 
+                border-right: none; /* 移除右邊框 */
+                border-bottom: 1px solid rgba(255,255,255,0.1); /* 添加下邊框 */
             }
 
-            .ch-title { font-size: 1.8rem; margin-bottom: 0.2rem; }
-            .ch-num { font-size: 0.7rem; margin-bottom: 0.5rem; }
+            /* 調整文字大小以適應縮小的空間 */
+            .ch-title { 
+                font-size: 1.8rem; 
+                margin-bottom: 0.2rem; 
+            }
+            
+            .ch-num { 
+                font-size: 0.7rem; 
+                margin-bottom: 0.5rem; 
+            }
+            
             .ch-desc { 
                 font-size: 0.6rem; 
-                opacity: 0.7; transform: translateY(0); margin-top: 2px; 
+                opacity: 0.7; 
+                transform: translateY(0); /* 手機上始終顯示 */
+                margin-top: 2px; 
             }
-            .content { transform: translateY(0); }
-            .bg-overlay { opacity: 0.6; }
+            
+            .content { 
+                transform: translateY(0); /* 取消位移動畫 */
+            }
+            
+            .bg-overlay { 
+                opacity: 0.6; /* 降低圖片透明度 */
+            }
 
-            /* ✅ 移動設備用更小的圖片 */
-            .c1 .bg-overlay { background-image: url('https://images.unsplash.com/photo-1606041008023-472dfb5e530f?q=80&w=800&auto=format&fit=crop'); }
-            .c2 .bg-overlay { background-image: url('https://images.unsplash.com/photo-1445217143695-467124038776?q=80&w=800&auto=format&fit=crop'); }
-            .c3 .bg-overlay { background-image: url('https://images.unsplash.com/photo-1548685913-fe6678babe8d?q=80&w=800&auto=format&fit=crop'); }
+            /* 手機用超小圖片以優化加載速度 */
+            .c1 .bg-overlay { 
+                background-image: url('https://images.unsplash.com/photo-1606041008023-472dfb5e530f?q=80&w=800&auto=format&fit=crop'); 
+            }
+            .c2 .bg-overlay { 
+                background-image: url('https://images.unsplash.com/photo-1445217143695-467124038776?q=80&w=800&auto=format&fit=crop'); 
+            }
+            .c3 .bg-overlay { 
+                background-image: url('https://images.unsplash.com/photo-1548685913-fe6678babe8d?q=80&w=800&auto=format&fit=crop'); 
+            }
         }
     </style>
 </head>
 <body>
 
+    <!-- 背景漸層層 -->
     <div class="gradient-bg"></div>
+    
+    <!-- 頁面過渡黑幕 -->
     <div class="transition-overlay" id="overlay"></div>
 
+    <!-- 頂部導覽列 -->
     <nav>
         <div class="logo" data-hover>naha.</div>
         <div class="est">EST. 2026</div>
     </nav>
 
+    <!-- 主滾動容器 - PPT 模式 -->
     <div class="main-scroll-container">
         
+        <!-- 第一頁：首頁英雄區 -->
         <section class="hero-section">
             <h1 class="hero-title" data-hover>NAHA</h1>
             <p class="hero-subtitle">Parfums - Beyond Scents</p>
@@ -276,8 +517,10 @@
             </div>
         </section>
 
+        <!-- 第二頁：系列選擇 -->
         <section class="collection-section">
-            <!-- ✅ 改為正確的導航連結 -->
+            
+            <!-- Chapter 1: Luminescence 花香系 -->
             <div class="chapter c1" onclick="navigateTo('chapter_luminescence.html')">
                 <div class="bg-overlay"></div>
                 <div class="content">
@@ -287,6 +530,7 @@
                 </div>
             </div>
 
+            <!-- Chapter 2: Silhouette 木質系 -->
             <div class="chapter c2" onclick="navigateTo('chapter_silhouette.html')">
                 <div class="bg-overlay"></div>
                 <div class="content">
@@ -296,6 +540,7 @@
                 </div>
             </div>
 
+            <!-- Chapter 3: Obsidian 東方系 -->
             <div class="chapter c3" onclick="navigateTo('chapter_obsidian.html')">
                 <div class="bg-overlay"></div>
                 <div class="content">
@@ -309,16 +554,23 @@
     </div>
 
     <script>
+        /* ========================================= 
+           頁面加載完成 - 顯示內容
+           ========================================= */
         window.addEventListener('load', () => {
-            document.body.classList.add('loaded');
+            document.body.classList.add('loaded'); /* 移除初始淡入狀態 */
         });
 
-        // ✅ 改進的導航函數 - 添加淡出效果
+        /* ========================================= 
+           導航函數 - 點擊卡片時跳轉頁面
+           ========================================= */
         function navigateTo(url) {
-            if(!url) return;
+            if(!url) return; /* 檢查 URL 有效性 */
             const overlay = document.getElementById('overlay');
-            overlay.classList.add('active');
-            setTimeout(() => { window.location.href = url; }, 800);
+            overlay.classList.add('active'); /* 顯示淡黑過渡層 */
+            setTimeout(() => { 
+                window.location.href = url; /* 延遲 800ms 後跳轉 */
+            }, 800);
         }
     </script>
 </body>
