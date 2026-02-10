@@ -315,11 +315,14 @@
         .perfume-name {
             font-family: 'Italiana', serif; 
             font-size: clamp(2.2rem, 8vw, 5.5rem);
-            line-height: 0.9; 
+            line-height: 1;
             margin-bottom: 1.8rem;
             background: linear-gradient(45deg, #fff, #aaa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         /* ========================================= 
@@ -616,7 +619,10 @@
 
             .perfume-name { 
                 font-size: clamp(1.8rem, 6vw, 3.2rem); 
-                margin-bottom: 1rem; 
+                margin-bottom: 1rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .perfume-desc { 
@@ -697,8 +703,8 @@
 
             .slide-content {
                 flex-direction: column; 
-                padding: 80px 5% 60px; 
-                gap: 20px;
+                padding: 80px 5% 20px; 
+                gap: 10px;
                 text-align: center;
                 justify-content: flex-start;
                 height: 100%;
@@ -707,7 +713,7 @@
             .visual-area {
                 flex: 0 0 auto;
                 width: 100%;
-                height: 45vh;
+                height: 35vh;
             }
 
             .img-frame { 
@@ -729,22 +735,25 @@
 
             .perfume-no {
                 font-size: 0.7rem;
-                margin-bottom: 0.6rem;
+                margin-bottom: 0.3rem;
             }
 
             .perfume-name { 
-                font-size: clamp(1.6rem, 5.5vw, 2.2rem);
+                font-size: clamp(1.6rem, 5.5vw, 2rem);
                 line-height: 1;
-                margin-bottom: 0.6rem;
+                margin-bottom: 0.4rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .perfume-desc { 
                 font-size: 0.8rem;
-                line-height: 1.6;
-                margin-bottom: 0.8rem;
+                line-height: 1.5;
+                margin-bottom: 0.4rem;
                 max-width: 100%;
                 display: -webkit-box;
-                -webkit-line-clamp: 3;
+                -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
                 overflow: hidden;
             }
@@ -754,17 +763,17 @@
                 flex-direction: row;
                 flex-wrap: wrap;
                 justify-content: center;
-                gap: 10px 20px;
+                gap: 8px 15px;
                 border-top: 1px solid rgba(255,255,255,0.08);
-                padding-top: 0.8rem;
-                margin-bottom: 0.8rem;
+                padding-top: 0.4rem;
+                margin-bottom: 0.4rem;
                 width: 100%;
             }
 
             .note-row { 
                 display: flex;
                 flex-direction: column;
-                gap: 3px;
+                gap: 2px;
                 align-items: center;
             }
 
@@ -778,13 +787,13 @@
             }
 
             .capacity-selector {
-                margin-bottom: 0.8rem;
+                margin-bottom: 0.4rem;
                 width: 100%;
             }
 
             .capacity-selector > label {
                 font-size: 0.7rem;
-                margin-bottom: 0.5rem;
+                margin-bottom: 0.3rem;
             }
 
             .capacity-options {
@@ -796,8 +805,8 @@
             .capacity-btn {
                 flex: 1 0 calc(33.333% - 6px);
                 min-width: 60px;
-                min-height: 40px;
-                padding: 0.5rem 0.4rem;
+                min-height: 38px;
+                padding: 0.45rem 0.3rem;
                 font-size: 0.65rem;
             }
 
@@ -806,11 +815,11 @@
                 gap: 0.3rem;
                 align-items: center;
                 justify-content: center;
-                margin-bottom: 0.8rem;
+                margin-bottom: 0.4rem;
             }
 
             .product-price {
-                font-size: 1.5rem;
+                font-size: 1.4rem;
             }
 
             .price-label {
@@ -819,10 +828,10 @@
 
             .add-to-cart-btn {
                 width: 100%;
-                padding: 0.75rem 1.5rem;
+                padding: 0.7rem 1.5rem;
                 font-size: 0.75rem;
                 letter-spacing: 1px;
-                min-height: 44px;
+                min-height: 42px;
             }
 
             .cart-icon {
@@ -859,20 +868,66 @@
                 font-size: 0.6rem;
             }
 
+            .slide-content {
+                padding: 80px 5% 15px;
+                gap: 8px;
+            }
+
+            .visual-area {
+                height: 32vh;
+            }
+
+            .perfume-no {
+                margin-bottom: 0.2rem;
+            }
+
             .perfume-name {
                 font-size: clamp(1.4rem, 5vw, 1.8rem);
+                margin-bottom: 0.3rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .perfume-desc {
+                margin-bottom: 0.3rem;
+                -webkit-line-clamp: 1;
+            }
+
+            .notes-grid {
+                gap: 6px 12px;
+                padding-top: 0.3rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .capacity-selector {
+                margin-bottom: 0.3rem;
+            }
+
+            .capacity-selector > label {
+                margin-bottom: 0.2rem;
             }
 
             .capacity-btn {
-                flex: 1 0 calc(33.333% - 6px);
-                padding: 0.45rem 0.3rem;
+                flex: 1 0 calc(33.333% - 5px);
+                padding: 0.4rem 0.2rem;
                 font-size: 0.6rem;
+                min-height: 36px;
+            }
+
+            .price-section {
+                margin-bottom: 0.3rem;
+            }
+
+            .product-price {
+                font-size: 1.3rem;
             }
 
             .add-to-cart-btn {
                 width: 100%;
-                padding: 0.7rem 1.2rem;
+                padding: 0.65rem 1.2rem;
                 font-size: 0.65rem;
+                min-height: 40px;
             }
         }
     </style>
