@@ -666,12 +666,46 @@
         });
 
         /* ========================================= 
-           手機版初始化 - 自動播放所有影片並設置速度 0.8x
+           頁面顯示事件 - 修復返回首頁的黑屏問題
+           ========================================= */
+        window.addEventListener('pageshow', (event) => {
+            // 移除黑色過渡層
+            const overlay = document.getElementById('overlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+                overlay.style.opacity = '0';
+                overlay.style.visibility = 'hidden';
+            }
+
+            // 確保頁面正常顯示
+            document.body.style.display = 'block';
+            document.body.style.opacity = '1';
+            
+            // 重新初始化手機影片
+            if (isMobile) {
+                initializeMobileVideos();
+            }
+        });
+
+        /* ========================================= 
+           手機版初始化 - 自動播放所有影片
+           第一章 (c1) 和 第三章 (c3) 速度為 0.5x
+           第二章 (c2) 速度為 0.8x
            ========================================= */
         function initializeMobileVideos() {
             const videos = document.querySelectorAll('.bg-video');
-            videos.forEach(video => {
-                video.playbackRate = 0.8; /* 設置播放速度為 0.8x */
+            videos.forEach((video, index) => {
+                // 獲取該視頻所在的 chapter 元素
+                const chapter = video.closest('.chapter');
+                
+                if (chapter.classList.contains('c1') || chapter.classList.contains('c3')) {
+                    // 第一章和第三章：播放速度 0.5x
+                    video.playbackRate = 0.5;
+                } else {
+                    // 第二章：播放速度 0.8x
+                    video.playbackRate = 0.8;
+                }
+                
                 video.play().catch(err => {
                     console.log('影片自動播放失敗:', err);
                 });
