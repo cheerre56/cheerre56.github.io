@@ -651,16 +651,38 @@
 
     <script>
         /* ========================================= 
-           頁面加載完成 - 顯示內容
+           全局變數 - 檢測是否為行動設備
+           ========================================= */
+        const isMobile = window.innerWidth <= 768;
+
+        /* ========================================= 
+           頁面加載完成 - 顯示內容 + 初始化手機影片播放
            ========================================= */
         window.addEventListener('load', () => {
             document.body.classList.add('loaded'); /* 移除初始淡入狀態 */
+            if (isMobile) {
+                initializeMobileVideos(); /* 手機版初始化自動播放 */
+            }
         });
 
         /* ========================================= 
-           影片播放控制函數 - 滑鼠進入時播放
+           手機版初始化 - 自動播放所有影片並設置速度 0.8x
+           ========================================= */
+        function initializeMobileVideos() {
+            const videos = document.querySelectorAll('.bg-video');
+            videos.forEach(video => {
+                video.playbackRate = 0.8; /* 設置播放速度為 0.8x */
+                video.play().catch(err => {
+                    console.log('影片自動播放失敗:', err);
+                });
+            });
+        }
+
+        /* ========================================= 
+           影片播放控制函數 - 桌面版滑鼠進入時播放
            ========================================= */
         function playVideo(element) {
+            if (isMobile) return; /* 手機版忽略此事件 */
             const video = element.querySelector('.bg-video');
             if (video) {
                 video.play().catch(err => {
@@ -670,9 +692,10 @@
         }
 
         /* ========================================= 
-           影片暫停控制函數 - 滑鼠離開時暫停
+           影片暫停控制函數 - 桌面版滑鼠離開時暫停
            ========================================= */
         function pauseVideo(element) {
+            if (isMobile) return; /* 手機版忽略此事件 */
             const video = element.querySelector('.bg-video');
             if (video) {
                 video.pause();
