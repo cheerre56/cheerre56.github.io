@@ -410,6 +410,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex: 0 1 auto;
         }
 
         .capacity-btn:hover {
@@ -653,6 +654,11 @@
                 justify-content: center;
             }
 
+            .capacity-btn {
+                flex: 0 1 calc(33.333% - 7px);
+                min-width: 80px;
+            }
+
             .price-section {
                 justify-content: center;
             }
@@ -703,8 +709,8 @@
 
             .slide-content {
                 flex-direction: column; 
-                padding: 80px 5% 20px; 
-                gap: 10px;
+                padding: 80px 5% 25px; 
+                gap: 12px;
                 text-align: center;
                 justify-content: flex-start;
                 height: 100%;
@@ -713,7 +719,7 @@
             .visual-area {
                 flex: 0 0 auto;
                 width: 100%;
-                height: 35vh;
+                height: 40vh;
             }
 
             .img-frame { 
@@ -750,7 +756,7 @@
             .perfume-desc { 
                 font-size: 0.8rem;
                 line-height: 1.5;
-                margin-bottom: 0.4rem;
+                margin-bottom: 0.5rem;
                 max-width: 100%;
                 display: -webkit-box;
                 -webkit-line-clamp: 2;
@@ -765,8 +771,8 @@
                 justify-content: center;
                 gap: 8px 15px;
                 border-top: 1px solid rgba(255,255,255,0.08);
-                padding-top: 0.4rem;
-                margin-bottom: 0.4rem;
+                padding-top: 0.5rem;
+                margin-bottom: 0.5rem;
                 width: 100%;
             }
 
@@ -787,13 +793,13 @@
             }
 
             .capacity-selector {
-                margin-bottom: 0.4rem;
+                margin-bottom: 0.6rem;
                 width: 100%;
             }
 
             .capacity-selector > label {
                 font-size: 0.7rem;
-                margin-bottom: 0.3rem;
+                margin-bottom: 0.4rem;
             }
 
             .capacity-options {
@@ -803,8 +809,8 @@
             }
 
             .capacity-btn {
-                flex: 1 0 calc(33.333% - 6px);
-                min-width: 60px;
+                flex: 0 1 calc(33.333% - 6px);
+                min-width: 65px;
                 min-height: 38px;
                 padding: 0.45rem 0.3rem;
                 font-size: 0.65rem;
@@ -815,7 +821,7 @@
                 gap: 0.3rem;
                 align-items: center;
                 justify-content: center;
-                margin-bottom: 0.4rem;
+                margin-bottom: 0.6rem;
             }
 
             .product-price {
@@ -869,12 +875,12 @@
             }
 
             .slide-content {
-                padding: 80px 5% 15px;
-                gap: 8px;
+                padding: 80px 5% 20px;
+                gap: 10px;
             }
 
             .visual-area {
-                height: 32vh;
+                height: 38vh;
             }
 
             .perfume-no {
@@ -890,33 +896,38 @@
             }
 
             .perfume-desc {
-                margin-bottom: 0.3rem;
-                -webkit-line-clamp: 1;
+                margin-bottom: 0.4rem;
+                -webkit-line-clamp: 2;
             }
 
             .notes-grid {
                 gap: 6px 12px;
-                padding-top: 0.3rem;
-                margin-bottom: 0.3rem;
+                padding-top: 0.4rem;
+                margin-bottom: 0.4rem;
             }
 
             .capacity-selector {
-                margin-bottom: 0.3rem;
+                margin-bottom: 0.5rem;
             }
 
             .capacity-selector > label {
-                margin-bottom: 0.2rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .capacity-options {
+                gap: 6px;
             }
 
             .capacity-btn {
-                flex: 1 0 calc(33.333% - 5px);
+                flex: 0 1 calc(33.333% - 4px);
+                min-width: 60px;
                 padding: 0.4rem 0.2rem;
                 font-size: 0.6rem;
                 min-height: 36px;
             }
 
             .price-section {
-                margin-bottom: 0.3rem;
+                margin-bottom: 0.5rem;
             }
 
             .product-price {
@@ -988,7 +999,7 @@
                     <span class="perfume-no reveal delay-1">NO.01</span>
                     <h1 class="perfume-name reveal delay-2">Autumn Brew</h1>
                     <p class="perfume-desc reveal delay-3">
-                        一場金色的交響樂，封存於午後的琥珀光影中。當第一縷陽光滲透果園，空氣中瀰漫威廉梨的清脆，隨後轉向小蒼蘭的優雅，最後以核桃木的溫暖擁抱靈魂。
+                        一場金色��交響樂，封存於午後的琥珀光影中。當第一縷陽光滲透果園，空氣中瀰漫威廉梨的清脆，隨後轉向小蒼蘭的優雅，最後以核桃木的溫暖擁抱靈魂。
                         <br><br>
                         A golden symphony captured in amber shadows.
                     </p>
@@ -1194,7 +1205,7 @@
             };
             localStorage.setItem('nahaCart', JSON.stringify(cart));
             
-            /* 更新徽章 */
+            /* 更新���章 */
             updateCartBadge();
         }
 
