@@ -16,7 +16,7 @@
             --text-color: #e0e0e0;
             --accent-color: #888;
             --accent-gold: #c5a367;
-            --border-radius: 12px; /* 統一的 R角設定 */
+            --border-radius: 12px;
         }
 
         /* ========================================= 
@@ -30,7 +30,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: 'Space Grotesk', sans-serif;
-            overflow-x: hidden; /* 防止橫向卷軸 */
+            overflow-x: hidden;
         }
 
         *, *::before, *::after {
@@ -343,7 +343,7 @@
         }
 
         /* ========================================= 
-           自訂購買彈窗 - ✅ 新增
+           自訂購買彈窗
            ========================================= */
         .checkout-modal {
             position: fixed;
@@ -378,7 +378,7 @@
         }
 
         /* ========================================= 
-           動畫定義 - 彈窗進入
+           動畫定義
            ========================================= */
         @keyframes slideUp {
             from {
@@ -400,15 +400,6 @@
             }
         }
 
-        /* ========================================= 
-           彈窗圖標 - 建設中
-           ========================================= */
-        .modal-icon {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
         @keyframes pulse {
             0%, 100% {
                 transform: scale(1);
@@ -421,8 +412,14 @@
         }
 
         /* ========================================= 
-           彈窗標題
+           彈窗內容樣式
            ========================================= */
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
         .modal-title {
             font-family: 'Italiana', serif;
             font-size: 2.2rem;
@@ -431,9 +428,6 @@
             letter-spacing: 2px;
         }
 
-        /* ========================================= 
-           彈窗副標題
-           ========================================= */
         .modal-subtitle {
             font-size: 1rem;
             color: white;
@@ -441,9 +435,6 @@
             line-height: 1.6;
         }
 
-        /* ========================================= 
-           彈窗描述文字
-           ========================================= */
         .modal-description {
             font-size: 0.9rem;
             color: var(--accent-color);
@@ -452,9 +443,6 @@
             font-style: italic;
         }
 
-        /* ========================================= 
-           彈窗按鈕組
-           ========================================= */
         .modal-buttons {
             display: flex;
             gap: 1rem;
@@ -490,20 +478,6 @@
         .modal-btn.close-btn:hover {
             background: var(--accent-color);
             color: white;
-        }
-
-        /* ========================================= 
-           動畫定義 - 淡入效果
-           ========================================= */
-        @keyframes fadeInAnimation { 
-            from { 
-                opacity: 0; 
-                transform: translateY(10px); 
-            } 
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            } 
         }
 
         /* ========================================= 
@@ -613,12 +587,12 @@
 <body>
 
     <!-- ========================================= 
-         背景漸層層 - 固定背���
+         背景漸層層
          ========================================= -->
     <div class="gradient-bg"></div>
 
     <!-- ========================================= 
-         自訂購買彈窗 - ✅ 新增
+         自訂購買彈窗
          ========================================= -->
     <div class="checkout-modal" id="checkoutModal">
         <div class="modal-content">
@@ -641,7 +615,7 @@
          ========================================= -->
     <nav>
         <a href="index.html" class="logo">naha.</a>
-        <a href="index.html" class="back-link">Continue Shopping</a>
+        <a href="chapter_luminescence.html" class="back-link">Continue Shopping</a>
     </nav>
 
     <!-- ========================================= 
@@ -654,7 +628,7 @@
              購物車商品列表
              ========================================= -->
         <div class="cart-items" id="cartItems">
-            <!-- ✅ 動態生成的商品會插入到這裡 -->
+            <!-- 動態生成的商品會插入到這裡 -->
         </div>
 
         <!-- ========================================= 
@@ -680,22 +654,81 @@
 
     <script>
         /* ========================================= 
-           購物車資料和商品列表
+           清理舊格式資料 - ✅ 新增
+           ========================================= */
+        function cleanOldCartData() {
+            const cart = JSON.parse(localStorage.getItem('nahaCart')) || {};
+            const validKeys = new Set([
+                'Autumn Brew_10ml', 'Autumn Brew_30ml', 'Autumn Brew_50ml',
+                'Forest Whispers_10ml', 'Forest Whispers_30ml', 'Forest Whispers_50ml'
+            ]);
+
+            let hasChanged = false;
+            const newCart = {};
+
+            Object.entries(cart).forEach(([key, value]) => {
+                if (validKeys.has(key)) {
+                    newCart[key] = value;
+                } else {
+                    // 移除舊格式或無效的商品
+                    hasChanged = true;
+                }
+            });
+
+            if (hasChanged) {
+                localStorage.setItem('nahaCart', JSON.stringify(newCart));
+            }
+
+            return newCart;
+        }
+
+        /* ========================================= 
+           購物車商品資料庫
            ========================================= */
         const cartData = {
-            'Seraphina': { price: 1800, img: 'https://i.meee.com.tw/mjeui9K.png', variant: '50ml / Eau de Parfum' },
-            'Aurelia': { price: 1800, img: 'https://i.meee.com.tw/mjeui9K.png', variant: '50ml / Eau de Parfum' },
-            'Viola': { price: 1800, img: 'https://i.meee.com.tw/mjeui9K.png', variant: '50ml / Eau de Parfum' },
-            'Iris': { price: 1800, img: 'https://i.meee.com.tw/mjeui9K.png', variant: '50ml / Eau de Parfum' },
-            'Flora': { price: 1800, img: 'https://i.meee.com.tw/mjeui9K.png', variant: '50ml / Eau de Parfum' }
+            'Autumn Brew_10ml': { 
+                name: 'Autumn Brew',
+                price: 259, 
+                img: 'https://i.meee.com.tw/mjeui9K.png', 
+                variant: '10ml / Eau de Parfum' 
+            },
+            'Autumn Brew_30ml': { 
+                name: 'Autumn Brew',
+                price: 495, 
+                img: 'https://i.meee.com.tw/mjeui9K.png', 
+                variant: '30ml / Eau de Parfum' 
+            },
+            'Autumn Brew_50ml': { 
+                name: 'Autumn Brew',
+                price: 765, 
+                img: 'https://i.meee.com.tw/mjeui9K.png', 
+                variant: '50ml / Eau de Parfum' 
+            },
+            'Forest Whispers_10ml': { 
+                name: 'Forest Whispers',
+                price: 259, 
+                img: 'https://i.meee.com.tw/mjeui9K.png', 
+                variant: '10ml / Eau de Parfum' 
+            },
+            'Forest Whispers_30ml': { 
+                name: 'Forest Whispers',
+                price: 495, 
+                img: 'https://i.meee.com.tw/mjeui9K.png', 
+                variant: '30ml / Eau de Parfum' 
+            },
+            'Forest Whispers_50ml': { 
+                name: 'Forest Whispers',
+                price: 765, 
+                img: 'https://i.meee.com.tw/mjeui9K.png', 
+                variant: '50ml / Eau de Parfum' 
+            }
         };
 
         /* ========================================= 
            從 LocalStorage 讀取購物車內容
            ========================================= */
         function loadCart() {
-            const cart = JSON.parse(localStorage.getItem('nahaCart')) || {};
-            return cart;
+            return cleanOldCartData();
         }
 
         /* ========================================= 
@@ -721,26 +754,29 @@
 
             document.getElementById('checkoutBtn').disabled = false;
 
-            Object.entries(cart).forEach(([name, qty]) => {
-                const product = cartData[name];
+            Object.entries(cart).forEach(([key, item]) => {
+                const product = cartData[key];
+                
                 if (!product) return;
 
-                const itemTotal = product.price * qty;
-                const item = document.createElement('div');
-                item.className = 'cart-item';
-                item.dataset.name = name;
-                item.dataset.price = product.price;
+                const quantity = item.quantity || item;
+                const price = product.price;
+                const itemTotal = price * quantity;
+                const itemElement = document.createElement('div');
+                itemElement.className = 'cart-item';
+                itemElement.dataset.key = key;
+                itemElement.dataset.price = price;
 
-                item.innerHTML = `
-                    <img src="${product.img}" alt="${name}" class="item-thumb">
+                itemElement.innerHTML = `
+                    <img src="${product.img}" alt="${product.name}" class="item-thumb">
                     <div class="item-info">
-                        <div class="item-name">${name}</div>
+                        <div class="item-name">${product.name}</div>
                         <div class="item-variant">${product.variant}</div>
                     </div>
                     <div class="item-controls">
                         <div class="qty-selector">
                             <button class="qty-btn minus">−</button>
-                            <span class="qty-val">${qty}</span>
+                            <span class="qty-val">${quantity}</span>
                             <button class="qty-btn plus">+</button>
                         </div>
                         <div class="item-price">NT$ ${itemTotal.toLocaleString()}</div>
@@ -748,16 +784,15 @@
                     </div>
                 `;
 
-                /* ✅ 綁定數量按鈕事件 */
-                const minusBtn = item.querySelector('.minus');
-                const plusBtn = item.querySelector('.plus');
-                const removeBtn = item.querySelector('.remove-btn');
+                const minusBtn = itemElement.querySelector('.minus');
+                const plusBtn = itemElement.querySelector('.plus');
+                const removeBtn = itemElement.querySelector('.remove-btn');
 
-                minusBtn.addEventListener('click', () => updateQuantity(name, qty - 1));
-                plusBtn.addEventListener('click', () => updateQuantity(name, qty + 1));
-                removeBtn.addEventListener('click', () => removeItem(name));
+                minusBtn.addEventListener('click', () => updateQuantity(key, quantity - 1));
+                plusBtn.addEventListener('click', () => updateQuantity(key, quantity + 1));
+                removeBtn.addEventListener('click', () => removeItem(key));
 
-                cartItems.appendChild(item);
+                cartItems.appendChild(itemElement);
             });
 
             updateTotal();
@@ -766,12 +801,17 @@
         /* ========================================= 
            更新商品數量
            ========================================= */
-        function updateQuantity(name, qty) {
+        function updateQuantity(key, quantity) {
             const cart = loadCart();
-            if (qty <= 0) {
-                delete cart[name];
+            if (quantity <= 0) {
+                delete cart[key];
             } else {
-                cart[name] = qty;
+                const item = cart[key];
+                if (typeof item === 'object') {
+                    item.quantity = quantity;
+                } else {
+                    cart[key] = quantity;
+                }
             }
             localStorage.setItem('nahaCart', JSON.stringify(cart));
             renderCart();
@@ -780,9 +820,9 @@
         /* ========================================= 
            移除商品
            ========================================= */
-        function removeItem(name) {
+        function removeItem(key) {
             const cart = loadCart();
-            delete cart[name];
+            delete cart[key];
             localStorage.setItem('nahaCart', JSON.stringify(cart));
             renderCart();
         }
@@ -794,10 +834,11 @@
             const cart = loadCart();
             let total = 0;
 
-            Object.entries(cart).forEach(([name, qty]) => {
-                const product = cartData[name];
+            Object.entries(cart).forEach(([key, item]) => {
+                const product = cartData[key];
+                const quantity = item.quantity || item;
                 if (product) {
-                    total += product.price * qty;
+                    total += product.price * quantity;
                 }
             });
 
@@ -807,7 +848,7 @@
         }
 
         /* ========================================= 
-           結帳函式 - 打開自訂彈窗 ✅ 新增
+           結帳函式
            ========================================= */
         function checkout() {
             const cart = loadCart();
@@ -818,7 +859,7 @@
         }
 
         /* ========================================= 
-           打開購買彈窗 - ✅ 新增
+           打開購買彈窗
            ========================================= */
         function openCheckoutModal() {
             const modal = document.getElementById('checkoutModal');
@@ -826,7 +867,7 @@
         }
 
         /* ========================================= 
-           關閉購買彈窗 - ✅ 新增
+           關閉購買彈窗
            ========================================= */
         function closeCheckoutModal() {
             const modal = document.getElementById('checkoutModal');
@@ -834,14 +875,14 @@
         }
 
         /* ========================================= 
-           繼續購物 - ✅ 新增
+           繼續購物
            ========================================= */
         function goShopping() {
             window.location.href = 'chapter_luminescence.html';
         }
 
         /* ========================================= 
-           點擊彈窗外部關閉 - ✅ 新增
+           點擊彈窗外部關閉
            ========================================= */
         document.getElementById('checkoutModal').addEventListener('click', (e) => {
             if (e.target.id === 'checkoutModal') {
@@ -850,7 +891,7 @@
         });
 
         /* ========================================= 
-           頁面載入時渲染購物車
+           頁面載入時渲染購物車並清理舊資料
            ========================================= */
         document.addEventListener('DOMContentLoaded', () => {
             renderCart();
