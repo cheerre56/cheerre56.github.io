@@ -357,6 +357,26 @@
         }
 
         /* ========================================= 
+           影片元素樣式 - Chapter 1 和 Chapter 2 影片背景
+           ========================================= */
+        .bg-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 保持寬高比並覆蓋整個區域 */
+            opacity: 0.5; /* 初始透明度 */
+            transition: opacity 0.8s ease, filter 0.8s ease; /* 過渡效果 */
+            filter: saturate(0.2) brightness(0.6); /* 降低飽和度和亮度 */
+            z-index: 0;
+        }
+        .chapter:hover .bg-video {
+            opacity: 1; /* 懸停時顯示完全 */
+            filter: saturate(1) brightness(1); /* 恢復原色 */
+        }
+
+        /* ========================================= 
            卡片內容層 - 文字和標題
            ========================================= */
         .content {
@@ -419,19 +439,13 @@
             width: 100%; 
             height: 100%;
             background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8)); /* 上淺下深 */
-            z-index: 1; /* 置於圖片上方 */
+            z-index: 1; /* 置���圖片上方 */
             pointer-events: none; /* 不攔截滑鼠事件 */
         }
 
         /* ========================================= 
-           背景圖片 URL - 三個系列的圖片
+           背景圖片 URL - 第三個系列的圖片
            ========================================= */
-        .c1 .bg-overlay { 
-            background-image: url('https://images.unsplash.com/photo-1606041008023-472dfb5e530f?q=80&w=2688&auto=format&fit=crop'); 
-        }
-        .c2 .bg-overlay { 
-            background-image: url('https://images.unsplash.com/photo-1445217143695-467124038776?q=80&w=2726&auto=format&fit=crop'); 
-        }
         .c3 .bg-overlay { 
             background-image: url('https://images.unsplash.com/photo-1548685913-fe6678babe8d?q=80&w=2688&auto=format&fit=crop'); 
         }
@@ -496,13 +510,6 @@
            平板設備適配 (1024px 以下)
            ========================================= */
         @media (max-width: 1024px) {
-            /* 更小的圖片以優化加載 */
-            .c1 .bg-overlay { 
-                background-image: url('https://images.unsplash.com/photo-1606041008023-472dfb5e530f?q=80&w=1440&auto=format&fit=crop'); 
-            }
-            .c2 .bg-overlay { 
-                background-image: url('https://images.unsplash.com/photo-1445217143695-467124038776?q=80&w=1440&auto=format&fit=crop'); 
-            }
             .c3 .bg-overlay { 
                 background-image: url('https://images.unsplash.com/photo-1548685913-fe6678babe8d?q=80&w=1440&auto=format&fit=crop'); 
             }
@@ -572,13 +579,11 @@
                 opacity: 0.6; /* 降低圖片透明度 */
             }
 
+            .bg-video { 
+                opacity: 0.6; /* 降低影片透明度 */
+            }
+
             /* 手機用超小圖片以優化加載速度 */
-            .c1 .bg-overlay { 
-                background-image: url('https://images.unsplash.com/photo-1606041008023-472dfb5e530f?q=80&w=800&auto=format&fit=crop'); 
-            }
-            .c2 .bg-overlay { 
-                background-image: url('https://images.unsplash.com/photo-1445217143695-467124038776?q=80&w=800&auto=format&fit=crop'); 
-            }
             .c3 .bg-overlay { 
                 background-image: url('https://images.unsplash.com/photo-1548685913-fe6678babe8d?q=80&w=800&auto=format&fit=crop'); 
             }
@@ -617,9 +622,12 @@
         <!-- 第二頁：系列選擇 -->
         <section class="collection-section">
             
-            <!-- Chapter 1: Luminescence 花香系 -->
-            <div class="chapter c1" onclick="navigateTo('chapter_luminescence.html')">
-                <div class="bg-overlay"></div>
+            <!-- Chapter 1: Luminescence 花香系 - 使用影片背景 -->
+            <div class="chapter c1" onclick="navigateTo('chapter_luminescence.html')" 
+                 onmouseenter="playVideo(this)" onmouseleave="pauseVideo(this)">
+                <video class="bg-video" playsinline muted loop>
+                    <source src="flower.mp4" type="video/mp4">
+                </video>
                 <div class="content">
                     <span class="ch-num">Chapter I</span>
                     <h2 class="ch-title">Luminescence</h2>
@@ -627,9 +635,12 @@
                 </div>
             </div>
 
-            <!-- Chapter 2: Silhouette 木質系 -->
-            <div class="chapter c2" onclick="navigateTo('chapter_silhouette.html')">
-                <div class="bg-overlay"></div>
+            <!-- Chapter 2: Silhouette 木質系 - 使用影片背景 -->
+            <div class="chapter c2" onclick="navigateTo('chapter_silhouette.html')"
+                 onmouseenter="playVideo(this)" onmouseleave="pauseVideo(this)">
+                <video class="bg-video" playsinline muted loop>
+                    <source src="wood.mp4" type="video/mp4">
+                </video>
                 <div class="content">
                     <span class="ch-num">Chapter II</span>
                     <h2 class="ch-title">Silhouette</h2>
@@ -657,6 +668,29 @@
         window.addEventListener('load', () => {
             document.body.classList.add('loaded'); /* 移除初始淡入狀態 */
         });
+
+        /* ========================================= 
+           影片播放控制函數 - 滑鼠進入時播放
+           ========================================= */
+        function playVideo(element) {
+            const video = element.querySelector('.bg-video');
+            if (video) {
+                video.play().catch(err => {
+                    console.log('影片播放失敗:', err);
+                });
+            }
+        }
+
+        /* ========================================= 
+           影片暫停控制函數 - 滑鼠離開時暫停
+           ========================================= */
+        function pauseVideo(element) {
+            const video = element.querySelector('.bg-video');
+            if (video) {
+                video.pause();
+                video.currentTime = 0; /* 重置到開始位置 */
+            }
+        }
 
         /* ========================================= 
            導航函數 - 點擊卡片時跳轉頁面
