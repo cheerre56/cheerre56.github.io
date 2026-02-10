@@ -357,7 +357,7 @@
         }
 
         /* ========================================= 
-           影片元素樣式 - Chapter 1 和 Chapter 2 影片背景
+           影片元素樣式 - Chapter 1、2、3 影片背景
            ========================================= */
         .bg-video {
             position: absolute;
@@ -439,15 +439,8 @@
             width: 100%; 
             height: 100%;
             background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8)); /* 上淺下深 */
-            z-index: 1; /* 置���圖片上方 */
+            z-index: 1; /* 置於圖片上方 */
             pointer-events: none; /* 不攔截滑鼠事件 */
-        }
-
-        /* ========================================= 
-           背景圖片 URL - 第三個系列的圖片
-           ========================================= */
-        .c3 .bg-overlay { 
-            background-image: url('https://images.unsplash.com/photo-1548685913-fe6678babe8d?q=80&w=2688&auto=format&fit=crop'); 
         }
 
         /* ========================================= 
@@ -510,9 +503,6 @@
            平板設備適配 (1024px 以下)
            ========================================= */
         @media (max-width: 1024px) {
-            .c3 .bg-overlay { 
-                background-image: url('https://images.unsplash.com/photo-1548685913-fe6678babe8d?q=80&w=1440&auto=format&fit=crop'); 
-            }
         }
 
         /* ========================================= 
@@ -582,11 +572,6 @@
             .bg-video { 
                 opacity: 0.6; /* 降低影片透明度 */
             }
-
-            /* 手機用超小圖片以優化加載速度 */
-            .c3 .bg-overlay { 
-                background-image: url('https://images.unsplash.com/photo-1548685913-fe6678babe8d?q=80&w=800&auto=format&fit=crop'); 
-            }
         }
     </style>
 </head>
@@ -648,9 +633,12 @@
                 </div>
             </div>
 
-            <!-- Chapter 3: Obsidian 東方系 -->
-            <div class="chapter c3" onclick="navigateTo('chapter_obsidian.html')">
-                <div class="bg-overlay"></div>
+            <!-- Chapter 3: Obsidian 東方系 - 使用影片背景 -->
+            <div class="chapter c3" onclick="navigateTo('chapter_obsidian.html')"
+                 onmouseenter="playVideo(this)" onmouseleave="pauseVideo(this)">
+                <video class="bg-video" playsinline muted loop>
+                    <source src="Orient.mp4" type="video/mp4">
+                </video>
                 <div class="content">
                     <span class="ch-num">Chapter III</span>
                     <h2 class="ch-title">Obsidian</h2>
