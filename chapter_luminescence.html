@@ -201,12 +201,12 @@
             max-width: 1400px; 
             height: 80%;
             align-items: center; 
-            padding: 0 5%; 
+            padding: 100px 5% 40px; 
             gap: 6%;
         }
 
         /* ========================================= 
-           左側圖片區 - 香水瓶展示
+           左側圖片/影片區 - 香水瓶展示
            ========================================= */
         .visual-area {
             flex: 1; 
@@ -217,16 +217,16 @@
             align-items: center;
         }
 
-        /* ✅ 修改：四角都有小 R 角 */
+        /* ✅ 修改：支援圖片和影片的容器 */
         .img-frame {
             width: 100%; 
             max-width: 420px; 
             aspect-ratio: 3/4.2;
             overflow: hidden;
-            border-radius: 20px; /* ✅ 改為統一的小 R 角 */
+            border-radius: 20px;
             border: 1px solid rgba(255,255,255,0.08);
             position: relative;
-            /* 圖片預設狀態：縮小且透明 */
+            /* 預設狀態：縮小且透明 */
             opacity: 0; 
             transform: scale(0.95) translateY(20px);
             transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -234,6 +234,7 @@
             backface-visibility: hidden; /* 性能優化 */
         }
 
+        /* 圖片自適應 */
         .img-frame img {
             width: 100%; 
             height: 100%; 
@@ -241,7 +242,15 @@
             filter: saturate(0.9) contrast(1.1);
         }
 
-        /* Slide 激活時的圖片動畫 */
+        /* 影片自適應 - 保持寬高比並填滿容器 */
+        .img-frame video {
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Slide 激活時的動畫 */
         .slide.active .img-frame {
             opacity: 1; 
             transform: scale(1) translateY(0);
@@ -305,7 +314,7 @@
            ========================================= */
         .perfume-name {
             font-family: 'Italiana', serif; 
-            font-size: 5.5rem;
+            font-size: clamp(2.2rem, 8vw, 5.5rem);
             line-height: 0.9; 
             margin-bottom: 1.8rem;
             background: linear-gradient(45deg, #fff, #aaa);
@@ -523,7 +532,7 @@
             .slide-content {
                 flex-direction: column; 
                 height: 100%;
-                padding: 85px 8% 40px; 
+                padding: 95px 8% 40px; 
                 gap: 30px;
                 text-align: center; 
                 justify-content: flex-start;
@@ -532,7 +541,7 @@
             .visual-area { 
                 flex: 0 0 auto; 
                 width: 100%; 
-                height: 42vh; 
+                height: 40vh; 
             }
 
             .img-frame { 
@@ -552,7 +561,7 @@
             }
 
             .perfume-name { 
-                font-size: 3.2rem; 
+                font-size: clamp(1.8rem, 6vw, 3.2rem); 
                 margin-bottom: 1rem; 
             }
 
@@ -630,7 +639,7 @@
 
             .slide-content {
                 flex-direction: column; 
-                padding: 70px 5% 30px; 
+                padding: 80px 5% 40px; 
                 gap: 25px;
                 text-align: center;
                 justify-content: flex-start;
@@ -666,7 +675,7 @@
             }
 
             .perfume-name { 
-                font-size: 2.2rem;
+                font-size: clamp(1.6rem, 5.5vw, 2.2rem);
                 line-height: 1;
                 margin-bottom: 0.8rem;
             }
@@ -719,7 +728,7 @@
             }
 
             .product-price {
-                font-size: 2rem;
+                font-size: clamp(1.5rem, 5vw, 2rem);
             }
 
             .price-label {
@@ -727,7 +736,7 @@
             }
 
             .add-to-cart-btn {
-                width: 85%;
+                width: 95%;
                 padding: 0.8rem 1.5rem;
                 font-size: 0.7rem;
                 letter-spacing: 1px;
@@ -769,11 +778,11 @@
             }
 
             .perfume-name {
-                font-size: 1.8rem;
+                font-size: clamp(1.4rem, 5vw, 1.8rem);
             }
 
             .add-to-cart-btn {
-                width: 90%;
+                width: 95%;
                 padding: 0.7rem 1.2rem;
                 font-size: 0.65rem;
             }
@@ -826,14 +835,17 @@
             <div class="slide-content">
                 <div class="visual-area">
                     <div class="img-frame" data-hover>
-                        <img src="https://i.meee.com.tw/mjeui9K.png" alt="Autumn Brew">
+                        <video autoplay muted loop playsinline>
+                            <source src="Autumn.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
                     </div>
                 </div>
                 <div class="text-area">
                     <span class="perfume-no reveal delay-1">NO.01</span>
                     <h1 class="perfume-name reveal delay-2">Autumn Brew</h1>
                     <p class="perfume-desc reveal delay-3">
-                        一場金色的交響樂，封存於午後的琥珀光影中。當第一縷陽光滲透果園，空氣中瀰漫威廉梨的清脆，隨後轉向小蒼蘭的優雅，最後以廣藿香的深沉溫暖作收。
+                        一場金色的交響樂，封存於午後的琥珀光影中。當第一縷陽光滲透果園，空氣中瀰漫威廉梨的清脆，隨後轉向小蒼蘭的優雅，最後以核桃木的溫暖擁抱靈魂。
                         <br><br>
                         A golden symphony captured in amber shadows.
                     </p>
@@ -859,14 +871,17 @@
             <div class="slide-content">
                 <div class="visual-area">
                     <div class="img-frame" data-hover>
-                        <img src="https://i.meee.com.tw/mjeui9K.png" alt="Forest Whispers">
+                        <video autoplay muted loop playsinline>
+                            <source src="Forest.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
                     </div>
                 </div>
                 <div class="text-area">
                     <span class="perfume-no reveal delay-1">NO.02</span>
                     <h1 class="perfume-name reveal delay-2">Forest Whispers</h1>
                     <p class="perfume-desc reveal delay-3">
-                        一場夢境般的相遇，迷失在佈滿藍色花海的晨霧森林。喚醒心中沈睡已久的純真，赤腳踩在佈滿晨露的柔軟草地上，空氣中瀰漫著濕潤的綠意。
+                        一場夢境般的相遇，迷失在佈滿藍色花海的晨霧森林。喚醒心中沈睡已久的純真，赤腳踩在佈滿晨露的柔軟草地上，空氣中瀰漫著濕潤的青草香與白麝香的溫柔。
                         <br><br>
                         A dreamlike encounter, lost in a misty forest carpeted with blue blooms.
                     </p>
