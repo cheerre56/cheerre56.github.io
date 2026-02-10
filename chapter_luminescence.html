@@ -369,6 +369,54 @@
         }
 
         /* ========================================= 
+           容量選擇器
+           ========================================= */
+        .capacity-selector {
+            margin-bottom: 1.5rem;
+        }
+
+        .capacity-selector > label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 0.8rem;
+        }
+
+        .capacity-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+
+        .capacity-btn {
+            padding: 0.6rem 1rem;
+            border: 1px solid rgba(197, 163, 103, 0.5);
+            background: transparent;
+            color: var(--text-sub);
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .capacity-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .capacity-btn.active {
+            background: var(--accent);
+            color: var(--bg-color);
+            border-color: var(--accent);
+        }
+
+        /* ========================================= 
            產品價格區域
            ========================================= */
         .price-section {
@@ -411,6 +459,7 @@
             will-change: transform, background-color;
             position: relative;
             overflow: hidden;
+            z-index: 50;
         }
 
         .add-to-cart-btn:hover {
@@ -504,7 +553,7 @@
         }
 
         /* ========================================= 
-           動畫定義 - 上下浮動
+           動畫定義 - 上下���動
            ========================================= */
         @keyframes floatUp {
             0%, 100% { 
@@ -589,6 +638,10 @@
                 gap: 4px; 
             }
 
+            .capacity-options {
+                justify-content: center;
+            }
+
             .price-section {
                 justify-content: center;
             }
@@ -639,7 +692,7 @@
 
             .slide-content {
                 flex-direction: column; 
-                padding: 80px 5% 40px; 
+                padding: 80px 5% 50px; 
                 gap: 25px;
                 text-align: center;
                 justify-content: flex-start;
@@ -719,6 +772,28 @@
                 font-size: 0.75rem;
             }
 
+            .capacity-selector {
+                margin-bottom: 1rem;
+                width: 100%;
+            }
+
+            .capacity-selector > label {
+                font-size: 0.7rem;
+                margin-bottom: 0.6rem;
+            }
+
+            .capacity-options {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .capacity-btn {
+                flex: 1 0 calc(33.333% - 7px);
+                min-width: 70px;
+                padding: 0.5rem 0.6rem;
+                font-size: 0.65rem;
+            }
+
             .price-section {
                 flex-direction: column;
                 gap: 0.5rem;
@@ -740,6 +815,7 @@
                 padding: 0.8rem 1.5rem;
                 font-size: 0.7rem;
                 letter-spacing: 1px;
+                margin-bottom: 10px;
             }
 
             .cart-icon {
@@ -781,10 +857,17 @@
                 font-size: clamp(1.4rem, 5vw, 1.8rem);
             }
 
+            .capacity-btn {
+                flex: 1 0 calc(33.333% - 7px);
+                padding: 0.45rem 0.5rem;
+                font-size: 0.6rem;
+            }
+
             .add-to-cart-btn {
                 width: 95%;
                 padding: 0.7rem 1.2rem;
                 font-size: 0.65rem;
+                margin-bottom: 10px;
             }
         }
     </style>
@@ -854,9 +937,17 @@
                         <div class="note-row"><span class="note-label">Heart</span> <span class="note-val">Freesia</span></div>
                         <div class="note-row"><span class="note-label">Base</span> <span class="note-val">Patchouli</span></div>
                     </div>
+                    <div class="capacity-selector reveal delay-4">
+                        <label>Capacity:</label>
+                        <div class="capacity-options">
+                            <button class="capacity-btn" data-ml="10" data-price="259">10ml - NT$ 259</button>
+                            <button class="capacity-btn active" data-ml="30" data-price="495">30ml - NT$ 495</button>
+                            <button class="capacity-btn" data-ml="50" data-price="765">50ml - NT$ 765</button>
+                        </div>
+                    </div>
                     <div class="price-section reveal delay-5">
-                        <span class="product-price">NT$ 899</span>
-                        <span class="price-label">/ 50ml</span>
+                        <span class="product-price" id="price1">NT$ 495</span>
+                        <span class="price-label" id="capacity1">/ 30ml</span>
                     </div>
                     <button class="add-to-cart-btn reveal delay-5" onclick="addToCart(event, 'Autumn Brew')">Add to Cart</button>
                 </div>
@@ -890,9 +981,17 @@
                         <div class="note-row"><span class="note-label">Heart</span> <span class="note-val">Persimmon</span></div>
                         <div class="note-row"><span class="note-label">Base</span> <span class="note-val">White Musk</span></div>
                     </div>
+                    <div class="capacity-selector reveal delay-4">
+                        <label>Capacity:</label>
+                        <div class="capacity-options">
+                            <button class="capacity-btn" data-ml="10" data-price="259">10ml - NT$ 259</button>
+                            <button class="capacity-btn active" data-ml="30" data-price="495">30ml - NT$ 495</button>
+                            <button class="capacity-btn" data-ml="50" data-price="765">50ml - NT$ 765</button>
+                        </div>
+                    </div>
                     <div class="price-section reveal delay-5">
-                        <span class="product-price">NT$ 899</span>
-                        <span class="price-label">/ 50ml</span>
+                        <span class="product-price" id="price2">NT$ 495</span>
+                        <span class="price-label" id="capacity2">/ 30ml</span>
                     </div>
                     <button class="add-to-cart-btn reveal delay-5" onclick="addToCart(event, 'Forest Whispers')">Add to Cart</button>
                 </div>
@@ -909,7 +1008,36 @@
             document.body.classList.add('loaded');
             checkSlides();
             updateCartBadge();
+            initializeCapacitySelectors();
         });
+
+        /* ========================================= 
+           初始化容量選擇器
+           ========================================= */
+        function initializeCapacitySelectors() {
+            document.querySelectorAll('.capacity-selector').forEach(selector => {
+                const buttons = selector.querySelectorAll('.capacity-btn');
+                const slide = selector.closest('.slide');
+                const slideNum = slide.id === 'slide1' ? '1' : '2';
+                const priceElement = document.getElementById(`price${slideNum}`);
+                const capacityElement = document.getElementById(`capacity${slideNum}`);
+
+                buttons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        // 移除同組其他按鈕的 active class
+                        buttons.forEach(b => b.classList.remove('active'));
+                        // 添加當前按鈕的 active class
+                        this.classList.add('active');
+                        
+                        // 更新價格和容量顯示
+                        const price = this.dataset.price;
+                        const ml = this.dataset.ml;
+                        priceElement.textContent = `NT$ ${price}`;
+                        capacityElement.textContent = `/ ${ml}ml`;
+                    });
+                });
+            });
+        }
 
         /* ========================================= 
            Intersection Observer - 監測 Slide 可見性並觸發動畫
@@ -959,6 +1087,12 @@
             const button = event.target;
             const cartIcon = document.querySelector('.cart-icon');
             
+            // 獲取選中的容量和價格
+            const slide = button.closest('.slide');
+            const activeCapacityBtn = slide.querySelector('.capacity-btn.active');
+            const selectedML = activeCapacityBtn.dataset.ml;
+            const selectedPrice = activeCapacityBtn.dataset.price;
+            
             /* 計算開始和結束位置 */
             const buttonRect = button.getBoundingClientRect();
             const cartRect = cartIcon.getBoundingClientRect();
@@ -989,9 +1123,15 @@
                 flyingItem.remove();
             }, 800);
             
-            /* 添加到購物車 */
+            /* 添加到購物車 - 包含容量和價格 */
             const cart = JSON.parse(localStorage.getItem('nahaCart')) || {};
-            cart[productName] = (cart[productName] || 0) + 1;
+            const productKey = `${productName}_${selectedML}ml`;
+            cart[productKey] = {
+                name: productName,
+                ml: selectedML,
+                price: selectedPrice,
+                quantity: (cart[productKey]?.quantity || 0) + 1
+            };
             localStorage.setItem('nahaCart', JSON.stringify(cart));
             
             /* 更新徽章 */
@@ -1004,8 +1144,12 @@
         function updateCartBadge() {
             const cart = JSON.parse(localStorage.getItem('nahaCart')) || {};
             let totalItems = 0;
-            Object.values(cart).forEach(qty => {
-                totalItems += qty;
+            Object.values(cart).forEach(item => {
+                if (typeof item === 'object' && item.quantity) {
+                    totalItems += item.quantity;
+                } else {
+                    totalItems += 1;
+                }
             });
             
             const badge = document.getElementById('cartBadge');
