@@ -6,643 +6,426 @@
     <title>Naha Parfums | Beyond Scents</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Space+Grotesk:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300&display=swap" rel="stylesheet">
     <style>
         /* ========================================= 
-           CSS 變數定義 - 顏色主題
+           CSS 變數定義
            ========================================= */
         :root {
             --bg-color: #050505;
             --text-color: #e0e0e0;
+            --text-sub: #a0a0a0;
             --accent-color: #888;
             --accent-gold: #c5a367;
-            --line-width: 25px;              /* ✅ 粗線寬度變數 */
-            --line-left-pos: -80%;           /* ✅ 左邊飛出位置變數 */
-            --line-right-pos: -80%;          /* ✅ 右邊飛出位置變數 */
+            --line-width: 25px;
+            --line-left-pos: -80%;
+            --line-right-pos: -80%;
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
         /* ========================================= 
-           全局重置 - 移除預設邊距、內邊距和邊框
+           全局重置
            ========================================= */
         html, body {
-            margin: 0; 
-            padding: 0;
-            border: 0;
-            width: 100%; 
-            height: 100%;
+            margin: 0; padding: 0; border: 0;
+            width: 100%; height: 100%;
             background-color: transparent; 
-            overflow: hidden; /* 隱藏原生捲軸 */
-            overscroll-behavior: none; /* 防止 iOS 橡皮筋效果 */
+            overflow: hidden;
+            overscroll-behavior: none;
         }
 
-        /* ✅ 修正白框問題 - 移除所有邊框和外邊距 */
         *, *::before, *::after {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-            margin: 0;
-            padding: 0;
-            border: 0;
+            margin: 0; padding: 0; border: 0;
         }
 
-        /* ========================================= 
-           文本選擇限制 - 禁用特定元素的文本選擇
-           ========================================= */
-        nav, .ch-num, .ch-title, .est, .hero-title, .scroll-text {
-            -webkit-user-select: none; 
-            user-select: none;
-        }
-
-        /* ========================================= 
-           Body 樣式 - 主體背景和過渡效果
-           ========================================= */
         body {
             color: var(--text-color);
             font-family: 'Space Grotesk', sans-serif;
-            -webkit-font-smoothing: antialiased; /* 字體平滑渲染 */
+            -webkit-font-smoothing: antialiased;
             opacity: 0; 
-            transition: opacity 1.0s ease-out; /* 頁面載入淡入效果 */
+            transition: opacity 1.0s ease-out;
         }
-        body.loaded { 
-            opacity: 1; /* 載入完成後顯示 */
-        }
+        body.loaded { opacity: 1; }
 
         /* ========================================= 
-           背景特效 - 漸層光效
+           背景特效
            ========================================= */
         .gradient-bg {
-            position: fixed;
-            top: 0; 
-            left: 0;
-            width: 100vw; 
-            height: 100vh;
-            z-index: -1; /* 置於最底層 */
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
             background-color: var(--bg-color); 
             background-image: 
                 radial-gradient(circle at 20% 40%, rgba(70, 60, 150, 0.35), transparent 45%),
                 radial-gradient(circle at 80% 60%, rgba(40, 120, 110, 0.3), transparent 45%);
-            filter: blur(1px); /* 柔和模糊效果 */
-            will-change: filter; /* GPU 加速 */
-            backface-visibility: hidden; /* 性能優化 */
+            filter: blur(1px);
+            will-change: filter;
         }
 
         /* ========================================= 
-           核心滾動容器 - PPT 滾動模式
+           核心滾動容器 (Outer Scroll)
            ========================================= */
         .main-scroll-container {
-            height: 100vh; 
-            height: 100dvh; /* 支援手機動態高度 */
-            width: 100vw;
-            overflow-y: scroll; /* 啟用垂直滾動 */
-            scroll-snap-type: y mandatory; /* 強制吸附各頁面 */
-            scroll-behavior: smooth; /* 平滑滾動 */
-            -ms-overflow-style: none; /* 隱藏 IE/Edge 捲軸 */
-            scrollbar-width: none; /* 隱藏 Firefox 捲軸 */
-            contain: layout style paint; /* CSS containment 性能優化 */
+            height: 100vh; height: 100dvh; width: 100vw;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            -ms-overflow-style: none; scrollbar-width: none;
         }
-        .main-scroll-container::-webkit-scrollbar { 
-            display: none; /* 隱藏 Chrome/Safari 捲軸 */
-        }
+        .main-scroll-container::-webkit-scrollbar { display: none; }
 
         /* ========================================= 
-           Section 頁面容器 - 每一頁設置
+           Section 通用設置
            ========================================= */
         section {
-            width: 100vw;
-            height: 100vh; 
-            height: 100dvh; /* 確保每頁都是滿屏 */
-            position: relative;
-            overflow: hidden;
-            display: flex; 
-            flex-direction: column;
-            justify-content: center; 
-            align-items: center;
-            scroll-snap-align: start; /* 每頁開頭都要吸附 */
-            scroll-snap-stop: always; /* 防止滑太快跳過多頁 */
+            width: 100vw; height: 100vh; height: 100dvh;
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            scroll-snap-align: start; scroll-snap-stop: always;
         }
 
         /* ========================================= 
-           導覽列 - 頂部固定菜單
+           導覽列
            ========================================= */
         nav {
-            position: fixed;
-            top: 0; 
-            width: 100%;
-            padding: 2.5rem 4rem;
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            z-index: 100; /* 置於頁面最上層 */
-            mix-blend-mode: difference; /* 混合模式 */
-            pointer-events: none; /* 不攔截滑鼠事件 */
+            position: fixed; top: 0; width: 100%; padding: 2.5rem 4rem;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 100; mix-blend-mode: difference; pointer-events: none;
         }
-        
         .logo { 
-            font-family: 'Italiana', serif; 
-            font-size: 1.5rem; 
-            letter-spacing: 2px; 
-            color: white; 
-            pointer-events: auto; /* 允許點擊 */
+            font-family: 'Italiana', serif; font-size: 1.5rem; letter-spacing: 2px; 
+            color: white; pointer-events: auto; cursor: pointer;
         }
-        
-        .est { 
-            font-size: 0.7rem; 
-            letter-spacing: 1px; 
-            opacity: 0.6; 
-            color: white; 
-        }
+        .est { font-size: 0.7rem; letter-spacing: 1px; opacity: 0.6; color: white; }
 
         /* ========================================= 
-           首頁 - 標題動畫容器
+           第一頁：Hero Styles
            ========================================= */
-        .hero-title-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-
-        /* ========================================= 
-           首頁 - 標題動畫 ✅ 中央線從無到有再對稱分裂
-           ========================================= */
+        .hero-title-wrapper { position: relative; display: inline-block; }
         .hero-title {
-            font-size: 13vw; 
-            font-family: 'Italiana', serif; 
-            line-height: 0.85;
-            opacity: 0; 
-            transform: translateY(30px); /* 初始位置向下 */
-            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s; /* 淡入動畫 */
-            text-align: center; 
-            pointer-events: auto;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.3); /* 陰影效果 */
-            position: relative;
-            z-index: 2; /* 字在最上層 */
+            font-size: 13vw; font-family: 'Italiana', serif; line-height: 0.85;
+            opacity: 0; transform: translateY(30px);
+            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s;
+            text-align: center; pointer-events: auto;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.3); position: relative; z-index: 2;
         }
-
-        /* ✅ 左邊線：從中央長高，然後向左飛出 */
+        .hero-title::before, .hero-title::after {
+            content: ''; position: absolute; top: 50%; width: var(--line-width); height: 0%;
+            background: var(--accent-gold); will-change: height, width, left, right; z-index: -1;
+        }
         .hero-title::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: var(--line-width);
-            height: 0%;  /* 初始高度為 0 */
-            background: var(--accent-gold);
-            animation: 
-                growCenterLine 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.8s,
-                splitLineLeft 2s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.8s;
-            will-change: height, width, left;
-            z-index: -1; /* 在字後面 */
+            left: 50%; transform: translate(-50%, -50%);
+            animation: growCenterLine 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.8s,
+                       splitLineLeft 2s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.8s;
         }
-
-        /* ✅ 右邊線：從中央長高，然後向右飛出（完全對稱） */
         .hero-title::after {
-            content: '';
-            position: absolute;
-            right: 50%;
-            top: 50%;
-            transform: translate(50%, -50%);
-            width: var(--line-width);
-            height: 0%;  /* 初始高度為 0 */
-            background: var(--accent-gold);
-            animation: 
-                growCenterLine 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.8s,
-                splitLineRight 2s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.8s;
-            will-change: height, width, right;
-            z-index: -1; /* 在字後面 */
+            right: 50%; transform: translate(50%, -50%);
+            animation: growCenterLine 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.8s,
+                       splitLineRight 2s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.8s;
         }
-
-        /* ✅ 中央線長高動畫：0% → 100% */
-        @keyframes growCenterLine {
-            0% {
-                height: 0%;
-                width: var(--line-width);
-                opacity: 1;
-            }
-            100% {
-                height: 100%;
-                width: var(--line-width);
-                opacity: 1;
-            }
-        }
-
-        /* ✅ 左邊線分裂動畫：寬度 2px，向左移動 */
-        @keyframes splitLineLeft {
-            0% {
-                width: var(--line-width);
-                left: 50%;
-                opacity: 1;
-            }
-            100% {
-                width: 2px;
-                left: var(--line-left-pos);
-                opacity: 0.7;
-            }
-        }
-
-        /* ✅ 右邊線分裂動畫：寬度 2px，向右移動 */
-        @keyframes splitLineRight {
-            0% {
-                width: var(--line-width);
-                right: 50%;
-                opacity: 1;
-            }
-            100% {
-                width: 2px;
-                right: var(--line-right-pos);
-                opacity: 0.7;
-            }
-        }
-        
         .hero-subtitle {
-            margin-top: 1.5rem; 
-            font-size: 0.9rem; 
-            color: var(--accent-color);
-            letter-spacing: 0.4em; 
-            text-transform: uppercase;
-            opacity: 0; 
-            transform: translateY(30px);
-            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.7s; /* 延遲 0.2 秒 */
+            margin-top: 1.5rem; font-size: 0.9rem; color: var(--accent-color);
+            letter-spacing: 0.4em; text-transform: uppercase;
+            opacity: 0; transform: translateY(30px);
+            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.7s;
         }
-        
         .scroll-hint {
-            position: absolute; 
-            bottom: 4rem;
+            position: absolute; bottom: 4rem; display: flex; flex-direction: column;
+            align-items: center; gap: 10px; opacity: 0; 
+            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.2s; pointer-events: auto;
+        }
+        .scroll-text { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+        .scroll-line {
+            width: 1px; height: 40px; background: rgba(255,255,255,0.3);
+            animation: growLine 2s infinite ease-in-out; transform-origin: top;
+        }
+
+        /* ========================================= 
+           第二頁：Collection Styles
+           ========================================= */
+        .collection-section { flex-direction: row; background-color: transparent; }
+        .chapter {
+            flex: 1; height: 100%; position: relative;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            transition: flex 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            overflow: hidden; pointer-events: auto; cursor: pointer;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background-color: rgba(5, 5, 5, 0.5); backdrop-filter: blur(3px);
+        }
+        .chapter:last-child { border-right: none; }
+        .chapter:hover { flex: 2.5; }
+        .collection-section:hover .chapter:not(:hover) { opacity: 0.4; }
+        
+        .bg-video {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; opacity: 0.5; transition: opacity 0.8s ease, filter 0.8s ease;
+            filter: saturate(0.2) brightness(0.6); z-index: 0;
+        }
+        .chapter:hover .bg-video { opacity: 1; filter: saturate(1) brightness(1); }
+        
+        .content {
+            text-align: center; z-index: 2; position: relative;
+            transform: translateY(20px); transition: transform 0.6s ease 0.1s;
+        }
+        .chapter:hover .content { transform: translateY(0); }
+        
+        .ch-num { font-family: 'Italiana', serif; font-size: 0.9rem; letter-spacing: 3px; color: var(--accent-gold); margin-bottom: 1rem; display: block; opacity: 0.9; }
+        .ch-title { font-family: 'Italiana', serif; font-size: 3.5vw; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; white-space: nowrap; color: white; text-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .ch-desc { 
+            font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; 
+            opacity: 0; transform: translateY(20px); transition: all 0.6s ease 0.1s; color: rgba(255,255,255,0.8); 
+        }
+        .chapter:hover .ch-desc { opacity: 1; transform: translateY(0); }
+        .chapter::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8)); z-index: 1; pointer-events: none;
+        }
+
+        /* ========================================= 
+           第三頁：Knowledge (FAQ) Styles - ✅ 修正版
+           ========================================= */
+        .knowledge-section {
+            display: block; 
+            padding: 0;
+        }
+
+        .knowledge-scroll-wrapper {
+            width: 100%; height: 100%;
+            overflow-y: scroll; 
+            /* ✅ 修正重點 1：父容器 Padding 設為 0，避免推擠 sticky 元素 */
+            padding: 0; 
+            display: flex; 
+            /* 讓左右內容自己控制間距 */
+            max-width: 1400px; 
+            margin: 0 auto;
+            position: relative;
+            -ms-overflow-style: none; scrollbar-width: none;
+        }
+        .knowledge-scroll-wrapper::-webkit-scrollbar { display: none; }
+
+        /* 左側索引 - ✅ 修正版 */
+        .visual-area {
+            flex: 0 0 35%;
+            /* ✅ 修正重點 2：高度設為 100vh，直接對齊螢幕 */
+            height: 100vh;
+            /* ✅ 修正重點 3：Top 設為 0，無任何邊距干擾 */
+            position: sticky;
+            top: 0;
             display: flex; 
             flex-direction: column; 
-            align-items: center; 
-            gap: 10px;
-            opacity: 0; 
-            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.2s; /* 延遲 0.7 秒 */
-            pointer-events: auto;
-        }
-        
-        .scroll-text { 
-            font-size: 0.7rem; 
-            letter-spacing: 3px; 
-            text-transform: uppercase; 
-            color: rgba(255,255,255,0.5); 
-        }
-        
-        .scroll-line {
-            width: 1px; 
-            height: 40px; 
-            background: rgba(255,255,255,0.3);
-            animation: growLine 2s infinite ease-in-out; /* 無限伸縮動畫 */
-            transform-origin: top; /* 從上往下伸縮 */
+            justify-content: center; /* 這會確保它在 100vh 的中間 */
+            
+            /* 將原本父層的左邊距補回來 */
+            padding-left: 5%; 
         }
 
-        /* ========================================= 
-           第二頁 - 系列選擇容器
-           ========================================= */
-        .collection-section {
-            flex-direction: row; /* 桌面版橫向排列 */
-            background-color: transparent;
+        .visual-orb {
+            position: absolute; top: 50%; left: 20%; transform: translate(-50%, -50%);
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(197, 163, 103, 0.15), transparent 70%);
+            filter: blur(40px); border-radius: 50%; z-index: -1;
+            animation: orbFloat 6s ease-in-out infinite;
         }
 
-        /* ========================================= 
-           Chapter 卡片 - 每個系列卡片
-           ========================================= */
-        .chapter {
+        .index-content { position: relative; z-index: 1; }
+        .big-number {
+            font-family: 'Italiana', serif; font-size: 12rem; line-height: 0.8;
+            color: rgba(255, 255, 255, 0.03); position: absolute; top: -60px; left: -20px;
+            z-index: -1; transition: all 0.5s ease;
+        }
+        .chapter-label { font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; color: var(--accent-gold); margin-bottom: 1rem; display: block; opacity: 0; transform: translateY(20px); }
+        .chapter-title { font-family: 'Italiana', serif; font-size: 3.5rem; color: white; line-height: 1.1; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); }
+        .chapter-desc { 
+            font-family: 'Noto Sans TC', sans-serif; font-size: 0.9rem; color: var(--text-sub); 
+            line-height: 1.8; max-width: 300px; border-left: 1px solid var(--accent-gold); 
+            padding-left: 1.5rem; opacity: 0; transform: translateY(20px); 
+        }
+
+        .knowledge-section.visible .chapter-label { animation: fadeUp 0.8s forwards; }
+        .knowledge-section.visible .chapter-title { animation: fadeUp 0.8s forwards 0.2s; }
+        .knowledge-section.visible .chapter-desc { animation: fadeUp 0.8s forwards 0.4s; }
+
+        /* 右側內容 - ✅ 修正版 */
+        .content-area { 
             flex: 1; 
-            height: 100%;
-            position: relative;
-            border-right: 1px solid rgba(255,255,255,0.1);
-            transition: flex 0.8s cubic-bezier(0.25, 1, 0.5, 1); /* 寬度過渡 */
-            overflow: hidden; 
             pointer-events: auto;
-            display: flex; 
-            flex-direction: column;
-            justify-content: center; 
-            align-items: center;
-            background-color: rgba(5, 5, 5, 0.5); /* 半透明背景 */
-            backdrop-filter: blur(3px); /* 毛玻璃效果 */
-            cursor: pointer; /* 滑鼠指標 */
-        }
-        .chapter:last-child { 
-            border-right: none; /* 最後一個卡片無右邊框 */
-        }
-
-        /* ========================================= 
-           卡片懸停效果 - 只在桌面設備啟用
-           ========================================= */
-        @media (hover: hover) {
-            .chapter:hover { 
-                flex: 2.5; /* 懸停時寬度變大 */
-            }
-            .collection-section:hover .chapter:not(:hover) { 
-                opacity: 0.4; /* 未懸停卡片變暗 */
-            }
-        }
-
-        /* ========================================= 
-           背景圖片層 - 系列圖片
-           ========================================= */
-        .bg-overlay {
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
-            background-size: cover; /* 覆蓋整個區域 */
-            background-position: center center; /* 中心對齊 */
-            background-repeat: no-repeat;
-            opacity: 0.5; /* 初始透明度 */
-            transition: filter 0.8s ease, opacity 0.8s ease; /* 過渡效果 */
-            filter: saturate(0.2) brightness(0.6); /* 降低飽和度和亮度 */
-            z-index: 0;
-            will-change: transform; /* GPU 加速 */
-            backface-visibility: hidden; /* 性能優化 */
-        }
-        .chapter:hover .bg-overlay {
-            opacity: 1; /* 懸停時顯示完全 */
-            filter: saturate(1) brightness(1); /* 恢復原色 */
-        }
-
-        /* ========================================= 
-           影片元素樣式 - Chapter 1、2、3 影片背景
-           ========================================= */
-        .bg-video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* 保持寬高比並覆蓋整個區域 */
-            opacity: 0.5; /* 初始透明度 */
-            transition: opacity 0.8s ease, filter 0.8s ease; /* 過渡效果 */
-            filter: saturate(0.2) brightness(0.6); /* 降低飽和度和亮度 */
-            z-index: 0;
-        }
-        .chapter:hover .bg-video {
-            opacity: 1; /* 懸停時顯示完全 */
-            filter: saturate(1) brightness(1); /* 恢復原色 */
-        }
-
-        /* ========================================= 
-           卡片內容層 - 文字和標題
-           ========================================= */
-        .content {
-            text-align: center; 
-            z-index: 2; /* 置於圖片上方 */
-            position: relative;
-            transform: translateY(20px); /* 初始向下偏移 */
-            transition: transform 0.6s ease 0.1s; /* 過渡效果 */
-        }
-        .chapter:hover .content { 
-            transform: translateY(0); /* 懸停時回到正常位置 */
-        }
-
-        /* ========================================= 
-           卡片文字樣式 - 編號、標題、描述
-           ========================================= */
-        .ch-num { 
-            font-family: 'Italiana', serif; 
-            font-size: 0.9rem; 
-            letter-spacing: 3px; 
-            color: var(--accent-gold); 
-            margin-bottom: 1rem; 
-            display: block; 
-            opacity: 0.9; 
+            /* ✅ 修正重點 4：將原本父層的 Padding 移到這裡 */
+            padding-top: 180px; /* 避開 Nav */
+            padding-right: 5%; /* 補回右邊距 */
+            padding-bottom: 100px;
+            /* 增加左邊距，與左側區塊分開 */
+            margin-left: 8%;
         }
         
-        .ch-title { 
-            font-family: 'Italiana', serif; 
-            font-size: 3.5vw; 
-            text-transform: uppercase; 
-            letter-spacing: 0.05em; 
-            margin-bottom: 0.5rem; 
-            white-space: nowrap; /* 防止換行 */
-            color: white; 
-            text-shadow: 0 10px 30px rgba(0,0,0,0.8); 
+        .faq-group {
+            margin-bottom: 25vh; /* 增加間距確保滾動順暢 */
+            opacity: 0.3; transition: opacity 0.6s ease, filter 0.6s ease; filter: blur(3px);
         }
+        .faq-group.active { opacity: 1; filter: blur(0); }
+        .faq-group:last-child { margin-bottom: 0; }
+
+        .group-header {
+            border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;
+            margin-bottom: 2rem; display: flex; align-items: baseline; gap: 1rem;
+        }
+        .group-num { font-family: 'Italiana', serif; font-size: 1.5rem; color: var(--accent-gold); }
+        .group-title { font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-sub); }
+
+        .faq-item { border-bottom: 1px solid rgba(255, 255, 255, 0.05); margin-bottom: 0; }
+        .faq-question {
+            padding: 1.5rem 0; cursor: pointer; display: flex; justify-content: space-between;
+            align-items: center; font-size: 1.1rem; color: white; transition: color 0.3s;
+        }
+        .faq-question:hover { color: var(--accent-gold); }
         
-        .ch-desc { 
-            font-size: 0.75rem; 
-            letter-spacing: 0.3em; 
-            text-transform: uppercase; 
-            opacity: 0; /* 初始隱藏 */
-            transform: translateY(20px); /* 初始向下 */
-            transition: all 0.6s ease 0.1s; 
-            color: rgba(255,255,255,0.8); 
+        .icon-plus { position: relative; width: 12px; height: 12px; }
+        .icon-plus::before, .icon-plus::after {
+            content: ''; position: absolute; background: var(--accent-gold);
+            top: 50%; left: 50%; transform: translate(-50%, -50%); transition: all 0.3s;
         }
-        .chapter:hover .ch-desc { 
-            opacity: 1; /* 懸停時顯示 */
-            transform: translateY(0); /* 回到正常位置 */
-        }
+        .icon-plus::before { width: 100%; height: 1px; }
+        .icon-plus::after { width: 1px; height: 100%; }
+        .faq-item.active .icon-plus::after { height: 0; }
+        .faq-item.active .icon-plus::before { transform: translate(-50%, -50%) rotate(180deg); }
+
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
+        .faq-content { padding-bottom: 1.5rem; color: var(--text-sub); font-family: 'Noto Sans TC', sans-serif; font-size: 0.95rem; line-height: 1.8; font-weight: 300; }
+        .faq-item.active .faq-answer { max-height: 300px; }
+
+        .knowledge-footer { margin-top: 5rem; text-align: center; font-size: 0.8rem; color: var(--text-sub); opacity: 0.6; padding-bottom: 2rem;}
 
         /* ========================================= 
-           卡片覆蓋層 - 暗化漸層效果
+           動畫 Keyframes
            ========================================= */
-        .chapter::after {
-            content: ''; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8)); /* 上淺下深 */
-            z-index: 1; /* 置於圖片上方 */
-            pointer-events: none; /* 不攔截滑鼠事件 */
-        }
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes growCenterLine { 0% { height: 0%; width: var(--line-width); opacity: 1; } 100% { height: 100%; width: var(--line-width); opacity: 1; } }
+        @keyframes splitLineLeft { 0% { width: var(--line-width); left: 50%; opacity: 1; } 100% { width: 2px; left: var(--line-left-pos); opacity: 0.7; } }
+        @keyframes splitLineRight { 0% { width: var(--line-width); right: 50%; opacity: 1; } 100% { width: 2px; right: var(--line-right-pos); opacity: 0.7; } }
+        @keyframes growLine { 0% { transform: scaleY(0); transform-origin: top; opacity: 0; } 50% { transform: scaleY(1); transform-origin: top; opacity: 1; } 51% { transform: scaleY(1); transform-origin: bottom; opacity: 1; } 100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; } }
+        @keyframes orbFloat { 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; } 50% { transform: translate(-50%, -60%) scale(1.1); opacity: 1; } }
 
         /* ========================================= 
-           動畫定義 - 淡入上升動畫
-           ========================================= */
-        @keyframes fadeUp { 
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            } 
-        }
-        
-        /* ========================================= 
-           動畫定義 - 上下伸縮線動畫
-           ========================================= */
-        @keyframes growLine {
-            0% { 
-                transform: scaleY(0); 
-                transform-origin: top; 
-                opacity: 0; 
-            }
-            50% { 
-                transform: scaleY(1); 
-                transform-origin: top; 
-                opacity: 1; 
-            }
-            51% { 
-                transform: scaleY(1); 
-                transform-origin: bottom; 
-                opacity: 1; 
-            }
-            100% { 
-                transform: scaleY(0); 
-                transform-origin: bottom; 
-                opacity: 0; 
-            }
-        }
-
-        /* ========================================= 
-           頁面過渡層 - 導航淡出效果
+           過渡層
            ========================================= */
         .transition-overlay {
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100vw; 
-            height: 100vh;
-            background-color: #000; 
-            opacity: 0; 
-            visibility: hidden;
-            transition: opacity 0.8s ease; 
-            z-index: 9999; /* 置於最頂層 */
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #000; opacity: 0; visibility: hidden;
+            transition: opacity 0.8s ease; z-index: 9999;
         }
-        .transition-overlay.active { 
-            opacity: 1; /* 導航時淡黑 */
-            visibility: visible;
-        }
+        .transition-overlay.active { opacity: 1; visibility: visible; }
 
         /* ========================================= 
-           平板設備適配 (1024px 以下)
-           ========================================= */
-        @media (max-width: 1024px) {
-        }
-
-        /* ========================================= 
-           手機設備適配 (768px 以下) ✅ 調整線條參數
+           RWD 適配 (手機)
            ========================================= */
         @media (max-width: 768px) {
-            :root {
-                --line-width: 15px;          /* ✅ 手機版粗線縮小 */
-                --line-left-pos: -50%;       /* ✅ 手機版飛出距離縮小 */
-                --line-right-pos: -50%;      /* ✅ 手機版飛出距離縮小 */
-            }
+            :root { --line-width: 15px; --line-left-pos: -50%; --line-right-pos: -50%; }
+            nav { padding: 1.5rem 2rem; }
+            .hero-title { font-size: 20vw; }
+            .collection-section { flex-direction: column; }
+            .chapter { width: 100%; flex: 1 !important; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+            .ch-title { font-size: 1.8rem; } .ch-desc { opacity: 0.7; transform: translateY(0); margin-top: 2px; } .content { transform: translateY(0); }
+            .bg-overlay, .bg-video { opacity: 0.6; }
 
-            /* 導覽列 - 縮小邊距 */
-            nav { 
-                padding: 1.5rem 2rem; 
+            /* Knowledge Section Mobile - ✅ 修正版 */
+            .knowledge-scroll-wrapper { 
+                flex-direction: column; 
+                padding: 100px 5% 40px; /* 手機版還是需要 Padding */
+                gap: 3rem; 
+            }
+            .visual-area { 
+                /* 重置 Desktop 的特殊定位 */
+                position: relative; top: 0; height: auto; 
+                margin-top: 0; padding-top: 0; padding-left: 0;
+                flex: none; align-items: center; text-align: center; margin-bottom: 2rem; 
+            }
+            .content-area {
+                padding-top: 0; padding-right: 0; margin-left: 0;
             }
             
-            /* 首頁標題 - 更大的字體以適應手機 */
-            .hero-title { 
-                font-size: 20vw; 
-            }
-            
-            .hero-subtitle { 
-                font-size: 0.7rem; 
-                letter-spacing: 0.3em; 
-            }
-
-            /* 系列卡片 - 改為縱向排列 */
-            .collection-section { 
-                flex-direction: column; /* 從橫向改為縱向 */
-            }
-            
-            .chapter { 
-                width: 100%;
-                flex: 1 !important; /* 強制均分高度 */
-                height: auto;
-                border-right: none; /* 移除右邊框 */
-                border-bottom: 1px solid rgba(255,255,255,0.1); /* 添加下邊框 */
-            }
-
-            /* 調整文字大小以適應縮小的空間 */
-            .ch-title { 
-                font-size: 1.8rem; 
-                margin-bottom: 0.2rem; 
-            }
-            
-            .ch-num { 
-                font-size: 0.7rem; 
-                margin-bottom: 0.5rem; 
-            }
-            
-            .ch-desc { 
-                font-size: 0.6rem; 
-                opacity: 0.7; 
-                transform: translateY(0); /* 手機上始終顯示 */
-                margin-top: 2px; 
-            }
-            
-            .content { 
-                transform: translateY(0); /* 取消位移動畫 */
-            }
-            
-            .bg-overlay { 
-                opacity: 0.6; /* 降低圖片透明度 */
-            }
-
-            .bg-video { 
-                opacity: 0.6; /* 降低影片透明度 */
-            }
+            .visual-orb { left: 50%; width: 200px; height: 200px; }
+            .big-number { font-size: 8rem; top: -30px; left: 50%; transform: translateX(-50%); }
+            .chapter-desc { border-left: none; padding-left: 0; margin: 0 auto; }
+            .faq-group { opacity: 1; filter: blur(0); margin-bottom: 3rem; }
+            .faq-question { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 背景漸層層 -->
     <div class="gradient-bg"></div>
-    
-    <!-- 頁面過渡黑幕 -->
     <div class="transition-overlay" id="overlay"></div>
 
-    <!-- 頂部導覽列 -->
     <nav>
-        <div class="logo" data-hover>naha.</div>
+        <div class="logo" onclick="window.scrollTo({top:0, behavior:'smooth'})">naha.</div>
         <div class="est">EST. 2026</div>
     </nav>
 
-    <!-- 主滾動容器 - PPT 模式 -->
     <div class="main-scroll-container">
         
-        <!-- 第一頁：首頁英雄區 -->
         <section class="hero-section">
             <div class="hero-title-wrapper">
-                <h1 class="hero-title" data-hover>NAHA</h1>
+                <h1 class="hero-title">NAHA</h1>
             </div>
             <p class="hero-subtitle">Parfums - Beyond Scents</p>
-            <div class="scroll-hint" data-hover>
+            <div class="scroll-hint">
                 <span class="scroll-text">Scroll</span>
                 <div class="scroll-line"></div>
             </div>
         </section>
 
-        <!-- 第二頁：系列選擇 -->
         <section class="collection-section">
-            
-            <!-- Chapter 1: Luminescence 花香系 - 使用影片背景 -->
-            <div class="chapter c1" onclick="navigateTo('chapter_luminescence.html')" 
-                 onmouseenter="playVideo(this)" onmouseleave="pauseVideo(this)">
-                <video class="bg-video" playsinline muted loop>
-                    <source src="flower.mp4" type="video/mp4">
-                </video>
-                <div class="content">
-                    <span class="ch-num">Chapter I</span>
-                    <h2 class="ch-title">Luminescence</h2>
-                    <p class="ch-desc">The Floral Series</p>
-                </div>
+            <div class="chapter c1" onclick="navigateTo('chapter_luminescence.html')" onmouseenter="playVideo(this)" onmouseleave="pauseVideo(this)">
+                <video class="bg-video" playsinline muted loop><source src="flower.mp4" type="video/mp4"></video>
+                <div class="content"><span class="ch-num">Chapter I</span><h2 class="ch-title">Luminescence</h2><p class="ch-desc">The Floral Series</p></div>
             </div>
-
-            <!-- Chapter 2: Silhouette 木質系 - 使用影片背景 -->
-            <div class="chapter c2" onclick="navigateTo('chapter_silhouette.html')"
-                 onmouseenter="playVideo(this)" onmouseleave="pauseVideo(this)">
-                <video class="bg-video" playsinline muted loop>
-                    <source src="Wood.mp4" type="video/mp4">
-                </video>
-                <div class="content">
-                    <span class="ch-num">Chapter II</span>
-                    <h2 class="ch-title">Silhouette</h2>
-                    <p class="ch-desc">The Woody Series</p>
-                </div>
+            <div class="chapter c2" onclick="navigateTo('chapter_silhouette.html')" onmouseenter="playVideo(this)" onmouseleave="pauseVideo(this)">
+                <video class="bg-video" playsinline muted loop><source src="Wood.mp4" type="video/mp4"></video>
+                <div class="content"><span class="ch-num">Chapter II</span><h2 class="ch-title">Silhouette</h2><p class="ch-desc">The Woody Series</p></div>
             </div>
+            <div class="chapter c3" onclick="navigateTo('chapter_obsidian.html')" onmouseenter="playVideo(this)" onmouseleave="pauseVideo(this)">
+                <video class="bg-video" playsinline muted loop><source src="Orient.mp4" type="video/mp4"></video>
+                <div class="content"><span class="ch-num">Chapter III</span><h2 class="ch-title">Obsidian</h2><p class="ch-desc">The Oriental Series</p></div>
+            </div>
+        </section>
 
-            <!-- Chapter 3: Obsidian 東方系 - 使用影片背景 -->
-            <div class="chapter c3" onclick="navigateTo('chapter_obsidian.html')"
-                 onmouseenter="playVideo(this)" onmouseleave="pauseVideo(this)">
-                <video class="bg-video" playsinline muted loop>
-                    <source src="Orient.mp4" type="video/mp4">
-                </video>
-                <div class="content">
-                    <span class="ch-num">Chapter III</span>
-                    <h2 class="ch-title">Obsidian</h2>
-                    <p class="ch-desc">The Oriental Series</p>
+        <section class="knowledge-section" id="knowledgeSection">
+            <div class="knowledge-scroll-wrapper" id="knowledgeScroll">
+                
+                <div class="visual-area">
+                    <div class="visual-orb"></div>
+                    <div class="index-content">
+                        <div class="big-number" id="visualNum">01</div>
+                        <span class="chapter-label" id="visualLabel">CHAPTER 01</span>
+                        <h2 class="chapter-title" id="visualTitle">Selection</h2>
+                        <p class="chapter-desc" id="visualDesc">
+                            香水是記憶的載體。挑選一款適合的香氛，不僅是嗅覺的體驗，更是一場尋找自我印記的旅程。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="content-area">
+                    <div class="faq-group active" id="group1">
+                        <div class="group-header"><span class="group-num">01.</span><span class="group-title">Selection / 挑選與體驗</span></div>
+                        <div class="faq-item"><div class="faq-question">剛噴出來的味道有點刺鼻？<div class="icon-plus"></div></div><div class="faq-answer"><div class="faq-content">這是正常的。香水含高比例酒精，剛噴出時酒精正快速揮發。建議靜待 30 秒至 1 分鐘，避開前味酒精感，再細細品味層次。</div></div></div>
+                        <div class="faq-item"><div class="faq-question">如何找到適合自己的香水？<div class="icon-plus"></div></div><div class="faq-answer"><div class="faq-content">從「場景」與「記憶」入手。工作適合乾淨木質調；約會適合溫柔花香。建議購買試香組，在手腕試噴並感受 4-6 小時的完整變化。</div></div></div>
+                        <div class="faq-item"><div class="faq-question">EDP 與 EDT 的濃度區別？<div class="icon-plus"></div></div><div class="faq-answer"><div class="faq-content">EDP (Eau de Parfum) 濃度 15-20%，持香 5-8 小時，層次豐富；EDT (Eau de Toilette) 濃度 5-15%，持香 3-4 小時，氣味較輕盈。</div></div></div>
+                    </div>
+
+                    <div class="faq-group" id="group2">
+                        <div class="group-header"><span class="group-num">02.</span><span class="group-title">Rituals / 穿香技巧</span></div>
+                        <div class="faq-item"><div class="faq-question">為什麼留香時間很短？<div class="icon-plus"></div></div><div class="faq-answer"><div class="faq-content">留香受濃度、濕度及體溫影響。皮膚乾燥易揮發，建議先塗無香乳液保濕。此外，長期使用同款香水會產生「嗅覺疲勞」，導致自己聞不到。</div></div></div>
+                        <div class="faq-item"><div class="faq-question">噴完香水可以摩擦手腕嗎？<div class="icon-plus"></div></div><div class="faq-answer"><div class="faq-content">請避免！摩擦產生的熱能會破壞香水前調分子結構，導致氣味變質。正確方式是輕點手腕，讓其自然乾燥。</div></div></div>
+                    </div>
+
+                    <div class="faq-group" id="group3">
+                        <div class="group-header"><span class="group-num">03.</span><span class="group-title">Care / 保存與維護</span></div>
+                        <div class="faq-item"><div class="faq-question">香水會過期嗎？<div class="icon-plus"></div></div><div class="faq-answer"><div class="faq-content">若保存得當（避光、陰涼），香水可存放多年。請避開陽光直射、高溫與浴室潮濕環境。理想溫度為 15-25°C。</div></div></div>
+                        <div class="faq-item"><div class="faq-question">顏色變深正常嗎？<div class="icon-plus"></div></div><div class="faq-answer"><div class="faq-content">是的。許多天然香材（如香草、茉莉）會隨時間氧化使液體變深，這通常是天然成分的證明，不影響氣味品質。</div></div></div>
+                    </div>
+
+                    <div class="knowledge-footer">&copy; 2026 Naha Parfums.</div>
                 </div>
             </div>
         </section>
@@ -650,104 +433,123 @@
     </div>
 
     <script>
-        /* ========================================= 
-           全局變數 - 檢測是否為行動設備
-           ========================================= */
         const isMobile = window.innerWidth <= 768;
 
         /* ========================================= 
-           頁面加載完成 - 顯示內容 + 初始化手機影片播放
+           初始化
            ========================================= */
         window.addEventListener('load', () => {
-            document.body.classList.add('loaded'); /* 移除初始淡入狀態 */
-            if (isMobile) {
-                initializeMobileVideos(); /* 手機版初始化自動播放 */
-            }
+            document.body.classList.add('loaded');
+            if (isMobile) initializeMobileVideos();
         });
 
         /* ========================================= 
-           頁面顯示事件 - 修復返回首頁的黑屏問題
+           導航與影片邏輯
            ========================================= */
         window.addEventListener('pageshow', (event) => {
-            // 移除黑色過渡層
             const overlay = document.getElementById('overlay');
-            if (overlay) {
-                overlay.classList.remove('active');
-                overlay.style.opacity = '0';
-                overlay.style.visibility = 'hidden';
-            }
-
-            // 確保頁面正常顯示
-            document.body.style.display = 'block';
-            document.body.style.opacity = '1';
-            
-            // 重新初始化手機影片
-            if (isMobile) {
-                initializeMobileVideos();
-            }
+            if (overlay) { overlay.classList.remove('active'); overlay.style.opacity = '0'; overlay.style.visibility = 'hidden'; }
+            document.body.style.display = 'block'; document.body.style.opacity = '1';
+            if (isMobile) initializeMobileVideos();
         });
 
-        /* ========================================= 
-           手機版初始化 - 自動播放所有影片
-           第一章 (c1) 和 第三章 (c3) 速度為 0.5x
-           第二章 (c2) 速度為 0.8x
-           ========================================= */
         function initializeMobileVideos() {
-            const videos = document.querySelectorAll('.bg-video');
-            videos.forEach((video, index) => {
-                // 獲取該視頻所在的 chapter 元素
+            document.querySelectorAll('.bg-video').forEach(video => {
                 const chapter = video.closest('.chapter');
-                
-                if (chapter.classList.contains('c1') || chapter.classList.contains('c3')) {
-                    // 第一章和第三章：播放速度 0.5x
-                    video.playbackRate = 0.5;
-                } else {
-                    // 第二章：播放速度 0.8x
-                    video.playbackRate = 0.8;
-                }
-                
-                video.play().catch(err => {
-                    console.log('影片自動播放失敗:', err);
-                });
+                video.playbackRate = (chapter.classList.contains('c1') || chapter.classList.contains('c3')) ? 0.5 : 0.8;
+                video.play().catch(err => console.log('Autoplay blocked', err));
             });
         }
 
+        function playVideo(el) { if (!isMobile) el.querySelector('.bg-video')?.play().catch(() => {}); }
+        function pauseVideo(el) { 
+            if (!isMobile) { 
+                const v = el.querySelector('.bg-video'); 
+                if (v) { v.pause(); v.currentTime = 0; } 
+            } 
+        }
+
+        function navigateTo(url) {
+            if(!url) return;
+            document.getElementById('overlay').classList.add('active');
+            setTimeout(() => window.location.href = url, 800);
+        }
+
         /* ========================================= 
-           影片播放控制函數 - 桌面版滑鼠進入時播放
+           FAQ 邏輯 (整合版)
            ========================================= */
-        function playVideo(element) {
-            if (isMobile) return; /* 手機版忽略此事件 */
-            const video = element.querySelector('.bg-video');
-            if (video) {
-                video.play().catch(err => {
-                    console.log('影片播放失敗:', err);
+        
+        // 1. Intersection Observer for Knowledge Section Animation
+        const knowledgeSection = document.getElementById('knowledgeSection');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) knowledgeSection.classList.add('visible');
+            });
+        }, { threshold: 0.3 });
+        observer.observe(knowledgeSection);
+
+        // 2. Accordion Logic
+        document.querySelectorAll('.faq-question').forEach(q => {
+            q.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const item = q.parentElement;
+                const isActive = item.classList.contains('active');
+                item.closest('.faq-group').querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                if(!isActive) item.classList.add('active');
+            });
+        });
+
+        // 3. Scroll Spy for Knowledge Section (Internal Scroll)
+        const knowledgeScroll = document.getElementById('knowledgeScroll');
+        const groups = document.querySelectorAll('.faq-group');
+        const visualNum = document.getElementById('visualNum');
+        const visualLabel = document.getElementById('visualLabel');
+        const visualTitle = document.getElementById('visualTitle');
+        const visualDesc = document.getElementById('visualDesc');
+
+        const contentData = [
+            { num: '01', label: 'CHAPTER 01', title: 'Selection', desc: '香水是記憶的載體。挑選一款適合的香氛，不僅是嗅覺的體驗，更是一場尋找自我印記的旅程。' },
+            { num: '02', label: 'CHAPTER 02', title: 'Rituals', desc: '穿香是一種儀式。掌握溫度與脈搏的秘密，讓香氣成為你無形的第二層肌膚，如影隨形。' },
+            { num: '03', label: 'CHAPTER 03', title: 'Care', desc: '時間是香氛的朋友，也是敵人。學會正確的收藏與養護，讓每一瓶香水都能陪你走過漫長歲月。' }
+        ];
+
+        knowledgeScroll.addEventListener('scroll', () => {
+            let currentGroupIndex = 0;
+            const containerHeight = knowledgeScroll.clientHeight;
+            
+            if (knowledgeScroll.scrollHeight - knowledgeScroll.scrollTop <= containerHeight + 50) {
+                currentGroupIndex = groups.length - 1;
+            } else {
+                groups.forEach((group, index) => {
+                    const rect = group.getBoundingClientRect();
+                    // 因為是在 100vh 視窗內，我們檢查元素頂部是否在視窗上半部
+                    if (rect.top < window.innerHeight * 0.6 && rect.bottom > window.innerHeight * 0.4) {
+                        currentGroupIndex = index;
+                    }
                 });
             }
-        }
 
-        /* ========================================= 
-           影片暫停控制函數 - 桌面版滑鼠離開時暫停
-           ========================================= */
-        function pauseVideo(element) {
-            if (isMobile) return; /* 手機版忽略此事件 */
-            const video = element.querySelector('.bg-video');
-            if (video) {
-                video.pause();
-                video.currentTime = 0; /* 重置到開始位置 */
+            groups.forEach((g, i) => {
+                if (i === currentGroupIndex) g.classList.add('active');
+                else g.classList.remove('active');
+            });
+
+            const data = contentData[currentGroupIndex];
+            if (visualNum.innerText !== data.num) {
+                const content = document.querySelector('.index-content');
+                content.style.opacity = 0;
+                content.style.transform = 'translateY(10px)';
+                
+                setTimeout(() => {
+                    visualNum.innerText = data.num;
+                    visualLabel.innerText = data.label;
+                    visualTitle.innerText = data.title;
+                    visualDesc.innerText = data.desc;
+                    content.style.opacity = 1;
+                    content.style.transform = 'translateY(0)';
+                }, 300);
             }
-        }
-
-        /* ========================================= 
-           導航函數 - 點擊卡片時跳轉頁面
-           ========================================= */
-        function navigateTo(url) {
-            if(!url) return; /* 檢查 URL 有效性 */
-            const overlay = document.getElementById('overlay');
-            overlay.classList.add('active'); /* 顯示淡黑過渡層 */
-            setTimeout(() => { 
-                window.location.href = url; /* 延遲 800ms 後跳轉 */
-            }, 800);
-        }
+        });
     </script>
 </body>
 </html>
