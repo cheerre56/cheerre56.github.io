@@ -255,6 +255,7 @@
         
         .faq-group {
             margin-bottom: 25vh;
+            /* 桌面版保留特效 */
             opacity: 0.3; transition: opacity 0.6s ease, filter 0.6s ease; filter: blur(3px);
         }
         .faq-group.active { opacity: 1; filter: blur(0); }
@@ -311,7 +312,7 @@
         .transition-overlay.active { opacity: 1; visibility: visible; }
 
         /* ========================================= 
-           RWD 適配 (手機)
+           RWD 適配 (手機版 - 效能與一般網頁化)
            ========================================= */
         @media (max-width: 768px) {
             :root { --line-width: 15px; --line-left-pos: -50%; --line-right-pos: -50%; }
@@ -322,12 +323,12 @@
             .ch-title { font-size: 1.8rem; } .ch-desc { opacity: 0.7; transform: translateY(0); margin-top: 2px; } .content { transform: translateY(0); }
             .bg-overlay, .bg-video { opacity: 0.6; }
 
-            /* Knowledge Section Mobile - 效能與版面修正 */
+            /* Knowledge Section Mobile */
             .knowledge-scroll-wrapper { 
                 flex-direction: column; 
                 padding: 100px 5% 40px; 
                 gap: 3rem; 
-                -webkit-overflow-scrolling: touch; /* iOS 滑動優化 */
+                -webkit-overflow-scrolling: touch;
             }
             .visual-area { 
                 position: relative; top: 0; height: auto; 
@@ -338,16 +339,12 @@
                 padding-top: 0; padding-right: 0; margin-left: 0;
             }
             
-            /* ✅ 效能優化：強制移除手機版 Blur 與 Backdrop-filter */
+            /* ✅✅✅ 手機版關鍵修正：強制移除特效，改回一般網頁流 */
             .faq-group {
-                margin-bottom: 3rem;
-                opacity: 0.3;
-                filter: none !important; /* 移除模糊 */
-                transition: opacity 0.3s ease;
-            }
-            .faq-group.active {
-                opacity: 1;
-                filter: none !important; /* 移除模糊 */
+                opacity: 1 !important;          /* 永遠顯示，不透明 */
+                filter: none !important;        /* 移除模糊濾鏡 (提升效能) */
+                transition: none !important;    /* 移除動畫 (提升效能) */
+                margin-bottom: 4rem !important; /* 正常間距 */
             }
             
             .visual-orb { left: 50%; width: 200px; height: 200px; }
@@ -440,11 +437,17 @@
     <script>
         const isMobile = window.innerWidth <= 768;
 
+        /* ========================================= 
+           初始化
+           ========================================= */
         window.addEventListener('load', () => {
             document.body.classList.add('loaded');
             if (isMobile) initializeMobileVideos();
         });
 
+        /* ========================================= 
+           導航與影片邏輯
+           ========================================= */
         window.addEventListener('pageshow', (event) => {
             const overlay = document.getElementById('overlay');
             if (overlay) { overlay.classList.remove('active'); overlay.style.opacity = '0'; overlay.style.visibility = 'hidden'; }
@@ -474,6 +477,10 @@
             setTimeout(() => window.location.href = url, 800);
         }
 
+        /* ========================================= 
+           FAQ 邏輯 (整合版)
+           ========================================= */
+        
         // 1. Intersection Observer for Knowledge Section Animation
         const knowledgeSection = document.getElementById('knowledgeSection');
         const observer = new IntersectionObserver((entries) => {
@@ -494,7 +501,7 @@
             });
         });
 
-        // 3. Scroll Spy for Knowledge Section (Optimized for Mobile)
+        // 3. Scroll Spy for Knowledge Section (Internal Scroll)
         const knowledgeScroll = document.getElementById('knowledgeScroll');
         const groups = document.querySelectorAll('.faq-group');
         const visualNum = document.getElementById('visualNum');
