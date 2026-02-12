@@ -184,7 +184,7 @@
         }
 
         /* ========================================= 
-           第三頁：Knowledge (FAQ) Styles - ✅ 修正版
+           第三頁：Knowledge (FAQ) Styles
            ========================================= */
         .knowledge-section {
             display: block; 
@@ -194,10 +194,8 @@
         .knowledge-scroll-wrapper {
             width: 100%; height: 100%;
             overflow-y: scroll; 
-            /* ✅ 修正重點 1：父容器 Padding 設為 0，避免推擠 sticky 元素 */
             padding: 0; 
             display: flex; 
-            /* 讓左右內容自己控制間距 */
             max-width: 1400px; 
             margin: 0 auto;
             position: relative;
@@ -205,19 +203,17 @@
         }
         .knowledge-scroll-wrapper::-webkit-scrollbar { display: none; }
 
-        /* 左側索引 - ✅ 修正版 */
+        /* 左側索引 */
         .visual-area {
             flex: 0 0 35%;
-            /* ✅ 修正重點 2：高度設為 100vh，直接對齊螢幕 */
             height: 100vh;
-            /* ✅ 修正重點 3：Top 設為 0，無任何邊距干擾 */
             position: sticky;
             top: 0;
+            margin-top: -140px; 
+            padding-top: 100px; 
             display: flex; 
             flex-direction: column; 
-            justify-content: center; /* 這會確保它在 100vh 的中間 */
-            
-            /* 將原本父層的左邊距補回來 */
+            justify-content: center;
             padding-left: 5%; 
         }
 
@@ -229,7 +225,7 @@
             animation: orbFloat 6s ease-in-out infinite;
         }
 
-        .index-content { position: relative; z-index: 1; }
+        .index-content { position: relative; z-index: 1; transition: opacity 0.2s ease, transform 0.2s ease; }
         .big-number {
             font-family: 'Italiana', serif; font-size: 12rem; line-height: 0.8;
             color: rgba(255, 255, 255, 0.03); position: absolute; top: -60px; left: -20px;
@@ -247,20 +243,18 @@
         .knowledge-section.visible .chapter-title { animation: fadeUp 0.8s forwards 0.2s; }
         .knowledge-section.visible .chapter-desc { animation: fadeUp 0.8s forwards 0.4s; }
 
-        /* 右側內容 - ✅ 修正版 */
+        /* 右側內容 */
         .content-area { 
             flex: 1; 
             pointer-events: auto;
-            /* ✅ 修正重點 4：將原本父層的 Padding 移到這裡 */
-            padding-top: 180px; /* 避開 Nav */
-            padding-right: 5%; /* 補回右邊距 */
+            padding-top: 180px; 
+            padding-right: 5%; 
             padding-bottom: 100px;
-            /* 增加左邊距，與左側區塊分開 */
             margin-left: 8%;
         }
         
         .faq-group {
-            margin-bottom: 25vh; /* 增加間距確保滾動順暢 */
+            margin-bottom: 25vh;
             opacity: 0.3; transition: opacity 0.6s ease, filter 0.6s ease; filter: blur(3px);
         }
         .faq-group.active { opacity: 1; filter: blur(0); }
@@ -328,14 +322,14 @@
             .ch-title { font-size: 1.8rem; } .ch-desc { opacity: 0.7; transform: translateY(0); margin-top: 2px; } .content { transform: translateY(0); }
             .bg-overlay, .bg-video { opacity: 0.6; }
 
-            /* Knowledge Section Mobile - ✅ 修正版 */
+            /* Knowledge Section Mobile - 效能與版面修正 */
             .knowledge-scroll-wrapper { 
                 flex-direction: column; 
-                padding: 100px 5% 40px; /* 手機版還是需要 Padding */
+                padding: 100px 5% 40px; 
                 gap: 3rem; 
+                -webkit-overflow-scrolling: touch; /* iOS 滑動優化 */
             }
             .visual-area { 
-                /* 重置 Desktop 的特殊定位 */
                 position: relative; top: 0; height: auto; 
                 margin-top: 0; padding-top: 0; padding-left: 0;
                 flex: none; align-items: center; text-align: center; margin-bottom: 2rem; 
@@ -344,10 +338,21 @@
                 padding-top: 0; padding-right: 0; margin-left: 0;
             }
             
+            /* ✅ 效能優化：強制移除手機版 Blur 與 Backdrop-filter */
+            .faq-group {
+                margin-bottom: 3rem;
+                opacity: 0.3;
+                filter: none !important; /* 移除模糊 */
+                transition: opacity 0.3s ease;
+            }
+            .faq-group.active {
+                opacity: 1;
+                filter: none !important; /* 移除模糊 */
+            }
+            
             .visual-orb { left: 50%; width: 200px; height: 200px; }
             .big-number { font-size: 8rem; top: -30px; left: 50%; transform: translateX(-50%); }
             .chapter-desc { border-left: none; padding-left: 0; margin: 0 auto; }
-            .faq-group { opacity: 1; filter: blur(0); margin-bottom: 3rem; }
             .faq-question { font-size: 1rem; }
         }
     </style>
@@ -435,17 +440,11 @@
     <script>
         const isMobile = window.innerWidth <= 768;
 
-        /* ========================================= 
-           初始化
-           ========================================= */
         window.addEventListener('load', () => {
             document.body.classList.add('loaded');
             if (isMobile) initializeMobileVideos();
         });
 
-        /* ========================================= 
-           導航與影片邏輯
-           ========================================= */
         window.addEventListener('pageshow', (event) => {
             const overlay = document.getElementById('overlay');
             if (overlay) { overlay.classList.remove('active'); overlay.style.opacity = '0'; overlay.style.visibility = 'hidden'; }
@@ -475,10 +474,6 @@
             setTimeout(() => window.location.href = url, 800);
         }
 
-        /* ========================================= 
-           FAQ 邏輯 (整合版)
-           ========================================= */
-        
         // 1. Intersection Observer for Knowledge Section Animation
         const knowledgeSection = document.getElementById('knowledgeSection');
         const observer = new IntersectionObserver((entries) => {
@@ -499,13 +494,14 @@
             });
         });
 
-        // 3. Scroll Spy for Knowledge Section (Internal Scroll)
+        // 3. Scroll Spy for Knowledge Section (Optimized for Mobile)
         const knowledgeScroll = document.getElementById('knowledgeScroll');
         const groups = document.querySelectorAll('.faq-group');
         const visualNum = document.getElementById('visualNum');
         const visualLabel = document.getElementById('visualLabel');
         const visualTitle = document.getElementById('visualTitle');
         const visualDesc = document.getElementById('visualDesc');
+        const indexContent = document.querySelector('.index-content');
 
         const contentData = [
             { num: '01', label: 'CHAPTER 01', title: 'Selection', desc: '香水是記憶的載體。挑選一款適合的香氛，不僅是嗅覺的體驗，更是一場尋找自我印記的旅程。' },
@@ -513,43 +509,66 @@
             { num: '03', label: 'CHAPTER 03', title: 'Care', desc: '時間是香氛的朋友，也是敵人。學會正確的收藏與養護，讓每一瓶香水都能陪你走過漫長歲月。' }
         ];
 
+        let isTicking = false;
+
         knowledgeScroll.addEventListener('scroll', () => {
+            if (!isTicking) {
+                window.requestAnimationFrame(() => {
+                    updateActiveGroup();
+                    isTicking = false;
+                });
+                isTicking = true;
+            }
+        });
+
+        function updateActiveGroup() {
             let currentGroupIndex = 0;
             const containerHeight = knowledgeScroll.clientHeight;
-            
-            if (knowledgeScroll.scrollHeight - knowledgeScroll.scrollTop <= containerHeight + 50) {
+            const scrollHeight = knowledgeScroll.scrollHeight;
+            const scrollTop = knowledgeScroll.scrollTop;
+
+            // 判斷是否接近底部
+            if (scrollHeight - scrollTop <= containerHeight + 50) {
                 currentGroupIndex = groups.length - 1;
             } else {
-                groups.forEach((group, index) => {
-                    const rect = group.getBoundingClientRect();
-                    // 因為是在 100vh 視窗內，我們檢查元素頂部是否在視窗上半部
-                    if (rect.top < window.innerHeight * 0.6 && rect.bottom > window.innerHeight * 0.4) {
-                        currentGroupIndex = index;
+                // 優化：使用簡單的迴圈，減少計算量
+                for (let i = 0; i < groups.length; i++) {
+                    const rect = groups[i].getBoundingClientRect();
+                    const elementCenter = rect.top + rect.height / 2;
+                    const windowCenter = window.innerHeight / 2;
+                    
+                    if (elementCenter > windowCenter - 200 && elementCenter < windowCenter + 200) {
+                        currentGroupIndex = i;
+                        break; 
                     }
-                });
+                }
             }
 
+            // 更新 Active 狀態
             groups.forEach((g, i) => {
-                if (i === currentGroupIndex) g.classList.add('active');
-                else g.classList.remove('active');
+                if (i === currentGroupIndex) {
+                    if (!g.classList.contains('active')) g.classList.add('active');
+                } else {
+                    if (g.classList.contains('active')) g.classList.remove('active');
+                }
             });
 
+            // 更新左側文字
             const data = contentData[currentGroupIndex];
             if (visualNum.innerText !== data.num) {
-                const content = document.querySelector('.index-content');
-                content.style.opacity = 0;
-                content.style.transform = 'translateY(10px)';
+                indexContent.style.opacity = 0;
+                indexContent.style.transform = 'translateY(5px)';
                 
                 setTimeout(() => {
                     visualNum.innerText = data.num;
                     visualLabel.innerText = data.label;
                     visualTitle.innerText = data.title;
                     visualDesc.innerText = data.desc;
-                    content.style.opacity = 1;
-                    content.style.transform = 'translateY(0)';
-                }, 300);
+                    indexContent.style.opacity = 1;
+                    indexContent.style.transform = 'translateY(0)';
+                }, 200);
             }
-        });
+        }
     </script>
 </body>
 </html>
