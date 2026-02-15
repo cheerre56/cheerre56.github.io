@@ -1,0 +1,24 @@
+# ==========================================
+# 個人專屬 DNS 阻擋清單 (Personal Blocklist)
+# ==========================================
+
+easebar.com
+netease.com
+anticheatexpert.com
+liveupdate01s.asus.com
+
+optimizationguide-pa.googleapis.com
+streetviewpixels-pa.googleapis.com
+activity.windows.com
+settings.data.microsoft.com
+playstoregatewayadapter-pa.googleapis.com
+
+assets.adobedtm.com
+t.adbiding.com
+p16-ad-site-sign-sg.tiktokcdn.com
+p19-ad-site-sign-sg.tiktokcdn.com
+
+telemetry.1passwordservices.com
+firebaselogging-pa.googleapis.com
+log5-lf.qishui.com
+log3-lf.qishui.com
