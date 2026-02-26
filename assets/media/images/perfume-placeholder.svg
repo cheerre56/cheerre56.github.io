@@ -1,0 +1,21 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800" role="img" aria-label="Naha Perfume Placeholder">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#221d17" />
+      <stop offset="100%" stop-color="#0f1014" />
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f0e3c8" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#c5a367" stop-opacity="0.35" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="800" fill="url(#bg)" />
+  <circle cx="510" cy="95" r="130" fill="#3d2f1f" fill-opacity="0.3" />
+  <circle cx="90" cy="700" r="170" fill="#263341" fill-opacity="0.35" />
+  <rect x="200" y="210" width="200" height="90" rx="12" fill="#111111" />
+  <rect x="170" y="290" width="260" height="320" rx="28" fill="url(#glass)" stroke="#f4e7cb" stroke-opacity="0.45" />
+  <rect x="230" y="335" width="140" height="5" rx="2.5" fill="#f4e7cb" fill-opacity="0.65" />
+  <text x="300" y="420" text-anchor="middle" fill="#f8ebcf" font-family="Georgia, serif" font-size="40" letter-spacing="2">NAHA</text>
+  <text x="300" y="455" text-anchor="middle" fill="#f8ebcf" font-family="Arial, sans-serif" font-size="12" letter-spacing="3">PARFUMS</text>
+  <text x="300" y="700" text-anchor="middle" fill="#d8b87d" font-family="Arial, sans-serif" font-size="16" letter-spacing="6">PLACEHOLDER</text>
+</svg>
