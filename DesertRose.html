@@ -6,15 +6,54 @@
   <title>NAHA — Desert Rose</title>
   <style>
     :root {
+      --max: 1180px;
+    }
+
+    /* ===== DAY MODE ===== */
+    body {
       --bg: #f5f1eb;
       --paper: #fbf8f4;
+      --paper-soft: rgba(251, 248, 244, 0.84);
       --text: #1f1a17;
       --muted: #6f645c;
       --line: #d9cec3;
       --accent: #8a5a52;
       --accent-dark: #5a3834;
       --shadow: 0 10px 30px rgba(31, 26, 23, 0.08);
-      --max: 1180px;
+
+      --nav-blend: normal;
+      --gradient-bg:
+        radial-gradient(circle at 18% 30%, rgba(181, 139, 99, 0.18), transparent 38%),
+        radial-gradient(circle at 82% 70%, rgba(138, 90, 82, 0.16), transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.28), transparent 52%);
+
+      --hero-video-filter: saturate(0.88) contrast(0.96) brightness(0.96);
+      --quote-bg: linear-gradient(180deg, rgba(255,255,255,0.25), rgba(255,255,255,0.05));
+      --transition-bg: #f5f1eb;
+      --mode-btn-bg: rgba(255,255,255,0.45);
+    }
+
+    /* ===== NIGHT MODE ===== */
+    body.dark {
+      --bg: #050505;
+      --paper: rgba(10, 10, 10, 0.78);
+      --paper-soft: rgba(10, 10, 10, 0.66);
+      --text: #e0e0e0;
+      --muted: #9a9a9a;
+      --line: rgba(255,255,255,0.12);
+      --accent: #c5a367;
+      --accent-dark: #9f7d49;
+      --shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+
+      --nav-blend: difference;
+      --gradient-bg:
+        radial-gradient(circle at 20% 40%, rgba(70, 60, 150, 0.35), transparent 45%),
+        radial-gradient(circle at 80% 60%, rgba(40, 120, 110, 0.3), transparent 45%);
+
+      --hero-video-filter: saturate(0.82) brightness(0.82) contrast(1.02);
+      --quote-bg: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      --transition-bg: #000;
+      --mode-btn-bg: rgba(255,255,255,0.08);
     }
 
     * { box-sizing: border-box; }
@@ -27,6 +66,16 @@
       background: var(--bg);
       line-height: 1.75;
       letter-spacing: 0.01em;
+      transition: background-color 0.45s ease, color 0.45s ease;
+      opacity: 0;
+    }
+
+    body.loaded {
+      opacity: 1;
+      transition:
+        opacity 0.9s ease,
+        background-color 0.45s ease,
+        color 0.45s ease;
     }
 
     h1, h2, h3, .brand {
@@ -40,6 +89,16 @@
       text-decoration: none;
     }
 
+    .page-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-color: var(--bg);
+      background-image: var(--gradient-bg);
+      filter: blur(1px);
+      transition: background-color 0.45s ease, background-image 0.45s ease;
+    }
+
     .container {
       width: min(calc(100% - 48px), var(--max));
       margin: 0 auto;
@@ -49,9 +108,11 @@
       position: sticky;
       top: 0;
       z-index: 20;
-      background: rgba(245, 241, 235, 0.9);
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
       backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(217, 206, 195, 0.75);
+      border-bottom: 1px solid var(--line);
+      transition: background 0.45s ease, border-color 0.45s ease;
+      mix-blend-mode: var(--nav-blend);
     }
 
     .nav {
@@ -71,7 +132,7 @@
     .nav-right {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 14px;
     }
 
     .nav-links {
@@ -79,28 +140,43 @@
       gap: 24px;
       font-size: 0.95rem;
       color: var(--muted);
+      transition: color 0.45s ease;
     }
 
-    .lang-switch {
+    .lang-switch,
+    .mode-switch {
       display: inline-flex;
       border: 1px solid var(--line);
       border-radius: 999px;
       overflow: hidden;
-      background: rgba(255,255,255,0.45);
-      flex-shrink: 0;
+      background: var(--mode-btn-bg);
+      transition: border-color 0.45s ease, background 0.45s ease;
     }
 
-    .lang-switch button {
+    .lang-switch button,
+    .mode-btn {
       border: 0;
       background: transparent;
       padding: 8px 14px;
       cursor: pointer;
       font: inherit;
       color: var(--muted);
+      transition: background 0.35s ease, color 0.35s ease;
     }
 
     .lang-switch button.active {
       background: var(--text);
+      color: #fff;
+    }
+
+    .mode-btn {
+      width: 40px;
+      padding: 8px 0;
+      color: var(--text);
+    }
+
+    .mode-btn:hover {
+      background: var(--accent);
       color: #fff;
     }
 
@@ -124,6 +200,7 @@
       text-transform: uppercase;
       color: var(--muted);
       margin-bottom: 16px;
+      transition: color 0.45s ease;
     }
 
     .hero h1 {
@@ -137,6 +214,7 @@
       color: var(--muted);
       max-width: 560px;
       margin-bottom: 28px;
+      transition: color 0.45s ease;
     }
 
     .hero-meta {
@@ -146,13 +224,15 @@
       color: var(--muted);
       font-size: 0.95rem;
       margin-bottom: 32px;
+      transition: color 0.45s ease;
     }
 
     .badge {
       border: 1px solid var(--line);
       padding: 8px 14px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.45);
+      background: color-mix(in srgb, var(--paper) 65%, transparent);
+      transition: border-color 0.45s ease, background 0.45s ease;
     }
 
     .hero-actions {
@@ -189,7 +269,7 @@
     }
 
     .btn-secondary:hover {
-      background: rgba(255,255,255,0.55);
+      background: color-mix(in srgb, var(--paper) 55%, transparent);
     }
 
     .hero-visual {
@@ -197,7 +277,8 @@
       min-height: 560px;
       overflow: hidden;
       border-left: 1px solid var(--line);
-      background: #d8c5b3;
+      background: color-mix(in srgb, var(--bg) 85%, #000 15%);
+      transition: border-color 0.45s ease, background 0.45s ease;
     }
 
     .hero-video {
@@ -207,25 +288,19 @@
       height: 100%;
       object-fit: cover;
       object-position: center center;
-      filter: saturate(0.88) contrast(0.96) brightness(0.96);
+      filter: var(--hero-video-filter);
+      transition: filter 0.45s ease;
     }
 
+    /* 已完全取消遮罩 */
     .hero-video-overlay {
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(
-          180deg,
-          rgba(20, 15, 12, 0.08) 0%,
-          rgba(20, 15, 12, 0.04) 35%,
-          rgba(20, 15, 12, 0.18) 100%
-        );
-      pointer-events: none;
+      display: none;
     }
 
     section {
       padding: 84px 0;
       border-top: 1px solid var(--line);
+      transition: border-color 0.45s ease;
     }
 
     .section-head {
@@ -243,6 +318,7 @@
       margin: 0;
       color: var(--muted);
       font-size: 1.02rem;
+      transition: color 0.45s ease;
     }
 
     .profile-grid,
@@ -258,6 +334,7 @@
       border: 1px solid var(--line);
       padding: 28px;
       box-shadow: var(--shadow);
+      transition: background 0.45s ease, border-color 0.45s ease, box-shadow 0.45s ease;
     }
 
     .card h3 {
@@ -268,6 +345,7 @@
     .card p {
       margin: 0;
       color: var(--muted);
+      transition: color 0.45s ease;
     }
 
     .profile-list,
@@ -287,11 +365,13 @@
       border-bottom: 1px solid var(--line);
       font-size: 0.98rem;
       flex-wrap: wrap;
+      transition: border-color 0.45s ease;
     }
 
     .profile-list li span:first-child,
     .detail-list li span:first-child {
       color: var(--muted);
+      transition: color 0.45s ease;
     }
 
     .notes-list {
@@ -305,9 +385,10 @@
       padding: 10px 14px;
       border-radius: 999px;
       border: 1px solid var(--line);
-      background: rgba(255,255,255,0.6);
+      background: color-mix(in srgb, var(--paper) 70%, transparent);
       font-size: 0.94rem;
       color: var(--muted);
+      transition: border-color 0.45s ease, background 0.45s ease, color 0.45s ease;
     }
 
     .pyramid {
@@ -320,6 +401,7 @@
       border: 1px solid var(--line);
       padding: 24px;
       box-shadow: var(--shadow);
+      transition: background 0.45s ease, border-color 0.45s ease, box-shadow 0.45s ease;
     }
 
     .pyramid-row small {
@@ -329,6 +411,7 @@
       color: var(--muted);
       margin-bottom: 10px;
       font-size: 0.72rem;
+      transition: color 0.45s ease;
     }
 
     .pyramid-row h3 {
@@ -339,11 +422,13 @@
     .pyramid-row p {
       margin: 0;
       color: var(--muted);
+      transition: color 0.45s ease;
     }
 
     .quote-block {
       padding: 84px 0;
-      background: linear-gradient(180deg, rgba(255,255,255,0.25), rgba(255,255,255,0.05));
+      background: var(--quote-bg);
+      transition: background 0.45s ease;
     }
 
     .quote {
@@ -362,6 +447,7 @@
       letter-spacing: 0.18em;
       text-transform: uppercase;
       font-size: 0.78rem;
+      transition: color 0.45s ease;
     }
 
     .cta {
@@ -374,6 +460,7 @@
       border: 1px solid var(--line);
       box-shadow: var(--shadow);
       padding: 40px 24px;
+      transition: background 0.45s ease, border-color 0.45s ease, box-shadow 0.45s ease;
     }
 
     .cta-box h2 {
@@ -385,6 +472,7 @@
       color: var(--muted);
       max-width: 620px;
       margin: 0 auto 24px;
+      transition: color 0.45s ease;
     }
 
     .site-footer {
@@ -392,6 +480,7 @@
       padding: 28px 0 42px;
       color: var(--muted);
       font-size: 0.9rem;
+      transition: border-color 0.45s ease, color 0.45s ease;
     }
 
     .footer-row {
@@ -422,7 +511,6 @@
       display: inline;
     }
 
-    /* Tablet */
     @media (max-width: 980px) {
       .hero {
         grid-template-columns: 1fr;
@@ -455,7 +543,6 @@
       }
     }
 
-    /* Mobile optimized */
     @media (max-width: 640px) {
       .container {
         width: min(calc(100% - 24px), var(--max));
@@ -477,24 +564,28 @@
       }
 
       .nav-right {
-        width: auto;
-        gap: 10px;
+        gap: 8px;
       }
 
       .nav-links {
         display: none;
       }
 
-      .lang-switch button {
+      .lang-switch button,
+      .mode-btn {
         padding: 7px 12px;
         font-size: 0.88rem;
+      }
+
+      .mode-btn {
+        width: 36px;
+        padding: 7px 0;
       }
 
       .hero {
         min-height: auto;
       }
 
-      /* 手機版：影片在上，文案在下 */
       .hero-visual {
         order: -1;
         min-height: 42vh;
@@ -661,6 +752,8 @@
   </style>
 </head>
 <body>
+  <div class="page-bg"></div>
+
   <header class="site-header">
     <div class="container nav">
       <a href="#" class="brand">NAHA</a>
@@ -688,6 +781,10 @@
         <div class="lang-switch" aria-label="Language switcher">
           <button id="btn-zh" class="active" type="button">中文</button>
           <button id="btn-en" type="button">EN</button>
+        </div>
+
+        <div class="mode-switch">
+          <button id="modeToggle" class="mode-btn" type="button" aria-label="切換白天與夜晚模式">🌙</button>
         </div>
       </div>
     </div>
@@ -1139,6 +1236,7 @@
     const html = document.documentElement;
     const btnZh = document.getElementById("btn-zh");
     const btnEn = document.getElementById("btn-en");
+    const modeToggle = document.getElementById("modeToggle");
 
     function setLang(lang) {
       html.setAttribute("data-current-lang", lang);
@@ -1148,11 +1246,47 @@
       localStorage.setItem("naha-lang", lang);
     }
 
+    function updateModeButton() {
+      if (document.body.classList.contains("dark")) {
+        modeToggle.textContent = "☀";
+        modeToggle.setAttribute("aria-label", "切換到白天模式");
+      } else {
+        modeToggle.textContent = "🌙";
+        modeToggle.setAttribute("aria-label", "切換到夜晚模式");
+      }
+    }
+
+    function setMode(mode) {
+      if (mode === "dark") {
+        document.body.classList.add("dark");
+      } else {
+        document.body.classList.remove("dark");
+      }
+      localStorage.setItem("naha-mode", mode);
+      updateModeButton();
+    }
+
     btnZh.addEventListener("click", () => setLang("zh"));
     btnEn.addEventListener("click", () => setLang("en"));
 
-    const savedLang = localStorage.getItem("naha-lang") || "zh";
-    setLang(savedLang);
+    modeToggle.addEventListener("click", () => {
+      const isDark = document.body.classList.contains("dark");
+      setMode(isDark ? "light" : "dark");
+    });
+
+    window.addEventListener("load", () => {
+      const savedLang = localStorage.getItem("naha-lang") || "zh";
+      setLang(savedLang);
+
+      const savedMode = localStorage.getItem("naha-mode");
+      if (savedMode === "dark") {
+        setMode("dark");
+      } else {
+        setMode("light");
+      }
+
+      document.body.classList.add("loaded");
+    });
   </script>
 </body>
 </html>
