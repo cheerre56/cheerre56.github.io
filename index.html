@@ -632,6 +632,45 @@
       }
     }
 
+    @keyframes growCenterLine {
+      0% {
+        height: 0%;
+        width: var(--line-width);
+        opacity: 1;
+      }
+      100% {
+        height: 100%;
+        width: var(--line-width);
+        opacity: 1;
+      }
+    }
+
+    @keyframes splitLineLeft {
+      0% {
+        width: var(--line-width);
+        left: 50%;
+        opacity: 1;
+      }
+      100% {
+        width: 2px;
+        left: var(--line-left-pos);
+        opacity: 0.35;
+      }
+    }
+
+    @keyframes splitLineRight {
+      0% {
+        width: var(--line-width);
+        right: 50%;
+        opacity: 1;
+      }
+      100% {
+        width: 2px;
+        right: var(--line-right-pos);
+        opacity: 0.35;
+      }
+    }
+
     @keyframes growLine {
       0% {
         transform: scaleY(0);
@@ -716,6 +755,10 @@
         --line-right-pos: -50%;
       }
 
+      .main-scroll-container {
+        scroll-snap-type: y proximity;
+      }
+
       nav {
         padding: 1.25rem 1.3rem;
       }
@@ -734,6 +777,14 @@
         font-size: 13px;
       }
 
+      /* 第一頁保留滿版 */
+      .hero-section {
+        min-height: 100vh;
+        min-height: 100dvh;
+        height: 100vh;
+        height: 100dvh;
+      }
+
       .hero-title {
         font-size: 20vw;
       }
@@ -749,13 +800,20 @@
         bottom: 2.5rem;
       }
 
+      /* 第二頁與第三頁改成自然高度 */
       .collection-section,
       .brand-story-section {
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+        overflow: visible;
+        justify-content: flex-start;
         padding: 6.5rem 1rem 2rem;
       }
 
       .collection-shell,
       .brand-story-shell {
+        height: auto;
         justify-content: flex-start;
         padding-top: 0.5rem;
         gap: 1.15rem;
@@ -779,11 +837,12 @@
       }
 
       .series-grid {
+        min-height: auto;
         gap: 0.9rem;
       }
 
       .series-card {
-        min-height: 28vh;
+        min-height: 24vh;
         border-radius: 22px;
       }
 
@@ -824,6 +883,7 @@
       }
 
       .brand-story-right {
+        height: auto;
         border-radius: 22px;
         padding: 1.25rem 1rem 1.4rem;
       }
@@ -937,7 +997,7 @@
 
                 <div class="series-footer">
                   <span class="series-notes">Cedar / Grain / Shadow</span>
-                  <span class="series-link">Enter Chapter→</span>
+                  <span class="series-link">Enter Chapter →</span>
                 </div>
               </div>
             </div>
