@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-current-lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NAHA — Desert Rose</title>
+  <style>
+    :root {
+      --bg: #f5f1eb;
+      --paper: #fbf8f4;
+      --text: #1f1a17;
+      --muted: #6f645c;
+      --line: #d9cec3;
+      --accent: #8a5a52;
+      --accent-dark: #5a3834;
+      --shadow: 0 10px 30px rgba(31, 26, 23, 0.08);
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.75;
+      letter-spacing: 0.01em;
+    }
+
+    h1, h2, h3, .brand {
+      font-family: "Times New Roman", Georgia, "Noto Serif TC", serif;
+      letter-spacing: 0.04em;
+      font-weight: 500;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(calc(100% - 48px), var(--max));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(245, 241, 235, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(217, 206, 195, 0.75);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 72px;
+      gap: 16px;
+    }
+
+    .brand {
+      font-size: 1.15rem;
+      letter-spacing: 0.35em;
+      white-space: nowrap;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.45);
+      flex-shrink: 0;
+    }
+
+    .lang-switch button {
+      border: 0;
+      background: transparent;
+      padding: 8px 14px;
+      cursor: pointer;
+      font: inherit;
+      color: var(--muted);
+    }
+
+    .lang-switch button.active {
+      background: var(--text);
+      color: #fff;
+    }
+
+    .hero {
+      min-height: calc(100vh - 72px);
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      align-items: stretch;
+    }
+
+    .hero-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 72px 0;
+    }
+
+    .eyebrow {
+      font-size: 0.8rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 7vw, 6rem);
+      line-height: 0.98;
+      margin: 0 0 20px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.08rem;
+      color: var(--muted);
+      max-width: 560px;
+      margin-bottom: 28px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 32px;
+    }
+
+    .badge {
+      border: 1px solid var(--line);
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.45);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 150px;
+      padding: 14px 22px;
+      border-radius: 999px;
+      border: 1px solid var(--text);
+      transition: 0.25s ease;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background: var(--text);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-dark);
+      border-color: var(--accent-dark);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.55);
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 560px;
+      overflow: hidden;
+      border-left: 1px solid var(--line);
+      background: #d8c5b3;
+    }
+
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      filter: saturate(0.88) contrast(0.96) brightness(0.96);
+    }
+
+    .hero-video-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(20, 15, 12, 0.08) 0%,
+          rgba(20, 15, 12, 0.04) 35%,
+          rgba(20, 15, 12, 0.18) 100%
+        );
+      pointer-events: none;
+    }
+
+    section {
+      padding: 84px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-head {
+      margin-bottom: 36px;
+      max-width: 780px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      margin: 0 0 14px;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .profile-grid,
+    .story-grid,
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      margin: 0 0 14px;
+      font-size: 1.3rem;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .profile-list,
+    .notes-list,
+    .detail-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .profile-list li,
+    .detail-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.98rem;
+      flex-wrap: wrap;
+    }
+
+    .profile-list li span:first-child,
+    .detail-list li span:first-child {
+      color: var(--muted);
+    }
+
+    .notes-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .notes-list li {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.6);
+      font-size: 0.94rem;
+      color: var(--muted);
+    }
+
+    .pyramid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .pyramid-row {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .pyramid-row small {
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-size: 0.72rem;
+    }
+
+    .pyramid-row h3 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+    }
+
+    .pyramid-row p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .quote-block {
+      padding: 84px 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.25), rgba(255,255,255,0.05));
+    }
+
+    .quote {
+      max-width: 880px;
+      margin: 0 auto;
+      text-align: center;
+      font-family: "Times New Roman", Georgia, "Noto Serif TC", serif;
+      font-size: clamp(1.6rem, 3vw, 2.7rem);
+      line-height: 1.45;
+    }
+
+    .quote-author {
+      text-align: center;
+      margin-top: 18px;
+      color: var(--muted);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+    }
+
+    .cta {
+      text-align: center;
+      padding-bottom: 100px;
+    }
+
+    .cta-box {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      padding: 40px 24px;
+    }
+
+    .cta-box h2 {
+      margin: 0 0 14px;
+      font-size: clamp(2rem, 4vw, 3rem);
+    }
+
+    .cta-box p {
+      color: var(--muted);
+      max-width: 620px;
+      margin: 0 auto 24px;
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--line);
+      padding: 28px 0 42px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    [data-lang],
+    [data-lang-inline] {
+      display: none;
+    }
+
+    html[data-current-lang="zh"] [data-lang="zh"] {
+      display: block;
+    }
+
+    html[data-current-lang="zh"] [data-lang-inline="zh"] {
+      display: inline;
+    }
+
+    html[data-current-lang="en"] [data-lang="en"] {
+      display: block;
+    }
+
+    html[data-current-lang="en"] [data-lang-inline="en"] {
+      display: inline;
+    }
+
+    /* Tablet */
+    @media (max-width: 980px) {
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero-copy {
+        padding: 52px 0 28px;
+      }
+
+      .hero-visual {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+        min-height: 420px;
+      }
+
+      .profile-grid,
+      .story-grid,
+      .details-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      section {
+        padding: 68px 0;
+      }
+
+      .section-head {
+        margin-bottom: 28px;
+      }
+    }
+
+    /* Mobile optimized */
+    @media (max-width: 640px) {
+      .container {
+        width: min(calc(100% - 24px), var(--max));
+      }
+
+      .site-header {
+        position: sticky;
+      }
+
+      .nav {
+        min-height: auto;
+        padding: 12px 0;
+        align-items: center;
+      }
+
+      .brand {
+        font-size: 1rem;
+        letter-spacing: 0.22em;
+      }
+
+      .nav-right {
+        width: auto;
+        gap: 10px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .lang-switch button {
+        padding: 7px 12px;
+        font-size: 0.88rem;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      /* 手機版：影片在上，文案在下 */
+      .hero-visual {
+        order: -1;
+        min-height: 42vh;
+        max-height: 380px;
+        border-top: 0;
+        border-left: 0;
+        margin: 0 -12px;
+      }
+
+      .hero-video {
+        object-fit: cover;
+        object-position: center center;
+      }
+
+      .hero-copy {
+        padding: 24px 0 18px;
+      }
+
+      .eyebrow {
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        margin-bottom: 12px;
+      }
+
+      .hero h1 {
+        font-size: clamp(2.3rem, 12vw, 3.4rem);
+        line-height: 0.96;
+        margin-bottom: 14px;
+      }
+
+      .hero-subtitle {
+        font-size: 0.96rem;
+        line-height: 1.68;
+        margin-bottom: 18px;
+        max-width: 100%;
+      }
+
+      .hero-meta {
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .badge {
+        font-size: 0.8rem;
+        padding: 7px 11px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .btn {
+        width: 100%;
+        min-width: 0;
+        padding: 13px 18px;
+        font-size: 0.92rem;
+      }
+
+      section {
+        padding: 48px 0;
+      }
+
+      .section-head {
+        margin-bottom: 22px;
+        max-width: 100%;
+      }
+
+      .section-head h2 {
+        font-size: clamp(1.5rem, 8vw, 2rem);
+        line-height: 1.12;
+        margin-bottom: 10px;
+      }
+
+      .section-head p {
+        font-size: 0.95rem;
+        line-height: 1.72;
+      }
+
+      .card,
+      .pyramid-row,
+      .cta-box {
+        padding: 20px 16px;
+      }
+
+      .card h3,
+      .pyramid-row h3 {
+        font-size: 1.06rem;
+      }
+
+      .card p,
+      .pyramid-row p {
+        font-size: 0.94rem;
+        line-height: 1.72;
+      }
+
+      .profile-list li,
+      .detail-list li {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        padding: 12px 0;
+        font-size: 0.94rem;
+      }
+
+      .notes-list {
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      .notes-list li {
+        font-size: 0.82rem;
+        padding: 8px 10px;
+      }
+
+      .pyramid {
+        gap: 14px;
+      }
+
+      .pyramid-row small {
+        font-size: 0.68rem;
+        margin-bottom: 8px;
+      }
+
+      .quote-block {
+        padding: 56px 0;
+      }
+
+      .quote {
+        font-size: clamp(1.2rem, 6vw, 1.6rem);
+        line-height: 1.55;
+      }
+
+      .quote-author {
+        margin-top: 12px;
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+      }
+
+      .cta {
+        padding-bottom: 64px;
+      }
+
+      .cta-box h2 {
+        font-size: clamp(1.6rem, 8vw, 2.2rem);
+      }
+
+      .cta-box p {
+        font-size: 0.94rem;
+        line-height: 1.72;
+        margin-bottom: 18px;
+      }
+
+      .site-footer {
+        padding: 22px 0 30px;
+        font-size: 0.82rem;
+      }
+
+      .footer-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a href="#" class="brand">NAHA</a>
+
+      <div class="nav-right">
+        <nav class="nav-links">
+          <a href="#profile">
+            <span data-lang-inline="zh">香氣輪廓</span>
+            <span data-lang-inline="en">Profile</span>
+          </a>
+          <a href="#pyramid">
+            <span data-lang-inline="zh">香調結構</span>
+            <span data-lang-inline="en">Notes</span>
+          </a>
+          <a href="#story">
+            <span data-lang-inline="zh">香氣故事</span>
+            <span data-lang-inline="en">Story</span>
+          </a>
+          <a href="#details">
+            <span data-lang-inline="zh">產品資訊</span>
+            <span data-lang-inline="en">Details</span>
+          </a>
+        </nav>
+
+        <div class="lang-switch" aria-label="Language switcher">
+          <button id="btn-zh" class="active" type="button">中文</button>
+          <button id="btn-en" type="button">EN</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-label="Hero">
+      <div class="container" style="display: contents;">
+        <div class="hero-copy container">
+          <div class="eyebrow">
+            <span data-lang-inline="zh">Landscape Collection</span>
+            <span data-lang-inline="en">Landscape Collection</span>
+          </div>
+
+          <h1>Desert Rose</h1>
+
+          <p class="hero-subtitle">
+            <span data-lang-inline="zh">
+              玫瑰隨沙漠之風緩慢展開，辛香、木質與沉香交疊出深邃而安靜的輪廓。
+            </span>
+            <span data-lang-inline="en">
+              A rose carried by the desert wind — warm spice, dark woods, and oud unfolding in quiet layers.
+            </span>
+          </p>
+
+          <div class="hero-meta">
+            <span class="badge">
+              <span data-lang-inline="zh">東方木質調</span>
+              <span data-lang-inline="en">Oriental Woody</span>
+            </span>
+            <span class="badge">
+              <span data-lang-inline="zh">中性香</span>
+              <span data-lang-inline="en">Unisex</span>
+            </span>
+            <span class="badge">30 ml / Eau de Parfum</span>
+          </div>
+
+          <div class="hero-actions">
+            <a href="#details" class="btn btn-primary">
+              <span data-lang-inline="zh">探索香氣</span>
+              <span data-lang-inline="en">Discover the Scent</span>
+            </a>
+            <a href="#story" class="btn btn-secondary">
+              <span data-lang-inline="zh">閱讀故事</span>
+              <span data-lang-inline="en">Read the Story</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <video class="hero-video" autoplay muted loop playsinline>
+            <source src="DeserRose.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+
+          <div class="hero-video-overlay"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="profile">
+      <div class="container">
+        <div class="section-head">
+          <h2>
+            <span data-lang-inline="zh">香氣輪廓</span>
+            <span data-lang-inline="en">Fragrance Profile</span>
+          </h2>
+          <p>
+            <span data-lang-inline="zh">
+              Desert Rose 介於花香的柔軟與沙漠熱風之間。開場是玫瑰與香料，之後逐漸轉為乾燥木質，最後停留在沉香深沉的氣息裡。
+            </span>
+            <span data-lang-inline="en">
+              Desert Rose sits between floral softness and desert heat. It opens with rose and spice, settles into dry woods, and lingers with a deep oud signature.
+            </span>
+          </p>
+        </div>
+
+        <div class="profile-grid">
+          <div class="card">
+            <h3>
+              <span data-lang-inline="zh">氣味性格</span>
+              <span data-lang-inline="en">Character</span>
+            </h3>
+            <ul class="profile-list">
+              <li>
+                <span>
+                  <span data-lang-inline="zh">香調分類</span>
+                  <span data-lang-inline="en">Fragrance Family</span>
+                </span>
+                <span>
+                  <span data-lang-inline="zh">東方木質調</span>
+                  <span data-lang-inline="en">Oriental Woody</span>
+                </span>
+              </li>
+              <li>
+                <span>
+                  <span data-lang-inline="zh">核心風格</span>
+                  <span data-lang-inline="en">Style</span>
+                </span>
+                <span>Spicy Rose Oud</span>
+              </li>
+              <li>
+                <span>
+                  <span data-lang-inline="zh">氣氛</span>
+                  <span data-lang-inline="en">Mood</span>
+                </span>
+                <span>
+                  <span data-lang-inline="zh">溫暖 / 神秘 / 內斂</span>
+                  <span data-lang-inline="en">Warm / Mysterious / Refined</span>
+                </span>
+              </li>
+              <li>
+                <span>
+                  <span data-lang-inline="zh">適合時刻</span>
+                  <span data-lang-inline="en">Wear</span>
+                </span>
+                <span>
+                  <span data-lang-inline="zh">夜晚 / 秋冬</span>
+                  <span data-lang-inline="en">Evening / Autumn / Winter</span>
+                </span>
+              </li>
+              <li>
+                <span>
+                  <span data-lang-inline="zh">整體印象</span>
+                  <span data-lang-inline="en">Expression</span>
+                </span>
+                <span>
+                  <span data-lang-inline="zh">優雅、安靜、深色調</span>
+                  <span data-lang-inline="en">Elegant, quiet, dark</span>
+                </span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>
+              <span data-lang-inline="zh">氛圍印象</span>
+              <span data-lang-inline="en">Atmosphere</span>
+            </h3>
+            <p>
+              <span data-lang-inline="zh">
+                靈感來自乾燥地景中的一朵玫瑰。它不著重甜美，而是描繪柔軟與熱度、花瓣與風沙、安靜與深度之間的對比。
+              </span>
+              <span data-lang-inline="en">
+                Inspired by rose blooming against an arid horizon, Desert Rose is less about sweetness and more about contrast: softness beside heat, petals against wind, stillness against depth.
+              </span>
+            </p>
+            <ul class="notes-list">
+              <li>
+                <span data-lang-inline="zh">暖辛香</span>
+                <span data-lang-inline="en">Warm spice</span>
+              </li>
+              <li>
+                <span data-lang-inline="zh">乾燥雪松</span>
+                <span data-lang-inline="en">Dry cedar</span>
+              </li>
+              <li>
+                <span data-lang-inline="zh">煙燻沉香</span>
+                <span data-lang-inline="en">Smoky oud</span>
+              </li>
+              <li>
+                <span data-lang-inline="zh">柔和麝香</span>
+                <span data-lang-inline="en">Soft musk</span>
+              </li>
+              <li>
+                <span data-lang-inline="zh">深色玫瑰</span>
+                <span data-lang-inline="en">Dark rose</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pyramid">
+      <div class="container">
+        <div class="section-head">
+          <h2>
+            <span data-lang-inline="zh">香調結構</span>
+            <span data-lang-inline="en">Fragrance Notes</span>
+          </h2>
+          <p>
+            <span data-lang-inline="zh">
+              這支香氣以三個層次展開，在皮膚上緩慢推進，讓每一段都有不同的質地與溫度。
+            </span>
+            <span data-lang-inline="en">
+              Built in three quiet movements, each layer reveals a different side of the scent as it settles on skin.
+            </span>
+          </p>
+        </div>
+
+        <div class="pyramid">
+          <div class="pyramid-row">
+            <small>
+              <span data-lang-inline="zh">前調</span>
+              <span data-lang-inline="en">Top Notes</span>
+            </small>
+            <h3>
+              <span data-lang-inline="zh">玫瑰 · 孜然</span>
+              <span data-lang-inline="en">Rose · Cumin</span>
+            </h3>
+            <p>
+              <span data-lang-inline="zh">
+                開場先是玫瑰的柔軟，接著由孜然帶出乾燥而辛熱的邊緣感，形成這支香水最鮮明的第一印象。
+              </span>
+              <span data-lang-inline="en">
+                The opening is vivid and warm. Rose appears first, then cumin adds a dry, spiced edge that gives the fragrance its desert heat.
+              </span>
+            </p>
+          </div>
+
+          <div class="pyramid-row">
+            <small>
+              <span data-lang-inline="zh">中調</span>
+              <span data-lang-inline="en">Heart Notes</span>
+            </small>
+            <h3>
+              <span data-lang-inline="zh">玫瑰 · 香根草 · 雪松</span>
+              <span data-lang-inline="en">Rose · Vetiver · Cedarwood</span>
+            </h3>
+            <p>
+              <span data-lang-inline="zh">
+                來到中段後，玫瑰變得更深、更有質地，香根草與雪松讓整體輪廓更乾淨俐落，帶出木質的骨架。
+              </span>
+              <span data-lang-inline="en">
+                At the center, rose deepens into something more textured. Vetiver and cedarwood create a dry, structured heart with subtle green and woody depth.
+              </span>
+            </p>
+          </div>
+
+          <div class="pyramid-row">
+            <small>
+              <span data-lang-inline="zh">後調</span>
+              <span data-lang-inline="en">Base Notes</span>
+            </small>
+            <h3>
+              <span data-lang-inline="zh">麝香 · 愈創木 · 沉香</span>
+              <span data-lang-inline="en">Musk · Guaiac Wood · Oud</span>
+            </h3>
+            <p>
+              <span data-lang-inline="zh">
+                收尾平滑而安靜，麝香柔化整體輪廓，愈創木與沉香則留下帶煙感、深色且持久的尾韻。
+              </span>
+              <span data-lang-inline="en">
+                The drydown is smooth, smoky, and intimate. Musk softens the composition while guaiac wood and oud leave a dark, lingering trail.
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="story">
+      <div class="container">
+        <div class="section-head">
+          <h2>
+            <span data-lang-inline="zh">香氣故事</span>
+            <span data-lang-inline="en">Scent Story</span>
+          </h2>
+          <p>
+            <span data-lang-inline="zh">
+              這是一片被氣味記住的地景，不依靠影像，而是靠空氣、質地與溫度被想起。
+            </span>
+            <span data-lang-inline="en">
+              A landscape remembered not through images, but through air, texture, and warmth.
+            </span>
+          </p>
+        </div>
+
+        <div class="story-grid">
+          <div class="card">
+            <h3>
+              <span data-lang-inline="zh">地景</span>
+              <span data-lang-inline="en">The Landscape</span>
+            </h3>
+            <p>
+              <span data-lang-inline="zh">
+                當夕陽落在無盡沙丘上，空氣開始安靜下來，只剩下餘溫、風與木質氣息在地表緩慢流動。就在這片乾燥之中，一朵玫瑰安靜綻放。
+              </span>
+              <span data-lang-inline="en">
+                As the sun lowers over endless dunes, the air becomes still and full of warmth. Dry wind carries traces of spice and wood across the sand, while somewhere unexpected, a rose blooms.
+              </span>
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>
+              <span data-lang-inline="zh">印象</span>
+              <span data-lang-inline="en">The Impression</span>
+            </h3>
+            <p>
+              <span data-lang-inline="zh">
+                Desert Rose 捕捉的是一種對比：花瓣的柔軟與地景的嚴酷、沉香的深度與玫瑰的表面光澤、克制與餘韻之間的平衡。
+              </span>
+              <span data-lang-inline="en">
+                Desert Rose captures that contrast: the softness of petals against a harsh horizon, the quiet richness of oud beneath a floral surface, the elegance of restraint instead of excess.
+              </span>
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>
+              <span data-lang-inline="zh">情緒</span>
+              <span data-lang-inline="en">The Emotion</span>
+            </h3>
+            <p>
+              <span data-lang-inline="zh">
+                這不是一支明亮甜美的玫瑰，而是一支更深色、更安靜的玫瑰。它貼近肌膚時顯得內斂，離開之後卻會留下記憶點。
+              </span>
+              <span data-lang-inline="en">
+                This is not a bright rose. It is a deeper one — shaded, warm, and composed. A scent that feels intimate at first, then leaves a memorable trace behind.
+              </span>
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>
+              <span data-lang-inline="zh">定位</span>
+              <span data-lang-inline="en">The Signature</span>
+            </h3>
+            <p>
+              <span data-lang-inline="zh">
+                在 NAHA 的 Landscape Collection 中，Desert Rose 是一幅關於沙漠熱風與花香陰影的肖像，神秘、克制，卻有明確存在感。
+              </span>
+              <span data-lang-inline="en">
+                In the NAHA Landscape Collection, Desert Rose stands as a portrait of desert air and floral shadow: mysterious, polished, and quietly intense.
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="quote-block" aria-label="Brand quote">
+      <div class="container">
+        <div class="quote">
+          <span data-lang-inline="zh">「一朵被熱度托起、被風雕塑，最終留存在木質記憶裡的玫瑰。」</span>
+          <span data-lang-inline="en">“A rose carried by heat, shaped by wind, and remembered in wood.”</span>
+        </div>
+        <div class="quote-author">NAHA — Desert Rose</div>
+      </div>
+    </section>
+
+    <section id="details">
+      <div class="container">
+        <div class="section-head">
+          <h2>
+            <span data-lang-inline="zh">產品資訊</span>
+            <span data-lang-inline="en">Details</span>
+          </h2>
+          <p>
+            <span data-lang-inline="zh">
+              極簡而有節制的設定，適合置於一個成熟、安靜且具 niche 氣質的香氛系列之中。
+            </span>
+            <span data-lang-inline="en">
+              Minimal, intentional, and designed to sit within a refined niche fragrance collection.
+            </span>
+          </p>
+        </div>
+
+        <div class="details-grid">
+          <div class="card">
+            <h3>
+              <span data-lang-inline="zh">商品資料</span>
+              <span data-lang-inline="en">Product Information</span>
+            </h3>
+            <ul class="detail-list">
+              <li>
+                <span><span data-lang-inline="zh">名稱</span><span data-lang-inline="en">Name</span></span>
+                <span>Desert Rose</span>
+              </li>
+              <li>
+                <span><span data-lang-inline="zh">品牌</span><span data-lang-inline="en">Brand</span></span>
+                <span>NAHA</span>
+              </li>
+              <li>
+                <span><span data-lang-inline="zh">系列</span><span data-lang-inline="en">Collection</span></span>
+                <span>Landscape Collection</span>
+              </li>
+              <li>
+                <span><span data-lang-inline="zh">濃度</span><span data-lang-inline="en">Concentration</span></span>
+                <span>Eau de Parfum</span>
+              </li>
+              <li>
+                <span><span data-lang-inline="zh">容量</span><span data-lang-inline="en">Volume</span></span>
+                <span>30 ml</span>
+              </li>
+              <li>
+                <span><span data-lang-inline="zh">性別定位</span><span data-lang-inline="en">Gender</span></span>
+                <span><span data-lang-inline="zh">中性</span><span data-lang-inline="en">Unisex</span></span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>
+              <span data-lang-inline="zh">使用方式</span>
+              <span data-lang-inline="en">How to Wear</span>
+            </h3>
+            <p>
+              <span data-lang-inline="zh">
+                建議噴灑於頸部、手腕、耳後等脈搏處，讓香氣隨體溫自然展開，呈現更立體、更柔和的層次。
+              </span>
+              <span data-lang-inline="en">
+                Spray onto pulse points such as the neck, wrists, and behind the ears. Allow the fragrance to unfold naturally on skin for a warmer and more dimensional experience.
+              </span>
+            </p>
+            <ul class="notes-list">
+              <li><span data-lang-inline="zh">頸部</span><span data-lang-inline="en">Neck</span></li>
+              <li><span data-lang-inline="zh">手腕</span><span data-lang-inline="en">Wrists</span></li>
+              <li><span data-lang-inline="zh">耳後</span><span data-lang-inline="en">Behind the ears</span></li>
+              <li><span data-lang-inline="zh">夜晚佩戴</span><span data-lang-inline="en">Evening wear</span></li>
+              <li><span data-lang-inline="zh">涼爽季節</span><span data-lang-inline="en">Cool weather</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container">
+        <div class="cta-box">
+          <h2>NAHA</h2>
+          <p>
+            <span data-lang-inline="zh">
+              以地景、記憶與空氣中的情緒為靈感。Desert Rose 是這個系列的第一章，描繪一片帶有熱度、花香與陰影的風景。
+            </span>
+            <span data-lang-inline="en">
+              Scents inspired by landscapes, memory, and the atmosphere between them. Desert Rose is the first chapter in a collection shaped by place and quiet emotion.
+            </span>
+          </p>
+          <a href="#" class="btn btn-primary">
+            <span data-lang-inline="zh">探索系列香氣</span>
+            <span data-lang-inline="en">Explore the Collection</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <div>© 2026 NAHA. All rights reserved.</div>
+      <div>Landscape Collection · Desert Rose</div>
+    </div>
+  </footer>
+
+  <script>
+    const html = document.documentElement;
+    const btnZh = document.getElementById("btn-zh");
+    const btnEn = document.getElementById("btn-en");
+
+    function setLang(lang) {
+      html.setAttribute("data-current-lang", lang);
+      html.setAttribute("lang", lang === "zh" ? "zh-Hant" : "en");
+      btnZh.classList.toggle("active", lang === "zh");
+      btnEn.classList.toggle("active", lang === "en");
+      localStorage.setItem("naha-lang", lang);
+    }
+
+    btnZh.addEventListener("click", () => setLang("zh"));
+    btnEn.addEventListener("click", () => setLang("en"));
+
+    const savedLang = localStorage.getItem("naha-lang") || "zh";
+    setLang(savedLang);
+  </script>
+</body>
+</html>
