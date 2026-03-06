@@ -5,25 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Naha Parfums | Beyond Scents</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Space+Grotesk:wght@300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --line-width: 25px;
       --line-left-pos: -80%;
       --line-right-pos: -80%;
+      --max-width: 1240px;
     }
 
     /* ===== DAY MODE ===== */
     body {
       --bg-color: #f5f1eb;
-      --bg-secondary: #e8ddd2;
-      --paper: rgba(251, 248, 244, 0.18);
-      --paper-strong: rgba(251, 248, 244, 0.82);
+      --paper: rgba(251, 248, 244, 0.22);
+      --paper-strong: rgba(251, 248, 244, 0.86);
 
       --text-color: #1f1a17;
       --text-soft: #6f645c;
-      --accent-color: #8c7c70;
       --accent-gold: #b58b63;
       --line-color: rgba(111, 100, 92, 0.18);
 
@@ -34,31 +33,39 @@
       --gradient-2: rgba(138, 90, 82, 0.16);
       --gradient-3: rgba(255, 255, 255, 0.28);
 
-      --chapter-bg: rgba(251, 248, 244, 0.18);
-      --chapter-overlay-top: rgba(31, 26, 23, 0.12);
-      --chapter-overlay-bottom: rgba(31, 26, 23, 0.56);
-
       --video-filter: saturate(0.38) brightness(0.78) contrast(0.92);
       --video-filter-hover: saturate(0.88) brightness(0.96) contrast(0.96);
 
       --chapter-title-color: #fffaf6;
       --chapter-desc-color: rgba(255, 248, 242, 0.86);
+
       --scroll-color: rgba(111, 100, 92, 0.7);
       --scroll-line: rgba(111, 100, 92, 0.35);
 
       --transition-bg: #f5f1eb;
+
+      --card-overlay-top: rgba(31, 26, 23, 0.08);
+      --card-overlay-bottom: rgba(31, 26, 23, 0.52);
+      --card-border: rgba(255,255,255,0.22);
+      --card-shadow: 0 24px 48px rgba(31, 26, 23, 0.12);
+      --card-meta-bg: rgba(251, 248, 244, 0.82);
+      --card-meta-text: #1f1a17;
+      --card-button-bg: rgba(251, 248, 244, 0.88);
+      --card-button-text: #1f1a17;
+
+      --story-panel-bg: rgba(251, 248, 244, 0.62);
+      --story-panel-border: rgba(111, 100, 92, 0.14);
+      --story-quote: #3f352d;
     }
 
-    /* ===== NIGHT MODE / 原本效果 ===== */
+    /* ===== NIGHT MODE ===== */
     body.dark {
       --bg-color: #050505;
-      --bg-secondary: #050505;
       --paper: rgba(5, 5, 5, 0.5);
       --paper-strong: rgba(5, 5, 5, 0.82);
 
       --text-color: #e0e0e0;
       --text-soft: #888;
-      --accent-color: #888;
       --accent-gold: #c5a367;
       --line-color: rgba(255, 255, 255, 0.1);
 
@@ -69,19 +76,29 @@
       --gradient-2: rgba(40, 120, 110, 0.3);
       --gradient-3: transparent;
 
-      --chapter-bg: rgba(5, 5, 5, 0.5);
-      --chapter-overlay-top: rgba(0, 0, 0, 0.2);
-      --chapter-overlay-bottom: rgba(0, 0, 0, 0.8);
-
       --video-filter: saturate(0.2) brightness(0.6);
       --video-filter-hover: saturate(1) brightness(1);
 
       --chapter-title-color: #ffffff;
-      --chapter-desc-color: rgba(255,255,255,0.8);
+      --chapter-desc-color: rgba(255,255,255,0.82);
+
       --scroll-color: rgba(255,255,255,0.5);
       --scroll-line: rgba(255,255,255,0.3);
 
       --transition-bg: #000;
+
+      --card-overlay-top: rgba(0, 0, 0, 0.16);
+      --card-overlay-bottom: rgba(0, 0, 0, 0.76);
+      --card-border: rgba(255,255,255,0.1);
+      --card-shadow: 0 28px 56px rgba(0, 0, 0, 0.34);
+      --card-meta-bg: rgba(8, 8, 8, 0.76);
+      --card-meta-text: #f2f2f2;
+      --card-button-bg: rgba(255,255,255,0.1);
+      --card-button-text: #ffffff;
+
+      --story-panel-bg: rgba(8, 8, 8, 0.62);
+      --story-panel-border: rgba(255,255,255,0.08);
+      --story-quote: #f2e1bf;
     }
 
     html, body {
@@ -103,14 +120,14 @@
       border: 0;
     }
 
-    nav, .ch-num, .ch-title, .est, .hero-title, .scroll-text {
+    nav, .hero-title, .scroll-text, .collection-kicker, .series-index, .series-tag {
       -webkit-user-select: none;
       user-select: none;
     }
 
     body {
-      font-family: 'Space Grotesk', sans-serif;
       color: var(--text-color);
+      font-family: 'Space Grotesk', sans-serif;
       -webkit-font-smoothing: antialiased;
       opacity: 0;
       transition:
@@ -125,10 +142,7 @@
 
     .gradient-bg {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      inset: 0;
       z-index: -1;
       background-color: var(--bg-color);
       background-image:
@@ -136,8 +150,6 @@
         radial-gradient(circle at 80% 60%, var(--gradient-2), transparent 45%),
         radial-gradient(circle at 50% 50%, var(--gradient-3), transparent 52%);
       filter: blur(1px);
-      will-change: filter;
-      backface-visibility: hidden;
       transition: background-color 0.45s ease, background-image 0.45s ease;
     }
 
@@ -186,13 +198,6 @@
       transition: color 0.45s ease, mix-blend-mode 0.45s ease;
     }
 
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      pointer-events: auto;
-    }
-
     .logo {
       font-family: 'Italiana', serif;
       font-size: 1.5rem;
@@ -200,6 +205,13 @@
       color: var(--text-color);
       pointer-events: auto;
       transition: color 0.45s ease;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      pointer-events: auto;
     }
 
     .est {
@@ -233,6 +245,7 @@
       transform: translateY(-1px);
     }
 
+    /* ===== PAGE 1 / HERO ===== */
     .hero-title-wrapper {
       position: relative;
       display: inline-block;
@@ -246,7 +259,6 @@
       transform: translateY(30px);
       animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s;
       text-align: center;
-      pointer-events: auto;
       text-shadow: var(--hero-shadow);
       position: relative;
       z-index: 2;
@@ -266,7 +278,6 @@
       animation:
         growCenterLine 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.8s,
         splitLineLeft 2s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.8s;
-      will-change: height, width, left;
       z-index: -1;
       opacity: 0.9;
       transition: background 0.45s ease;
@@ -284,49 +295,9 @@
       animation:
         growCenterLine 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.8s,
         splitLineRight 2s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.8s;
-      will-change: height, width, right;
       z-index: -1;
       opacity: 0.9;
       transition: background 0.45s ease;
-    }
-
-    @keyframes growCenterLine {
-      0% {
-        height: 0%;
-        width: var(--line-width);
-        opacity: 1;
-      }
-      100% {
-        height: 100%;
-        width: var(--line-width);
-        opacity: 1;
-      }
-    }
-
-    @keyframes splitLineLeft {
-      0% {
-        width: var(--line-width);
-        left: 50%;
-        opacity: 1;
-      }
-      100% {
-        width: 2px;
-        left: var(--line-left-pos);
-        opacity: 0.35;
-      }
-    }
-
-    @keyframes splitLineRight {
-      0% {
-        width: var(--line-width);
-        right: 50%;
-        opacity: 1;
-      }
-      100% {
-        width: 2px;
-        right: var(--line-right-pos);
-        opacity: 0.35;
-      }
     }
 
     .hero-subtitle {
@@ -370,131 +341,290 @@
       transition: background 0.45s ease;
     }
 
+    /* ===== PAGE 2 / COLLECTION ===== */
     .collection-section {
-      flex-direction: row;
-      background-color: transparent;
+      justify-content: center;
+      padding: 8rem 4rem 4rem;
     }
 
-    .chapter {
-      flex: 1;
+    .collection-shell {
+      width: min(100%, var(--max-width));
       height: 100%;
-      position: relative;
-      border-right: 1px solid var(--line-color);
-      transition:
-        flex 0.8s cubic-bezier(0.25, 1, 0.5, 1),
-        opacity 0.6s ease,
-        background 0.45s ease,
-        border-color 0.45s ease;
-      overflow: hidden;
-      pointer-events: auto;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: center;
-      background: var(--chapter-bg);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      gap: 2.2rem;
+    }
+
+    .collection-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 2rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--line-color);
+    }
+
+    .collection-kicker {
+      font-size: 0.78rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      margin-bottom: 0.7rem;
+    }
+
+    .collection-title {
+      font-family: 'Italiana', serif;
+      font-size: clamp(2.3rem, 5vw, 4.6rem);
+      line-height: 0.95;
+      color: var(--text-color);
+      letter-spacing: 0.04em;
+    }
+
+    .collection-intro {
+      max-width: 520px;
+      color: var(--text-soft);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      text-align: right;
+    }
+
+    .series-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.2rem;
+      min-height: 520px;
+    }
+
+    .series-card {
+      position: relative;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      box-shadow: var(--card-shadow);
+      background: var(--paper);
       cursor: pointer;
+      transition: transform 0.45s ease, border-color 0.45s ease, box-shadow 0.45s ease;
+      isolation: isolate;
     }
 
-    .chapter:last-child {
-      border-right: none;
+    .series-card:hover {
+      transform: translateY(-8px);
     }
 
-    @media (hover: hover) {
-      .chapter:hover {
-        flex: 2.25;
-      }
-
-      .collection-section:hover .chapter:not(:hover) {
-        opacity: 0.55;
-      }
-    }
-
-    .bg-video {
+    .series-video {
       position: absolute;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      opacity: 0.58;
-      transition: opacity 0.8s ease, filter 0.8s ease, transform 1s ease;
       filter: var(--video-filter);
+      transition: transform 1s ease, filter 0.8s ease;
       z-index: 0;
     }
 
-    .chapter:hover .bg-video {
-      opacity: 0.96;
+    .series-card:hover .series-video {
+      transform: scale(1.04);
       filter: var(--video-filter-hover);
-      transform: scale(1.02);
     }
 
-    .content {
-      text-align: center;
-      z-index: 2;
-      position: relative;
-      transform: translateY(20px);
-      transition: transform 0.6s ease 0.1s;
-      padding: 2rem;
-    }
-
-    .chapter:hover .content {
-      transform: translateY(0);
-    }
-
-    .ch-num {
-      font-family: 'Italiana', serif;
-      font-size: 0.9rem;
-      letter-spacing: 3px;
-      color: var(--accent-gold);
-      margin-bottom: 1rem;
-      display: block;
-      opacity: 0.95;
-      transition: color 0.45s ease;
-    }
-
-    .ch-title {
-      font-family: 'Italiana', serif;
-      font-size: 3.5vw;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.5rem;
-      white-space: nowrap;
-      color: var(--chapter-title-color);
-      text-shadow: 0 10px 30px rgba(0,0,0,0.28);
-      transition: color 0.45s ease;
-    }
-
-    .ch-desc {
-      font-size: 0.75rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.6s ease 0.1s, color 0.45s ease;
-      color: var(--chapter-desc-color);
-    }
-
-    .chapter:hover .ch-desc {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .chapter::after {
-      content: '';
+    .series-card::after {
+      content: "";
       position: absolute;
       inset: 0;
       background: linear-gradient(
         to bottom,
-        var(--chapter-overlay-top),
-        var(--chapter-overlay-bottom)
+        var(--card-overlay-top),
+        var(--card-overlay-bottom)
       );
       z-index: 1;
-      pointer-events: none;
       transition: background 0.45s ease;
     }
 
+    .series-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.35rem;
+    }
+
+    .series-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .series-index {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      height: 42px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: var(--card-meta-bg);
+      color: var(--card-meta-text);
+      font-size: 0.74rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .series-tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.88);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .series-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .series-name {
+      font-family: 'Italiana', serif;
+      font-size: clamp(2rem, 2.6vw, 3.2rem);
+      line-height: 0.95;
+      color: var(--chapter-title-color);
+      text-shadow: 0 10px 30px rgba(0,0,0,0.28);
+      letter-spacing: 0.04em;
+    }
+
+    .series-desc {
+      max-width: 28ch;
+      color: var(--chapter-desc-color);
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+
+    .series-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding-top: 0.3rem;
+    }
+
+    .series-notes {
+      color: rgba(255,255,255,0.78);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .series-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.8rem 1rem;
+      border-radius: 999px;
+      background: var(--card-button-bg);
+      color: var(--card-button-text);
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: transform 0.35s ease, background 0.35s ease, color 0.35s ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .series-card:hover .series-link {
+      transform: translateX(4px);
+    }
+
+    /* ===== PAGE 3 / BRAND STORY ===== */
+    .brand-story-section {
+      justify-content: center;
+      padding: 8rem 4rem 4rem;
+    }
+
+    .brand-story-shell {
+      width: min(100%, var(--max-width));
+      height: 100%;
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      align-items: center;
+      gap: 4rem;
+    }
+
+    .brand-story-left {
+      align-self: start;
+      padding-top: 2rem;
+    }
+
+    .brand-story-kicker {
+      font-size: 0.78rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      margin-bottom: 0.9rem;
+    }
+
+    .brand-story-title {
+      font-family: 'Italiana', serif;
+      font-size: clamp(2.6rem, 5vw, 5rem);
+      line-height: 0.95;
+      letter-spacing: 0.04em;
+      color: var(--text-color);
+    }
+
+    .brand-story-right {
+      background: var(--story-panel-bg);
+      border: 1px solid var(--story-panel-border);
+      box-shadow: var(--card-shadow);
+      border-radius: 28px;
+      padding: 2rem 2rem 2.2rem;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .brand-story-lead {
+      font-size: 1.15rem;
+      line-height: 1.8;
+      color: var(--text-color);
+      margin-bottom: 1.4rem;
+    }
+
+    .brand-story-body {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .brand-story-body p {
+      font-size: 0.95rem;
+      line-height: 1.95;
+      color: var(--text-soft);
+    }
+
+    .brand-story-quote {
+      margin-top: 1.8rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--line-color);
+      font-family: 'Italiana', serif;
+      font-size: 1.3rem;
+      line-height: 1.5;
+      color: var(--story-quote);
+      opacity: 0.95;
+    }
+
+    /* ===== ANIMATIONS ===== */
     @keyframes fadeUp {
       to {
         opacity: 1;
@@ -543,6 +673,42 @@
       visibility: visible;
     }
 
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1100px) {
+      .series-grid {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .collection-section,
+      .brand-story-section {
+        padding: 7rem 1.5rem 3rem;
+      }
+
+      .collection-shell,
+      .brand-story-shell {
+        gap: 1.6rem;
+      }
+
+      .collection-head,
+      .brand-story-shell {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+
+      .collection-intro {
+        text-align: left;
+      }
+
+      .series-card {
+        min-height: 31vh;
+      }
+
+      .brand-story-left {
+        padding-top: 0.5rem;
+      }
+    }
+
     @media (max-width: 768px) {
       :root {
         --line-width: 15px;
@@ -583,46 +749,100 @@
         bottom: 2.5rem;
       }
 
-      .collection-section {
+      .collection-section,
+      .brand-story-section {
+        padding: 6.5rem 1rem 2rem;
+      }
+
+      .collection-shell,
+      .brand-story-shell {
+        justify-content: flex-start;
+        padding-top: 0.5rem;
+        gap: 1.15rem;
+      }
+
+      .collection-kicker,
+      .brand-story-kicker {
+        font-size: 0.68rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .collection-title,
+      .brand-story-title {
+        font-size: 2.05rem;
+        line-height: 0.98;
+      }
+
+      .collection-intro {
+        font-size: 0.84rem;
+        line-height: 1.7;
+      }
+
+      .series-grid {
+        gap: 0.9rem;
+      }
+
+      .series-card {
+        min-height: 28vh;
+        border-radius: 22px;
+      }
+
+      .series-content {
+        padding: 1rem;
+      }
+
+      .series-index,
+      .series-tag {
+        min-height: 36px;
+        height: 36px;
+        font-size: 0.64rem;
+        padding: 0 10px;
+      }
+
+      .series-name {
+        font-size: 1.7rem;
+      }
+
+      .series-desc {
+        font-size: 0.8rem;
+        max-width: 100%;
+      }
+
+      .series-footer {
+        align-items: flex-start;
         flex-direction: column;
+        gap: 0.7rem;
       }
 
-      .chapter {
-        width: 100%;
-        flex: 1 !important;
-        height: auto;
-        border-right: none;
-        border-bottom: 1px solid var(--line-color);
+      .series-notes {
+        font-size: 0.64rem;
       }
 
-      .chapter:last-child {
-        border-bottom: none;
-      }
-
-      .ch-title {
-        font-size: 1.95rem;
-        margin-bottom: 0.2rem;
-      }
-
-      .ch-num {
+      .series-link {
         font-size: 0.72rem;
-        margin-bottom: 0.55rem;
+        padding: 0.72rem 0.92rem;
       }
 
-      .ch-desc {
-        font-size: 0.6rem;
-        opacity: 0.78;
-        transform: translateY(0);
-        margin-top: 2px;
+      .brand-story-right {
+        border-radius: 22px;
+        padding: 1.25rem 1rem 1.4rem;
       }
 
-      .content {
-        transform: translateY(0);
-        padding: 1.5rem 1rem;
+      .brand-story-lead {
+        font-size: 1rem;
+        line-height: 1.75;
+        margin-bottom: 1rem;
       }
 
-      .bg-video {
-        opacity: 0.68;
+      .brand-story-body p {
+        font-size: 0.88rem;
+        line-height: 1.82;
+      }
+
+      .brand-story-quote {
+        font-size: 1.08rem;
+        margin-top: 1.3rem;
+        padding-top: 1rem;
       }
     }
   </style>
@@ -632,7 +852,7 @@
   <div class="transition-overlay" id="overlay"></div>
 
   <nav>
-    <div class="logo" data-hover>naha.</div>
+    <div class="logo">naha.</div>
 
     <div class="nav-right">
       <div class="est">EST. 2026</div>
@@ -641,51 +861,155 @@
   </nav>
 
   <div class="main-scroll-container">
+    <!-- PAGE 1 -->
     <section class="hero-section">
       <div class="hero-title-wrapper">
-        <h1 class="hero-title" data-hover>NAHA</h1>
+        <h1 class="hero-title">NAHA</h1>
       </div>
       <p class="hero-subtitle">Parfums - Beyond Scents</p>
-      <div class="scroll-hint" data-hover>
+      <div class="scroll-hint">
         <span class="scroll-text">Scroll</span>
         <div class="scroll-line"></div>
       </div>
     </section>
 
+    <!-- PAGE 2 -->
     <section class="collection-section">
-      <div class="chapter c1" onclick="navigateTo('chapter_luminescence.html')"
-           onmouseenter="playVideo(this)" onmouseleave="pauseVideo(this)">
-        <video class="bg-video" playsinline muted loop>
-          <source src="assets/media/videos/flower.mp4" type="video/mp4">
-        </video>
-        <div class="content">
-          <span class="ch-num">Chapter I</span>
-          <h2 class="ch-title">Luminescence</h2>
-          <p class="ch-desc">The Floral Series</p>
+      <div class="collection-shell">
+        <div class="collection-head">
+          <div>
+            <div class="collection-kicker">Collection Overview</div>
+            <h2 class="collection-title">Three Chapters of<br>Atmosphere</h2>
+          </div>
+
+          <p class="collection-intro">
+            每一個系列都是一種氣味場景。從花香的光感、木質的輪廓，到東方調的深色餘韻，
+            NAHA 以不同的材料與空氣感，構成完整的香氛世界。
+          </p>
+        </div>
+
+        <div class="series-grid">
+          <article class="series-card" onclick="navigateTo('chapter_luminescence.html')">
+            <video class="series-video" playsinline muted loop preload="metadata">
+              <source src="assets/media/videos/flower.mp4" type="video/mp4">
+            </video>
+
+            <div class="series-content">
+              <div class="series-top">
+                <span class="series-index">I</span>
+                <span class="series-tag">Floral</span>
+              </div>
+
+              <div class="series-bottom">
+                <div>
+                  <h3 class="series-name">Luminescence</h3>
+                  <p class="series-desc">
+                    明亮、柔和且帶有空氣感的花香系列。像晨光落在花瓣上，乾淨、透明，卻有細緻層次。
+                  </p>
+                </div>
+
+                <div class="series-footer">
+                  <span class="series-notes">Petals / Air / Light</span>
+                  <span class="series-link">Enter Chapter →</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="series-card" onclick="navigateTo('chapter_silhouette.html')">
+            <video class="series-video" playsinline muted loop preload="metadata">
+              <source src="assets/media/videos/Wood.mp4" type="video/mp4">
+            </video>
+
+            <div class="series-content">
+              <div class="series-top">
+                <span class="series-index">II</span>
+                <span class="series-tag">Woody</span>
+              </div>
+
+              <div class="series-bottom">
+                <div>
+                  <h3 class="series-name">Silhouette</h3>
+                  <p class="series-desc">
+                    以木質、乾燥線條與沉穩結構構成的系列。更安靜、更有輪廓，像光影之間的側面剪影。
+                  </p>
+                </div>
+
+                <div class="series-footer">
+                  <span class="series-notes">Cedar / Grain / Shadow</span>
+                  <span class="series-link">Enter Chapter →</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="series-card" onclick="navigateTo('chapter_obsidian.html')">
+            <video class="series-video" playsinline muted loop preload="metadata">
+              <source src="assets/media/videos/Orient.mp4" type="video/mp4">
+            </video>
+
+            <div class="series-content">
+              <div class="series-top">
+                <span class="series-index">III</span>
+                <span class="series-tag">Oriental</span>
+              </div>
+
+              <div class="series-bottom">
+                <div>
+                  <h3 class="series-name">Obsidian</h3>
+                  <p class="series-desc">
+                    更深色的香料、樹脂與沉香層次，構成神秘、濃郁且帶著夜色張力的東方調系列。
+                  </p>
+                </div>
+
+                <div class="series-footer">
+                  <span class="series-notes">Resin / Spice / Depth</span>
+                  <span class="series-link">Enter Chapter →</span>
+                </div>
+              </div>
+            </div>
+          </article>
         </div>
       </div>
+    </section>
 
-      <div class="chapter c2" onclick="navigateTo('chapter_silhouette.html')"
-           onmouseenter="playVideo(this)" onmouseleave="pauseVideo(this)">
-        <video class="bg-video" playsinline muted loop>
-          <source src="assets/media/videos/Wood.mp4" type="video/mp4">
-        </video>
-        <div class="content">
-          <span class="ch-num">Chapter II</span>
-          <h2 class="ch-title">Silhouette</h2>
-          <p class="ch-desc">The Woody Series</p>
+    <!-- PAGE 3 -->
+    <section class="brand-story-section">
+      <div class="brand-story-shell">
+        <div class="brand-story-left">
+          <div class="brand-story-kicker">Brand Story</div>
+          <h2 class="brand-story-title">Scents of Landscape,<br>Memory, and Silence.</h2>
         </div>
-      </div>
 
-      <div class="chapter c3" onclick="navigateTo('chapter_obsidian.html')"
-           onmouseenter="playVideo(this)" onmouseleave="pauseVideo(this)">
-        <video class="bg-video" playsinline muted loop>
-          <source src="assets/media/videos/Orient.mp4" type="video/mp4">
-        </video>
-        <div class="content">
-          <span class="ch-num">Chapter III</span>
-          <h2 class="ch-title">Obsidian</h2>
-          <p class="ch-desc">The Oriental Series</p>
+        <div class="brand-story-right">
+          <p class="brand-story-lead">
+            NAHA 相信，香氣不只是氣味，而是一種能被記住的場景。
+          </p>
+
+          <div class="brand-story-body">
+            <p>
+              有些記憶不是從畫面開始，而是從空氣裡的一絲氣味開始。
+              乾燥木頭的溫度、花瓣上的光、深夜裡殘留的香料與煙感，
+              都能在某個瞬間，把人帶回一個地方。
+            </p>
+
+            <p>
+              NAHA 以這樣的想法創作香水——
+              不只是製造一種好聞的味道，而是捕捉一片地景、一段情緒，
+              以及那些難以言說卻能被感知的空氣層次。
+            </p>
+
+            <p>
+              從明亮的花香、沉靜的木質，到深色的東方調，
+              每一個 chapter 都是一種不同的氛圍切片。
+              它們不是彼此獨立的商品，而是共同構成 NAHA 的氣味世界。
+            </p>
+          </div>
+
+          <div class="brand-story-quote">
+            “We do not create scents to describe things.<br>
+            We create them to let people feel a place.”
+          </div>
         </div>
       </div>
     </section>
@@ -718,8 +1042,6 @@
     const savedMode = localStorage.getItem('naha-mode');
     if (savedMode === 'dark') {
       document.body.classList.add('dark');
-    } else if (savedMode === 'light') {
-      document.body.classList.remove('dark');
     }
     updateModeButton();
 
@@ -730,9 +1052,7 @@
 
     window.addEventListener('load', () => {
       document.body.classList.add('loaded');
-      if (isMobile) {
-        initializeMobileVideos();
-      }
+      initializeVideos();
     });
 
     window.addEventListener('pageshow', () => {
@@ -745,18 +1065,18 @@
 
       document.body.style.display = 'block';
       document.body.style.opacity = '1';
-
-      if (isMobile) {
-        initializeMobileVideos();
-      }
+      initializeVideos();
     });
 
-    function initializeMobileVideos() {
-      const videos = document.querySelectorAll('.bg-video');
-      videos.forEach((video) => {
-        const chapter = video.closest('.chapter');
+    function initializeVideos() {
+      const videos = document.querySelectorAll('.series-video');
 
-        if (chapter.classList.contains('c1') || chapter.classList.contains('c3')) {
+      videos.forEach((video) => {
+        const card = video.closest('.series-card');
+
+        if (card && card.querySelector('.series-name')?.textContent.includes('Luminescence')) {
+          video.playbackRate = 0.5;
+        } else if (card && card.querySelector('.series-name')?.textContent.includes('Obsidian')) {
           video.playbackRate = 0.5;
         } else {
           video.playbackRate = 0.8;
@@ -766,25 +1086,6 @@
           console.log('Video autoplay blocked:', err);
         });
       });
-    }
-
-    function playVideo(element) {
-      if (isMobile) return;
-      const video = element.querySelector('.bg-video');
-      if (video) {
-        video.play().catch(err => {
-          console.log('Video playback blocked:', err);
-        });
-      }
-    }
-
-    function pauseVideo(element) {
-      if (isMobile) return;
-      const video = element.querySelector('.bg-video');
-      if (video) {
-        video.pause();
-        video.currentTime = 0;
-      }
     }
 
     function navigateTo(url) {
