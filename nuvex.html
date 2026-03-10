@@ -1,549 +1,1935 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <title>New Tab</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;500;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>Nuvex Zen Start</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark light" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
 
   <style>
     :root {
-      /* 核心配色：Modern Zen 風格 (無雜訊) */
-      --bg-1: #0f172a;
-      --bg-2: #1e1b4b;
-      --bg-3: #312e81;
-      
-      --text-main: #ffffff;
-      --text-sub: rgba(255, 255, 255, 0.7);
-      
-      /* 玻璃擬態 */
-      --glass-surface: rgba(255, 255, 255, 0.08);
-      --glass-border: rgba(255, 255, 255, 0.15);
-      --glass-highlight: rgba(255, 255, 255, 0.2);
-      --glass-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-      
-      --accent-color: #818cf8;
-      --folder-color: #fbbf24;
-      
-      --drag-highlight: rgba(129, 140, 248, 0.3);
+      --bg: #0f1115;
+      --bg-elevated: #151922;
+      --bg-soft: rgba(255, 255, 255, 0.04);
+      --bg-soft-2: rgba(255, 255, 255, 0.06);
+      --bg-soft-3: rgba(255, 255, 255, 0.08);
+
+      --card: rgba(255, 255, 255, 0.045);
+      --card-hover: rgba(255, 255, 255, 0.07);
+      --card-strong: rgba(255, 255, 255, 0.09);
+
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.12);
+      --border-focus: rgba(199, 211, 255, 0.26);
+
+      --text: #f3f5f8;
+      --text-sub: rgba(243, 245, 248, 0.68);
+      --text-soft: rgba(243, 245, 248, 0.42);
+
+      --accent: #c7d3ff;
+      --accent-soft: rgba(199, 211, 255, 0.08);
+      --accent-soft-2: rgba(199, 211, 255, 0.12);
+
+      --danger: #ff8585;
+      --folder: #d8c28b;
+
+      --shadow-1: 0 8px 24px rgba(0, 0, 0, 0.18);
+      --shadow-2: 0 20px 50px rgba(0, 0, 0, 0.24);
+
+      --blur: blur(18px);
+
+      --radius-1: 28px;
+      --radius-2: 22px;
+      --radius-3: 18px;
+      --radius-4: 14px;
+      --radius-pill: 999px;
+
+      --page-width: 1120px;
+      --search-width: 900px;
+      --grid-width: 1000px;
     }
 
     body.light-mode {
-      --bg-1: #e0e7ff; --bg-2: #fae8ff; --bg-3: #ffffff;
-      --text-main: #1e293b; --text-sub: #64748b;
-      --glass-surface: rgba(255, 255, 255, 0.6);
-      --glass-border: rgba(255, 255, 255, 0.4);
-      --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      --bg: #f4f6f8;
+      --bg-elevated: #ffffff;
+      --bg-soft: rgba(17, 24, 39, 0.035);
+      --bg-soft-2: rgba(17, 24, 39, 0.05);
+      --bg-soft-3: rgba(17, 24, 39, 0.07);
+
+      --card: rgba(255, 255, 255, 0.72);
+      --card-hover: rgba(255, 255, 255, 0.9);
+      --card-strong: rgba(255, 255, 255, 0.96);
+
+      --border: rgba(17, 24, 39, 0.08);
+      --border-strong: rgba(17, 24, 39, 0.12);
+      --border-focus: rgba(98, 118, 180, 0.22);
+
+      --text: #111827;
+      --text-sub: rgba(17, 24, 39, 0.68);
+      --text-soft: rgba(17, 24, 39, 0.42);
+
+      --accent: #6f83b5;
+      --accent-soft: rgba(111, 131, 181, 0.08);
+      --accent-soft-2: rgba(111, 131, 181, 0.12);
+
+      --danger: #e25555;
+      --folder: #b79a59;
+
+      --shadow-1: 0 10px 28px rgba(64, 78, 106, 0.08);
+      --shadow-2: 0 24px 56px rgba(64, 78, 106, 0.14);
     }
 
-    * { box-sizing: border-box; outline: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+    }
 
     body {
-      margin: 0; padding: 0; 
-      font-family: 'Outfit', sans-serif;
-      min-height: 100vh;
-      display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-      background: radial-gradient(circle at 10% 20%, var(--bg-2) 0%, var(--bg-1) 90%);
-      color: var(--text-main);
-      overflow-y: auto; overflow-x: hidden;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.03), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,0.025), transparent 22%),
+        linear-gradient(180deg, #101318 0%, var(--bg) 100%);
+      overflow-x: hidden;
+      position: relative;
+      letter-spacing: -0.01em;
     }
 
-    /* 背景動態呼吸燈 */
+    body.light-mode {
+      background:
+        radial-gradient(circle at top left, rgba(111, 131, 181, 0.06), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(111, 131, 181, 0.04), transparent 24%),
+        linear-gradient(180deg, #f8fafc 0%, var(--bg) 100%);
+    }
+
     body::before {
-      content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
-      background: radial-gradient(circle at 50% 50%, var(--bg-3), transparent 60%);
-      opacity: 0.4; animation: pulse 10s ease-in-out infinite alternate; z-index: -1;
-    }
-    @keyframes pulse { 0% { transform: scale(1); opacity: 0.3; } 100% { transform: scale(1.1); opacity: 0.5; } }
-
-    .top-bar { 
-      width: 100%; padding: 24px; display: flex; justify-content: flex-end; 
-      position: fixed; top: 0; z-index: 50; 
-    }
-    .icon-btn {
-      background: transparent; border: none; color: var(--text-sub);
-      width: 40px; height: 40px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: 0.3s;
-    }
-    .icon-btn:hover { background: var(--glass-surface); color: var(--text-main); }
-
-    .container {
-      width: 100%; max-width: 680px;
-      display: flex; flex-direction: column; align-items: center;
-      padding-top: 10vh; padding-bottom: 60px; z-index: 10;
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,0.018), rgba(255,255,255,0.018)),
+        repeating-linear-gradient(
+          0deg,
+          transparent 0px,
+          transparent 3px,
+          rgba(255,255,255,0.012) 4px
+        );
+      opacity: 0.18;
+      z-index: -1;
     }
 
-    /* --- 時鐘與天氣區域 --- */
-    .clock-area { 
-      text-align: center; margin-bottom: 40px; 
-      display: flex; flex-direction: column; align-items: center;
-    }
-    .clock { 
-      font-size: 6rem; font-weight: 700; letter-spacing: -2px; line-height: 1; margin-bottom: 12px;
-      background: linear-gradient(180deg, var(--text-main) 20%, rgba(255,255,255,0.6) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      text-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    body.light-mode::before {
+      opacity: 0.08;
     }
 
-    /* 新增：天氣膠囊 */
-    .weather-pill {
-      display: flex; align-items: center; gap: 10px;
-      padding: 8px 20px; border-radius: 20px;
-      background: var(--glass-surface); border: 1px solid var(--glass-border);
-      backdrop-filter: blur(10px); color: var(--text-sub);
-      font-size: 0.95rem; font-weight: 400; cursor: pointer; transition: 0.3s;
-    }
-    .weather-pill:hover { 
-      background: rgba(255,255,255,0.15); color: var(--text-main); 
-      transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-    .weather-icon { width: 18px; height: 18px; opacity: 0.9; }
-
-    /* --- 搜尋欄 --- */
-    .search-wrapper { width: 100%; margin-bottom: 50px; position: relative; }
-    .search-box {
-      width: 100%; height: 64px;
-      background: var(--glass-surface); backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border); border-radius: 32px;
-      box-shadow: var(--glass-shadow);
-      display: flex; align-items: center; padding: 0 24px;
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    }
-    .search-box:focus-within, .search-box:hover {
-      transform: translateY(-2px) scale(1.01);
-      background: rgba(255,255,255,0.12);
-      border-color: var(--glass-highlight);
-      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-    }
-    .search-input { 
-      flex: 1; border: none; background: transparent; 
-      font-size: 1.15rem; color: var(--text-main); font-family: inherit;
-      height: 100%; margin: 0 16px; 
-    }
-    .search-input::placeholder { color: rgba(255,255,255,0.3); }
-
-    .action-icon { opacity: 0.6; transition: 0.2s; cursor: pointer; padding: 8px; border-radius: 50%; }
-    .action-icon:hover { opacity: 1; background: rgba(255,255,255,0.1); }
-    
-    .ai-pill {
-      display: flex; align-items: center; gap: 8px; padding: 8px 16px;
-      background: rgba(255,255,255,0.1); border-radius: 20px;
-      font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: 0.3s;
-    }
-    .ai-pill:hover, .ai-pill.active { background: var(--text-main); color: #000; }
-    
-    .ai-dropdown {
-      position: absolute; top: 120%; right: 0; width: 200px;
-      background: rgba(30, 30, 30, 0.95); backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border); border-radius: 16px; padding: 8px;
-      display: none; flex-direction: column; gap: 4px; z-index: 100;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-      transform-origin: top right; animation: scaleIn 0.2s ease;
-    }
-    .ai-dropdown.show { display: flex; }
-    @keyframes scaleIn { from { opacity:0; transform: scale(0.9); } to { opacity:1; transform: scale(1); } }
-    
-    .ai-item {
-      display: flex; align-items: center; gap: 12px; padding: 12px;
-      color: var(--text-main); text-decoration: none; font-size: 0.95rem;
-      border-radius: 10px; transition: 0.2s;
-    }
-    .ai-item:hover { background: rgba(255,255,255,0.1); }
-    .ai-item svg { width: 18px; height: 18px; }
-
-    /* --- 捷徑區 (Grid) --- */
-    .workspace-wrapper { width: 100%; }
-    
-    .breadcrumb-bar {
-      display: flex; align-items: center; gap: 8px; padding: 0 12px 16px 12px;
-      color: var(--text-sub); font-size: 0.9rem; font-weight: 500;
-    }
-    .breadcrumb-item:hover { color: var(--text-main); text-decoration: underline; }
-
-    .links-grid { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
-      gap: 24px 16px; width: 100%; justify-items: center;
+    button, input {
+      font: inherit;
     }
 
-    .link-card {
-      display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-      width: 100px; cursor: pointer; position: relative;
-      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-      border-radius: 16px; padding: 10px 4px;
-      border: 1px solid transparent; 
-    }
-    .link-card:hover { background: var(--glass-surface); transform: translateY(-5px); }
-    .link-card:active { transform: scale(0.95); }
-
-    .link-icon-box {
-      width: 64px; height: 64px; 
-      background: var(--glass-surface); border: 1px solid var(--glass-border);
-      border-radius: 22px; display: flex; align-items: center; justify-content: center;
-      margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      transition: 0.3s; overflow: hidden; backdrop-filter: blur(5px);
-    }
-    .link-card:hover .link-icon-box {
-      background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    .shell {
+      width: 100%;
+      max-width: var(--page-width);
+      margin: 0 auto;
+      padding: 20px 22px 56px;
     }
 
-    .link-icon { width: 36px; height: 36px; object-fit: contain; border-radius: 4px; }
-    .folder-icon { color: var(--folder-color); width: 32px; height: 32px; }
-    
-    .link-title {
-      font-size: 0.85rem; color: var(--text-main); text-align: center;
-      width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      opacity: 0.9; font-weight: 400; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    .topbar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 40px;
     }
 
-    .add-btn {
-      width: 64px; height: 64px;
-      border: 2px dashed rgba(255,255,255,0.2); border-radius: 22px;
-      display: flex; align-items: center; justify-content: center;
-      color: rgba(255,255,255,0.4); cursor: pointer; transition: 0.3s; margin-top: 10px;
+    .ghost-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text-sub);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: var(--blur);
+      box-shadow: var(--shadow-1);
+      transition: 0.2s ease;
     }
-    .add-btn:hover { border-color: var(--text-main); color: var(--text-main); background: rgba(255,255,255,0.05); }
 
-    /* 拖曳狀態 */
-    .link-card.drag-merge .link-icon-box { border: 2px solid var(--accent-color); background: var(--drag-highlight); transform: scale(1.1); }
-    .link-card.drag-sort-left { border-left: 2px solid var(--accent-color); }
-    .link-card.drag-sort-right { border-right: 2px solid var(--accent-color); }
+    .ghost-btn:hover {
+      color: var(--text);
+      background: var(--card-hover);
+      border-color: var(--border-strong);
+      transform: translateY(-1px);
+    }
 
-    /* Context Menu & Modal */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-top: 8px;
+      margin-bottom: 28px;
+    }
+
+    .clock-wrap {
+      text-align: center;
+    }
+
+    .clock {
+      font-size: clamp(4rem, 10vw, 6.4rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.055em;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .date-line {
+      margin-top: 14px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .soft-pill {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text-sub);
+      backdrop-filter: var(--blur);
+      box-shadow: var(--shadow-1);
+      font-size: 0.92rem;
+      font-weight: 500;
+      transition: 0.2s ease;
+    }
+
+    .soft-pill.clickable {
+      cursor: pointer;
+    }
+
+    .soft-pill.clickable:hover {
+      background: var(--card-hover);
+      color: var(--text);
+      border-color: var(--border-strong);
+      transform: translateY(-1px);
+    }
+
+    .search-zone {
+      width: 100%;
+      max-width: var(--search-width);
+      margin: 0 auto 18px;
+      position: relative;
+    }
+
+    .search-form {
+      position: relative;
+    }
+
+    .search-shell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 74px;
+      padding: 10px 12px 10px 16px;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      backdrop-filter: var(--blur);
+      box-shadow: var(--shadow-2);
+      transition: 0.22s ease;
+    }
+
+    .search-shell:hover,
+    .search-shell:focus-within {
+      background: var(--card-hover);
+      border-color: var(--border-strong);
+      transform: translateY(-1px);
+    }
+
+    .search-icon {
+      width: 40px;
+      height: 40px;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-soft);
+      border-radius: 50%;
+    }
+
+    .search-main {
+      flex: 1 1 auto;
+      min-width: 0;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 1.04rem;
+      font-weight: 500;
+      padding: 6px 2px;
+    }
+
+    .search-input::placeholder {
+      color: var(--text-soft);
+      font-weight: 500;
+    }
+
+    .search-input:focus {
+      outline: none;
+    }
+
+    .listen-text {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 8px);
+      color: #ff9b9b;
+      font-size: 0.84rem;
+      display: none;
+    }
+
+    .search-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .mini-btn {
+      height: 42px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text-sub);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: 0.2s ease;
+      white-space: nowrap;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .mini-btn.circle {
+      width: 42px;
+      padding: 0;
+      border-radius: 50%;
+    }
+
+    .mini-btn:hover,
+    .mini-btn.active {
+      background: var(--bg-soft-3);
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
+
+    .dropdown {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      width: 250px;
+      padding: 8px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--card-strong);
+      backdrop-filter: blur(24px);
+      box-shadow: var(--shadow-2);
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 100;
+    }
+
+    .dropdown.show {
+      display: flex;
+      animation: dropdownIn 0.16s ease;
+    }
+
+    @keyframes dropdownIn {
+      from {
+        opacity: 0;
+        transform: translateY(-6px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .dropdown-item {
+      min-height: 50px;
+      border-radius: 14px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text);
+      text-decoration: none;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .dropdown-item:hover {
+      background: var(--bg-soft-2);
+    }
+
+    .dropdown-item svg {
+      width: 18px;
+      height: 18px;
+      color: var(--text-sub);
+      flex: 0 0 auto;
+    }
+
+    .dropdown-item .meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .dropdown-item .meta b {
+      font-size: 0.94rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .dropdown-item .meta span {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 0 auto 28px;
+      max-width: var(--search-width);
+    }
+
+    .toolbar-chip {
+      min-height: 38px;
+      padding: 0 13px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text-sub);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: 0.2s ease;
+      backdrop-filter: var(--blur);
+    }
+
+    .toolbar-chip:hover {
+      background: var(--card-hover);
+      color: var(--text);
+      border-color: var(--border-strong);
+      transform: translateY(-1px);
+    }
+
+    .board {
+      width: 100%;
+      max-width: var(--grid-width);
+      margin: 0 auto;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      backdrop-filter: var(--blur);
+      box-shadow: var(--shadow-2);
+      padding: 18px 18px 20px;
+    }
+
+    .board-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .board-title {
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      letter-spacing: 0.01em;
+    }
+
+    .board-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .meta-badge {
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text-sub);
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .breadcrumb {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 4px 2px 16px;
+      color: var(--text-sub);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .breadcrumb-item {
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .breadcrumb-item:hover {
+      color: var(--text);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+      gap: 20px 12px;
+    }
+
+    .card {
+      position: relative;
+      min-height: 122px;
+      padding: 10px 8px;
+      border-radius: 22px;
+      border: 1px solid transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      cursor: pointer;
+      transition: 0.18s ease;
+      user-select: none;
+    }
+
+    .card:hover {
+      background: var(--bg-soft);
+      border-color: var(--border);
+      transform: translateY(-2px);
+    }
+
+    .card:active {
+      transform: scale(0.985);
+    }
+
+    .icon-box {
+      width: 70px;
+      height: 70px;
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--bg-soft-2), var(--bg-soft));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+      margin-bottom: 11px;
+      overflow: hidden;
+      transition: 0.2s ease;
+    }
+
+    .card:hover .icon-box {
+      background: linear-gradient(180deg, var(--bg-soft-3), var(--bg-soft-2));
+      border-color: var(--border-strong);
+    }
+
+    .favicon {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .folder-svg {
+      width: 32px;
+      height: 32px;
+      color: var(--folder);
+    }
+
+    .card-title {
+      width: 100%;
+      text-align: center;
+      color: var(--text);
+      font-size: 0.87rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 4px;
+    }
+
+    .card-sub {
+      width: 100%;
+      margin-top: 4px;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 0.72rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 4px;
+    }
+
+    .add-card .add-box {
+      width: 70px;
+      height: 70px;
+      border-radius: 22px;
+      border: 1.5px dashed var(--border-strong);
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 11px;
+      transition: 0.2s ease;
+      background: transparent;
+    }
+
+    .add-card:hover .add-box {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .card.drag-merge .icon-box {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .card.drag-sort-left {
+      border-left: 2px solid var(--accent);
+    }
+
+    .card.drag-sort-right {
+      border-right: 2px solid var(--accent);
+    }
+
+    .hint {
+      margin-top: 16px;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
     .context-menu {
-      position: absolute; background: rgba(30, 30, 30, 0.9); backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 6px;
-      min-width: 160px; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-      display: none; z-index: 1000;
+      position: fixed;
+      min-width: 184px;
+      padding: 6px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: var(--card-strong);
+      backdrop-filter: blur(24px);
+      box-shadow: var(--shadow-2);
+      display: none;
+      z-index: 999;
     }
-    .menu-item {
-      padding: 10px 12px; border-radius: 8px; color: var(--text-main);
-      font-size: 0.9rem; cursor: pointer; transition: 0.2s;
-    }
-    .menu-item:hover { background: var(--accent-color); }
-    
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
-      display: flex; justify-content: center; align-items: center;
-      z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s;
-    }
-    .modal-overlay.active { opacity: 1; visibility: visible; }
-    .modal {
-      width: 360px; background: #1e293b; padding: 30px;
-      border-radius: 24px; border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-    }
-    .modal h3 { margin: 0 0 20px 0; color: var(--text-main); font-weight: 500; }
-    .form-input {
-      width: 100%; padding: 14px; margin-bottom: 16px; border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2);
-      color: var(--text-main); font-size: 1rem;
-    }
-    .form-input:focus { border-color: var(--accent-color); background: rgba(0,0,0,0.4); }
-    .btns { display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px; }
-    .btn { padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: 500; }
-    .btn-cancel { background: transparent; color: var(--text-sub); }
-    .btn-cancel:hover { color: var(--text-main); }
-    .btn-save { background: var(--accent-color); color: white; }
-    .btn-save:hover { background: #6366f1; }
-    .listening { display: none; color: #f43f5e; font-size: 0.9rem; margin-right: 12px; animation: blink 1s infinite; }
-    @keyframes blink { 50% { opacity: 0.5; } }
 
+    .menu-item {
+      min-height: 42px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: 0.18s ease;
+    }
+
+    .menu-item:hover {
+      background: var(--bg-soft-2);
+    }
+
+    .menu-item.danger {
+      color: var(--danger);
+    }
+
+    .menu-item.danger:hover {
+      background: rgba(255, 133, 133, 0.08);
+    }
+
+    .menu-divider {
+      height: 1px;
+      margin: 4px 0;
+      background: var(--border);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.42);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.2s ease;
+      z-index: 2000;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      width: min(420px, 100%);
+      border-radius: 28px;
+      border: 1px solid var(--border);
+      background: var(--card-strong);
+      backdrop-filter: blur(28px);
+      box-shadow: var(--shadow-2);
+      padding: 24px;
+      transform: translateY(8px) scale(0.985);
+      transition: 0.2s ease;
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-title {
+      margin: 0 0 6px;
+      color: var(--text);
+      font-size: 1.08rem;
+      font-weight: 700;
+    }
+
+    .modal-desc {
+      margin: 0 0 18px;
+      color: var(--text-sub);
+      font-size: 0.9rem;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-sub);
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .input {
+      width: 100%;
+      min-height: 50px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text);
+      padding: 14px 15px;
+      transition: 0.18s ease;
+    }
+
+    .input::placeholder {
+      color: var(--text-soft);
+    }
+
+    .input:focus {
+      outline: none;
+      background: var(--bg-soft-2);
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 4px var(--accent-soft);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: 0.18s ease;
+      font-weight: 600;
+    }
+
+    .btn.subtle {
+      background: var(--bg-soft);
+      color: var(--text-sub);
+    }
+
+    .btn.subtle:hover {
+      background: var(--bg-soft-2);
+      color: var(--text);
+    }
+
+    .btn.primary {
+      background: var(--text);
+      color: var(--bg);
+      border-color: transparent;
+    }
+
+    .btn.primary:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    body.light-mode .btn.primary {
+      background: #111827;
+      color: #ffffff;
+    }
+
+    .modal-note {
+      margin-top: 10px;
+      text-align: right;
+      color: var(--text-soft);
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 860px) {
+      .shell {
+        padding: 16px 14px 42px;
+      }
+
+      .topbar {
+        margin-bottom: 30px;
+      }
+
+      .search-shell {
+        min-height: auto;
+        flex-wrap: wrap;
+        padding: 12px;
+        border-radius: 26px;
+      }
+
+      .search-main {
+        order: 2;
+        width: 100%;
+        flex: 0 0 100%;
+      }
+
+      .search-actions {
+        order: 3;
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+
+      .mini-btn:not(.circle) {
+        flex: 1 1 calc(50% - 6px);
+        justify-content: center;
+      }
+
+      .dropdown {
+        width: 100%;
+        left: 0;
+        right: 0;
+      }
+
+      .grid {
+        grid-template-columns: repeat(auto-fill, minmax(98px, 1fr));
+        gap: 18px 10px;
+      }
+
+      .board {
+        padding: 16px 12px 18px;
+        border-radius: 24px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .clock {
+        font-size: clamp(3.4rem, 18vw, 4.8rem);
+      }
+
+      .soft-pill {
+        min-height: 36px;
+        font-size: 0.86rem;
+        padding: 0 12px;
+      }
+
+      .toolbar {
+        gap: 8px;
+      }
+
+      .toolbar-chip {
+        min-height: 36px;
+        font-size: 0.84rem;
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px 8px;
+      }
+
+      .card {
+        min-height: 106px;
+        padding: 8px 4px;
+      }
+
+      .icon-box,
+      .add-card .add-box {
+        width: 62px;
+        height: 62px;
+        border-radius: 19px;
+      }
+
+      .favicon {
+        width: 32px;
+        height: 32px;
+      }
+
+      .card-title {
+        font-size: 0.81rem;
+      }
+
+      .card-sub {
+        font-size: 0.68rem;
+      }
+
+      .modal {
+        border-radius: 22px;
+        padding: 20px;
+      }
+
+      .modal-actions {
+        flex-direction: column-reverse;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
   </style>
 </head>
-<body class="">
-
-  <div class="top-bar">
-    <button class="icon-btn" id="themeBtn" title="切換明亮/深色模式">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-    </button>
-  </div>
-
-  <div class="container">
-    <div class="clock-area">
-      <div class="clock" id="clock">00:00</div>
-      <div class="weather-pill" onclick="window.open('https://weather.google.com')">
-        <span id="dateText">Loading...</span>
-        <span style="opacity:0.3">|</span>
-        <svg class="weather-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 18a5 5 0 0 0-10 0"></path><line x1="12" y1="9" x2="12" y2="2"></line><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"></line><line x1="1" y1="18" x2="3" y2="18"></line><line x1="21" y1="18" x2="23" y2="18"></line><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"></line><line x1="23" y1="22" x2="1" y2="22"></line><polyline points="16 5 12 9 8 5"></polyline></svg>
-        <span>24°C</span>
-      </div>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <button class="ghost-btn" id="themeBtn" title="切換主題" aria-label="切換主題">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3c0 .28-.01.56-.01.84A8.16 8.16 0 0 0 20 12c0 .27 0 .53.01.79Z"></path>
+        </svg>
+      </button>
     </div>
 
-    <div class="search-wrapper">
-      <form action="https://www.google.com/search" method="get" id="searchForm" class="search-box">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.5; margin-right:8px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <div id="listenText" class="listening">聆聽中...</div>
-        <input type="text" name="q" id="searchInput" class="search-input" placeholder="Search..." autocomplete="off" autofocus>
-        <div class="action-icon" id="micBtn" title="語音搜尋">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+    <section class="hero">
+      <div class="clock-wrap">
+        <div class="clock" id="clock">00:00</div>
+
+        <div class="date-line">
+          <div class="soft-pill" id="dateText">Loading...</div>
+
+          <div class="soft-pill clickable" id="weatherBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 19a4 4 0 1 1 .8-7.92A5 5 0 1 1 19 14h1a3 3 0 0 1 0 6H8Z"></path>
+            </svg>
+            <span id="weatherText">查看天氣</span>
+          </div>
         </div>
-        <div class="ai-pill" id="aiBtn" style="margin-left: 8px;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/></svg> 
-          <span>AI</span>
+      </div>
+    </section>
+
+    <section class="search-zone">
+      <form id="searchForm" class="search-form" autocomplete="off">
+        <div class="search-shell">
+          <div class="search-icon" aria-hidden="true">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="7"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
+
+          <div class="search-main">
+            <input
+              id="searchInput"
+              class="search-input"
+              type="text"
+              placeholder="搜尋、貼上網址，或按 / 直接聚焦"
+              autofocus
+            />
+            <div class="listen-text" id="listenText">聆聽中...</div>
+          </div>
+
+          <div class="search-actions">
+            <button type="button" class="mini-btn circle" id="focusBtn" title="清空">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+
+            <button type="button" class="mini-btn circle" id="micBtn" title="語音搜尋">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+            </button>
+
+            <button type="button" class="mini-btn" id="engineBtn">
+              <span id="engineLabel">Google</span>
+            </button>
+
+            <button type="button" class="mini-btn" id="aiBtn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"></path>
+              </svg>
+              <span>AI</span>
+            </button>
+          </div>
         </div>
-        <div class="ai-dropdown" id="aiDropdown">
-          <a href="https://chatgpt.com/" target="_blank" class="ai-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/></svg>ChatGPT</a>
-          <a href="https://gemini.google.com/" target="_blank" class="ai-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 10.5V8h-2.5v2.5H14v2.5h2.5V15.5H19v-2.5h2.5V10.5H19z"/></svg>Gemini</a>
-          <a href="https://claude.ai/" target="_blank" class="ai-item"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>Claude</a>
-          <a href="https://www.perplexity.ai/" target="_blank" class="ai-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z"/></svg>Perplexity</a>
+
+        <div class="dropdown" id="engineDropdown">
+          <div class="dropdown-item" data-engine="google">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 11v3h7a6.9 6.9 0 0 1-7 5 7 7 0 1 1 0-14 6.63 6.63 0 0 1 4.71 1.83l2.12-2.12A9.93 9.93 0 1 0 22 12c0-.67-.07-1.33-.2-2z"/></svg>
+            <div class="meta">
+              <b>Google</b>
+              <span>預設搜尋</span>
+            </div>
+          </div>
+
+          <div class="dropdown-item" data-engine="duckduckgo">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1.58 13.22c-.3.34-.78.53-1.58.53s-1.28-.19-1.58-.53a1.89 1.89 0 0 1-.42-1.28 4 4 0 0 1 .52-1.86 2.87 2.87 0 0 1-1.1-2.2A2.76 2.76 0 0 1 12 7.12a2.76 2.76 0 0 1 2.58 2.76 2.87 2.87 0 0 1-1.1 2.2A4 4 0 0 1 14 13.94a1.89 1.89 0 0 1-.42 1.28z"/></svg>
+            <div class="meta">
+              <b>DuckDuckGo</b>
+              <span>隱私優先</span>
+            </div>
+          </div>
+
+          <div class="dropdown-item" data-engine="bing">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3v14.5l5.6 3.5L20 16.8V9.4l-6.7-2.2v3.1l3.5 1.1v3.3l-5.2 2.7-2.3-1.4V3z"/></svg>
+            <div class="meta">
+              <b>Bing</b>
+              <span>圖片也好用</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dropdown" id="aiDropdown">
+          <a href="https://chatgpt.com/" target="_blank" class="dropdown-item">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2a9.8 9.8 0 0 0-4.46 1.08 5.27 5.27 0 0 0-7.24 4.87 5.15 5.15 0 0 0 .72 2.63A5.28 5.28 0 0 0 5.28 20h.13A5.28 5.28 0 0 0 15 21.47 5.28 5.28 0 0 0 20.72 20a5.27 5.27 0 0 0 2.64-4.57 5.15 5.15 0 0 0-.72-2.63A5.28 5.28 0 0 0 18.59 4h-.13A5.27 5.27 0 0 0 11.99 2z"/></svg>
+            <div class="meta">
+              <b>ChatGPT</b>
+              <span>通用型 AI</span>
+            </div>
+          </a>
+
+          <a href="https://www.perplexity.ai/" target="_blank" class="dropdown-item">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 3 6.5v11L12 22l9-4.5v-11Zm0 3.05 5.83 2.91v8.08L12 18.95l-5.83-2.91V7.96Z"/></svg>
+            <div class="meta">
+              <b>Perplexity</b>
+              <span>快速查資料</span>
+            </div>
+          </a>
+
+          <a href="https://claude.ai/" target="_blank" class="dropdown-item">
+            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"></circle></svg>
+            <div class="meta">
+              <b>Claude</b>
+              <span>長文整理</span>
+            </div>
+          </a>
+
+          <a href="https://gemini.google.com/" target="_blank" class="dropdown-item">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.7 6.3L20 10l-6.3 1.7L12 18l-1.7-6.3L4 10l6.3-1.7z"/></svg>
+            <div class="meta">
+              <b>Gemini</b>
+              <span>Google 生態</span>
+            </div>
+          </a>
         </div>
       </form>
-    </div>
+    </section>
 
-    <div class="workspace-wrapper">
-      <div class="breadcrumb-bar" id="breadcrumbBar" style="display:none;">
-        <span class="breadcrumb-item" onclick="goUp()" style="cursor:pointer; opacity:0.7;">&larr; Back</span>
-        <div id="breadcrumbPath" style="display:flex; align-items:center; margin-left:10px;"></div>
+    <section class="toolbar">
+      <div class="toolbar-chip" data-open="https://mail.google.com">Gmail</div>
+      <div class="toolbar-chip" data-open="https://calendar.google.com">Calendar</div>
+      <div class="toolbar-chip" data-open="https://drive.google.com">Drive</div>
+      <div class="toolbar-chip" data-open="https://www.youtube.com">YouTube</div>
+      <div class="toolbar-chip" data-open="https://github.com">GitHub</div>
+      <div class="toolbar-chip" data-open="https://www.notion.so">Notion</div>
+    </section>
+
+    <section class="board">
+      <div class="board-header">
+        <div class="board-title">Shortcuts</div>
+        <div class="board-meta">
+          <div class="meta-badge" id="itemCountPill">0 items</div>
+          <div class="meta-badge">拖曳排序 / 合併成資料夾</div>
+        </div>
       </div>
-      <div class="shortcut-container" id="workspace">
-        <div class="links-grid" id="linksGrid"></div>
+
+      <div class="breadcrumb" id="breadcrumbBar">
+        <span class="breadcrumb-item" onclick="goUp()">&larr; 返回</span>
+        <div id="breadcrumbPath" style="display:flex; align-items:center; flex-wrap:wrap;"></div>
       </div>
-    </div>
+
+      <div class="grid" id="linksGrid"></div>
+
+      <div class="hint">右鍵可新增、編輯、刪除</div>
+    </section>
   </div>
 
   <div class="context-menu" id="contextMenu">
     <div id="menuBgOptions">
-      <div class="menu-item" onclick="openModal('link')">New Shortcut</div>
-      <div class="menu-item" onclick="openModal('folder')">New Folder</div>
+      <div class="menu-item" onclick="openModal('link')">新增捷徑</div>
+      <div class="menu-item" onclick="openModal('folder')">新增資料夾</div>
     </div>
+
     <div id="menuItemOptions" style="display:none;">
-      <div class="menu-item" id="ctxEdit">Edit</div>
-      <div style="height:1px; background:rgba(255,255,255,0.1); margin:4px 0;"></div>
-      <div class="menu-item" id="ctxDelete" style="color:#ff4757;">Remove</div>
+      <div class="menu-item" id="ctxEdit">編輯</div>
+      <div class="menu-divider"></div>
+      <div class="menu-item danger" id="ctxDelete">刪除</div>
     </div>
   </div>
 
   <div class="modal-overlay" id="linkModal">
-    <div class="modal">
-      <h3 id="modalTitle">Add Shortcut</h3>
-      <input type="text" id="itemName" class="form-input" placeholder="Name">
-      <input type="text" id="itemUrl" class="form-input" placeholder="https://example.com">
-      <div class="btns">
-        <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
-        <button class="btn btn-save" onclick="saveItem()">Save</button>
+    <div class="modal" role="dialog" aria-modal="true">
+      <h3 class="modal-title" id="modalTitle">新增捷徑</h3>
+      <p class="modal-desc" id="modalDesc">新增常用網站或建立資料夾分類。</p>
+
+      <div class="field">
+        <label for="itemName">名稱</label>
+        <input id="itemName" class="input" type="text" placeholder="例如：ChatGPT" />
       </div>
+
+      <div class="field" id="urlGroup">
+        <label for="itemUrl">網址</label>
+        <input id="itemUrl" class="input" type="text" placeholder="https://example.com" />
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn subtle" type="button" onclick="closeModal()">取消</button>
+        <button class="btn primary" type="button" onclick="saveItem()">儲存</button>
+      </div>
+
+      <div class="modal-note">Enter 儲存 · Esc 關閉</div>
     </div>
   </div>
 
   <script>
-    // --- 1. 時間與日期邏輯 ---
-    function updateClock() {
-      const now = new Date();
-      document.getElementById('clock').innerText = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-      
-      const options = { weekday: 'short', month: 'short', day: 'numeric' };
-      document.getElementById('dateText').innerText = now.toLocaleDateString('en-US', options);
-    }
-    setInterval(updateClock, 1000); updateClock();
-
-    // --- 2. 佈景主題 ---
-    const btn = document.getElementById('themeBtn'); 
-    const body = document.body;
-    btn.onclick = () => { 
-      body.classList.toggle('light-mode'); 
-      localStorage.setItem('theme', body.classList.contains('light-mode')?'light':'dark'); 
+    const STORAGE_KEYS = {
+      theme: "nuvex_theme",
+      data: "nuvex_data_v3_zen",
+      engine: "nuvex_engine"
     };
-    if(localStorage.getItem('theme')==='light') body.classList.add('light-mode');
 
-    // --- 3. 語音與 AI ---
-    const mic = document.getElementById('micBtn'); const input = document.getElementById('searchInput'); const listenText = document.getElementById('listenText');
-    if('webkitSpeechRecognition' in window) {
-      const rec = new webkitSpeechRecognition(); rec.lang = 'zh-TW';
-      mic.onclick = () => { rec.start(); listenText.style.display='block'; input.placeholder=''; };
-      rec.onresult = (e) => { input.value = e.results[0][0].transcript; listenText.style.display='none'; setTimeout(() => document.getElementById('searchForm').submit(), 800); };
-      rec.onend = () => { listenText.style.display='none'; input.placeholder='Search...'; };
-    } else { mic.style.display='none'; }
+    const SEARCH_ENGINES = {
+      google: {
+        label: "Google",
+        buildUrl: (q) => `https://www.google.com/search?q=${encodeURIComponent(q)}`
+      },
+      duckduckgo: {
+        label: "DuckDuckGo",
+        buildUrl: (q) => `https://duckduckgo.com/?q=${encodeURIComponent(q)}`
+      },
+      bing: {
+        label: "Bing",
+        buildUrl: (q) => `https://www.bing.com/search?q=${encodeURIComponent(q)}`
+      }
+    };
 
-    const aiBtn = document.getElementById('aiBtn'); const aiDropdown = document.getElementById('aiDropdown');
-    aiBtn.onclick = (e) => { e.stopPropagation(); aiDropdown.classList.toggle('show'); aiBtn.classList.toggle('active'); };
-    document.addEventListener('click', (e) => { if (!aiBtn.contains(e.target) && !aiDropdown.contains(e.target)) { aiDropdown.classList.remove('show'); aiBtn.classList.remove('active'); }});
-
-    // --- 4. 資料結構 ---
-    let rootData = JSON.parse(localStorage.getItem('auroraData')) || [
-      {type:'link', name:'Google', url:'https://google.com'},
-      {type:'link', name:'YouTube', url:'https://youtube.com'},
-      {type:'link', name:'GitHub', url:'https://github.com'},
-      {type:'link', name:'Netflix', url:'https://netflix.com'}
+    const DEFAULT_DATA = [
+      { type: "link", name: "Google", url: "https://google.com" },
+      { type: "link", name: "YouTube", url: "https://youtube.com" },
+      { type: "link", name: "GitHub", url: "https://github.com" },
+      { type: "link", name: "ChatGPT", url: "https://chatgpt.com" },
+      { type: "link", name: "Drive", url: "https://drive.google.com" },
+      { type: "link", name: "Gmail", url: "https://mail.google.com" }
     ];
-    if(rootData.length > 0 && !rootData[0].type) rootData = rootData.map(item => ({type:'link', name:item.name, url:item.url})); 
-
-    let currentPath = []; 
-    const grid = document.getElementById('linksGrid');
 
     const CATEGORIES = {
-      'Social': ['facebook', 'instagram', 'twitter', 'x.com', 'linkedin', 'reddit', 'discord'],
-      'Video': ['youtube', 'twitch', 'netflix', 'disney', 'hulu', 'bilibili'],
-      'Gaming': ['steam', 'epic', 'xbox', 'playstation', 'nintendo'],
-      'Dev': ['github', 'gitlab', 'stackoverflow', 'codepen', 'localhost'],
-      'AI': ['chatgpt', 'openai', 'gemini', 'claude'],
-      'Shop': ['amazon', 'shopee', 'taobao', 'momo']
+      Social: ["facebook", "instagram", "twitter", "x.com", "linkedin", "reddit", "discord"],
+      Video: ["youtube", "twitch", "netflix", "disney", "hulu", "bilibili"],
+      Gaming: ["steam", "epic", "xbox", "playstation", "nintendo"],
+      Dev: ["github", "gitlab", "stackoverflow", "codepen", "vercel", "localhost"],
+      AI: ["chatgpt", "openai", "gemini", "claude", "perplexity"],
+      Shop: ["amazon", "shopee", "taobao", "momo", "pchome"]
     };
-    function predictFolderName(item1, item2) {
-      const getCat = (url) => { if(!url) return null; const lower = url.toLowerCase(); for(let cat in CATEGORIES) { if(CATEGORIES[cat].some(key => lower.includes(key))) return cat; } return null; };
-      const c1 = item1.type === 'link' ? getCat(item1.url) : null;
-      const c2 = item2.type === 'link' ? getCat(item2.url) : null;
-      if(c1 && c2 && c1 === c2) return c1; if(c1) return c1; if(c2) return c2; return `Folder`;
+
+    const body = document.body;
+    const themeBtn = document.getElementById("themeBtn");
+    const clockEl = document.getElementById("clock");
+    const dateTextEl = document.getElementById("dateText");
+    const weatherBtn = document.getElementById("weatherBtn");
+    const weatherTextEl = document.getElementById("weatherText");
+
+    const searchForm = document.getElementById("searchForm");
+    const searchInput = document.getElementById("searchInput");
+    const focusBtn = document.getElementById("focusBtn");
+    const micBtn = document.getElementById("micBtn");
+    const listenText = document.getElementById("listenText");
+
+    const engineBtn = document.getElementById("engineBtn");
+    const engineLabel = document.getElementById("engineLabel");
+    const engineDropdown = document.getElementById("engineDropdown");
+
+    const aiBtn = document.getElementById("aiBtn");
+    const aiDropdown = document.getElementById("aiDropdown");
+
+    const linksGrid = document.getElementById("linksGrid");
+    const breadcrumbBar = document.getElementById("breadcrumbBar");
+    const breadcrumbPath = document.getElementById("breadcrumbPath");
+    const itemCountPill = document.getElementById("itemCountPill");
+
+    const contextMenu = document.getElementById("contextMenu");
+    const menuBgOptions = document.getElementById("menuBgOptions");
+    const menuItemOptions = document.getElementById("menuItemOptions");
+
+    const modal = document.getElementById("linkModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalDesc = document.getElementById("modalDesc");
+    const itemNameInput = document.getElementById("itemName");
+    const itemUrlInput = document.getElementById("itemUrl");
+    const urlGroup = document.getElementById("urlGroup");
+
+    let rootData = loadData();
+    let currentPath = [];
+    let currentModalType = "link";
+    let isEditing = false;
+    let contextTargetIndex = -1;
+    let draggedIndex = null;
+    let draggedItem = null;
+    let dragAction = null;
+
+    let activeEngine = localStorage.getItem(STORAGE_KEYS.engine) || "google";
+    if (!SEARCH_ENGINES[activeEngine]) activeEngine = "google";
+
+    function loadData() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEYS.data));
+        if (!Array.isArray(saved) || saved.length === 0) return structuredClone(DEFAULT_DATA);
+        return saved.map(normalizeItem).filter(Boolean);
+      } catch {
+        return structuredClone(DEFAULT_DATA);
+      }
     }
-    function getCurrentArray() { let current = rootData; for (let index of currentPath) { current = current[index].children; } return current; }
 
-    // --- 5. 渲染邏輯 (簡約版) ---
-    function render() {
-      grid.innerHTML = '';
-      const currentList = getCurrentArray();
+    function normalizeItem(item) {
+      if (!item || typeof item !== "object") return null;
 
-      // Breadcrumb
-      const breadcrumbBar = document.getElementById('breadcrumbBar');
-      const breadcrumbPath = document.getElementById('breadcrumbPath');
-      if (currentPath.length > 0) {
-        breadcrumbBar.style.display = 'flex';
-        let html = `<span class="breadcrumb-item" onclick="goRoot()" ondrop="dropOnBreadcrumb(event, -1)" ondragover="allowDrop(event)">Home</span>`;
-        let tempPath = rootData;
-        currentPath.forEach((idx, i) => {
-          html += '<span style="opacity:0.4; margin:0 6px;">/</span>';
-          const folderName = tempPath[idx].name;
-          if (i < currentPath.length - 1) {
-             html += `<span class="breadcrumb-item" onclick="goToLevel(${i})" ondrop="dropOnBreadcrumb(event, ${i})" ondragover="allowDrop(event)">${folderName}</span>`;
-          } else {
-             html += `<span style="opacity:1; font-weight:600;">${folderName}</span>`;
-          }
-          tempPath = tempPath[idx].children;
-        });
-        breadcrumbPath.innerHTML = html;
-      } else {
-        breadcrumbBar.style.display = 'none';
+      if (item.type === "folder") {
+        return {
+          type: "folder",
+          name: String(item.name || "Folder"),
+          children: Array.isArray(item.children)
+            ? item.children.map(normalizeItem).filter(Boolean)
+            : []
+        };
       }
 
-      // Grid Items
-      currentList.forEach((item, i) => {
-        const div = document.createElement('div');
-        div.className = 'link-card';
-        div.draggable = true;
-        div.dataset.index = i;
+      const url = String(item.url || "").trim();
+      return {
+        type: "link",
+        name: String(item.name || "Untitled"),
+        url: url || "https://google.com"
+      };
+    }
 
-        div.ondragstart = (e) => dragStart(e, i);
-        div.ondragover = (e) => dragOver(e, i);
-        div.ondragleave = (e) => dragLeave(e);
-        div.ondrop = (e) => drop(e, i);
-        
-        let iconHtml = '';
-        if (item.type === 'folder') {
-            iconHtml = `<div class="link-icon-box"><svg class="folder-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-8l-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"></path></svg></div>`;
-            div.onclick = () => enterFolder(i);
-        } else {
-            const iconUrl = `https://www.google.com/s2/favicons?domain=${new URL(item.url).hostname}&sz=128`;
-            iconHtml = `<div class="link-icon-box"><img src="${iconUrl}" class="link-icon" onerror="this.src='https://www.google.com/s2/favicons?domain=google.com'"></div>`;
-            div.onclick = () => location.href = item.url;
-        }
+    function saveData() {
+      localStorage.setItem(STORAGE_KEYS.data, JSON.stringify(rootData));
+    }
 
-        div.innerHTML = `${iconHtml}<div class="link-title">${item.name}</div>`;
-        div.oncontextmenu = (e) => { e.preventDefault(); e.stopPropagation(); showContextMenu(e.pageX, e.pageY, 'item', i); };
-        grid.appendChild(div);
+    function getCurrentArray() {
+      let current = rootData;
+      for (const index of currentPath) {
+        if (!current[index] || current[index].type !== "folder") return rootData;
+        current = current[index].children;
+      }
+      return current;
+    }
+
+    function updateClock() {
+      const now = new Date();
+
+      clockEl.textContent = now.toLocaleTimeString("zh-TW", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
       });
 
-      // Add Button
-      const addBtn = document.createElement('div');
-      addBtn.className = 'link-card'; 
-      addBtn.innerHTML = `<div class="add-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>`;
-      addBtn.onclick = () => openModal('link');
-      addBtn.oncontextmenu = (e) => { e.preventDefault(); e.stopPropagation(); showContextMenu(e.pageX, e.pageY, 'bg'); }
-      grid.appendChild(addBtn);
+      dateTextEl.textContent = now.toLocaleDateString("zh-TW", {
+        weekday: "short",
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      });
     }
 
-    // --- 6. 拖曳邏輯 ---
-    let draggedIndex = null; let draggedItem = null; let dragAction = null; 
-    function dragStart(e, index) { draggedIndex = index; draggedItem = getCurrentArray()[index]; e.dataTransfer.effectAllowed = "move"; setTimeout(() => e.target.style.opacity = '0.5', 0); }
-    function dragOver(e, targetIndex) {
-        e.preventDefault(); if (draggedIndex === null || draggedIndex === targetIndex) return;
-        const targetEl = e.currentTarget; const rect = targetEl.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left; const width = rect.width;
-        resetDragStyles(targetEl);
-        if (getCurrentArray()[targetIndex].type === 'folder') { targetEl.classList.add('drag-merge'); dragAction = 'folder-in'; return; }
-        const centerZone = width * 0.4;
-        if (mouseX > centerZone && mouseX < (width - centerZone)) { targetEl.classList.add('drag-merge'); dragAction = 'merge'; } 
-        else if (mouseX <= centerZone) { targetEl.classList.add('drag-sort-left'); dragAction = 'sort-left'; } 
-        else { targetEl.classList.add('drag-sort-right'); dragAction = 'sort-right'; }
-    }
-    function dragLeave(e) { resetDragStyles(e.currentTarget); dragAction = null; }
-    function resetDragStyles(el) { el.classList.remove('drag-merge', 'drag-sort-left', 'drag-sort-right'); el.style.opacity = '1'; }
-    function drop(e, targetIndex) {
-        e.preventDefault(); e.stopPropagation(); resetDragStyles(e.currentTarget);
-        const cards = document.querySelectorAll('.link-card'); if(cards[draggedIndex]) cards[draggedIndex].style.opacity = '1';
-        if (draggedIndex === null || draggedIndex === targetIndex || !dragAction) return;
-        const list = getCurrentArray(); const targetItem = list[targetIndex];
-        if (dragAction === 'folder-in') { targetItem.children.push(draggedItem); list.splice(draggedIndex, 1); } 
-        else if (dragAction === 'merge') {
-            const folderName = predictFolderName(targetItem, draggedItem);
-            list[targetIndex] = { type: 'folder', name: folderName, children: [targetItem, draggedItem] };
-            if (draggedIndex > targetIndex) list.splice(draggedIndex, 1); else list.splice(draggedIndex, 1);
-        } 
-        else if (dragAction === 'sort-left' || dragAction === 'sort-right') {
-            const item = list.splice(draggedIndex, 1)[0];
-            let newIndex = targetIndex; if (draggedIndex < targetIndex) newIndex--; if (dragAction === 'sort-right') newIndex++;
-            list.splice(newIndex, 0, item);
-        }
-        draggedIndex = null; dragAction = null; saveAndRender();
-    }
-    function allowDrop(e) { e.preventDefault(); }
-    function dropOnBreadcrumb(e, levelIndex) {
-        e.preventDefault(); e.stopPropagation(); if (draggedIndex === null) return;
-        let targetList = rootData;
-        if (levelIndex > -1) { let path = currentPath.slice(0, levelIndex + 1); for (let idx of path) targetList = targetList[idx].children; }
-        getCurrentArray().splice(draggedIndex, 1); targetList.push(draggedItem); draggedIndex = null; saveAndRender();
-    }
-    
-    // --- 7. 功能函數 ---
-    function enterFolder(index) { currentPath.push(index); render(); }
-    function goUp() { currentPath.pop(); render(); }
-    function goRoot() { currentPath = []; render(); }
-    function goToLevel(i) { currentPath = currentPath.slice(0, i + 1); render(); }
-    function saveAndRender() { localStorage.setItem('auroraData', JSON.stringify(rootData)); render(); }
+    updateClock();
+    setInterval(updateClock, 1000);
 
-    // --- 8. UI 互動 ---
-    const menu = document.getElementById('contextMenu');
-    const menuBg = document.getElementById('menuBgOptions');
-    const menuItem = document.getElementById('menuItemOptions');
-    let targetIndex = -1;
-    document.getElementById('workspace').oncontextmenu = (e) => { e.preventDefault(); if (e.target.closest('.link-card')) return; showContextMenu(e.pageX, e.pageY, 'bg'); };
-    function showContextMenu(x, y, type, index = -1) {
-      targetIndex = index; menu.style.display = 'block';
-      if (type === 'bg') { menuBg.style.display = 'block'; menuItem.style.display = 'none'; }
-      else { menuBg.style.display = 'none'; menuItem.style.display = 'block'; }
-      const w = window.innerWidth, h = window.innerHeight;
-      menu.style.left = (x + 180 > w ? x - 180 : x) + 'px'; menu.style.top = (y + 150 > h ? y - 150 : y) + 'px';
+    function initTheme() {
+      const savedTheme = localStorage.getItem(STORAGE_KEYS.theme);
+      if (savedTheme === "light") body.classList.add("light-mode");
     }
-    document.addEventListener('click', () => menu.style.display = 'none');
-    document.getElementById('ctxDelete').onclick = () => { if(confirm('Are you sure?')) { getCurrentArray().splice(targetIndex, 1); saveAndRender(); }};
-    document.getElementById('ctxEdit').onclick = () => openModal(getCurrentArray()[targetIndex].type, true);
 
-    const modal = document.getElementById('linkModal');
-    const nameInput = document.getElementById('itemName');
-    const urlInput = document.getElementById('itemUrl');
-    const title = document.getElementById('modalTitle');
-    let currentModalType = 'link'; let isEditing = false;
-    function openModal(type, editing = false) {
-      currentModalType = type; isEditing = editing; modal.classList.add('active');
-      if (type === 'folder') { title.innerText = editing?"Edit Folder":"New Folder"; urlInput.style.display='none'; nameInput.placeholder="Folder Name"; }
-      else { title.innerText = editing?"Edit Shortcut":"New Shortcut"; urlInput.style.display='block'; nameInput.placeholder="Name"; }
-      if (editing) { const item = getCurrentArray()[targetIndex]; nameInput.value = item.name; if(type==='link') urlInput.value = item.url; }
-      else { nameInput.value = ''; urlInput.value = ''; }
-      nameInput.focus();
+    function toggleTheme() {
+      body.classList.toggle("light-mode");
+      localStorage.setItem(
+        STORAGE_KEYS.theme,
+        body.classList.contains("light-mode") ? "light" : "dark"
+      );
     }
-    function closeModal() { modal.classList.remove('active'); }
-    function saveItem() {
-      const name = nameInput.value.trim(); const list = getCurrentArray(); if (!name) return;
-      if (currentModalType === 'folder') { if (isEditing) list[targetIndex].name = name; else list.push({ type: 'folder', name: name, children: [] }); }
-      else {
-        let url = urlInput.value.trim(); if (!url) return; if (!url.startsWith('http')) url = 'https://' + url;
-        if (isEditing) { list[targetIndex].name = name; list[targetIndex].url = url; } else list.push({ type: 'link', name: name, url: url });
+
+    themeBtn.addEventListener("click", toggleTheme);
+    initTheme();
+
+    function initWeatherShortcut() {
+      weatherTextEl.textContent = "天氣";
+      weatherBtn.addEventListener("click", () => {
+        window.open("https://www.google.com/search?q=%E5%8F%B0%E5%8C%97%E5%A4%A9%E6%B0%A3", "_blank");
+      });
+    }
+
+    initWeatherShortcut();
+
+    function setEngine(engineKey) {
+      if (!SEARCH_ENGINES[engineKey]) return;
+      activeEngine = engineKey;
+      engineLabel.textContent = SEARCH_ENGINES[engineKey].label;
+      localStorage.setItem(STORAGE_KEYS.engine, engineKey);
+    }
+
+    setEngine(activeEngine);
+
+    function togglePanel(panel, button) {
+      const isOpen = panel.classList.contains("show");
+      closeAllPanels();
+      if (!isOpen) {
+        panel.classList.add("show");
+        button.classList.add("active");
       }
-      saveAndRender(); closeModal();
     }
-    
+
+    function closePanel(panel, button) {
+      panel.classList.remove("show");
+      button.classList.remove("active");
+    }
+
+    function closeAllPanels() {
+      closePanel(engineDropdown, engineBtn);
+      closePanel(aiDropdown, aiBtn);
+    }
+
+    engineBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      togglePanel(engineDropdown, engineBtn);
+    });
+
+    aiBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      togglePanel(aiDropdown, aiBtn);
+    });
+
+    engineDropdown.querySelectorAll("[data-engine]").forEach((item) => {
+      item.addEventListener("click", () => {
+        setEngine(item.dataset.engine);
+        closeAllPanels();
+        searchInput.focus();
+      });
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!engineDropdown.contains(e.target) && !engineBtn.contains(e.target) &&
+          !aiDropdown.contains(e.target) && !aiBtn.contains(e.target)) {
+        closeAllPanels();
+      }
+
+      if (!contextMenu.contains(e.target)) {
+        contextMenu.style.display = "none";
+      }
+    });
+
+    focusBtn.addEventListener("click", () => {
+      searchInput.value = "";
+      searchInput.focus();
+    });
+
+    document.querySelector(".toolbar").addEventListener("click", (e) => {
+      const chip = e.target.closest(".toolbar-chip");
+      if (!chip) return;
+      const url = chip.dataset.open;
+      if (url) window.open(url, "_blank");
+    });
+
+    function isLikelyUrl(value) {
+      const v = value.trim();
+      if (!v) return false;
+      if (v.startsWith("http://") || v.startsWith("https://")) return true;
+      return /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}/.test(v);
+    }
+
+    function normalizeUrl(url) {
+      const raw = String(url || "").trim();
+      if (!raw) return "";
+      if (/^https?:\/\//i.test(raw)) return raw;
+      return "https://" + raw;
+    }
+
+    function submitSearch() {
+      const q = searchInput.value.trim();
+      if (!q) return;
+
+      if (isLikelyUrl(q) && !q.includes(" ")) {
+        window.location.href = normalizeUrl(q);
+        return;
+      }
+
+      const engine = SEARCH_ENGINES[activeEngine] || SEARCH_ENGINES.google;
+      window.location.href = engine.buildUrl(q);
+    }
+
+    searchForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      submitSearch();
+    });
+
+    if ("webkitSpeechRecognition" in window) {
+      const recognition = new webkitSpeechRecognition();
+      recognition.lang = "zh-TW";
+      recognition.interimResults = false;
+      recognition.continuous = false;
+
+      micBtn.addEventListener("click", () => {
+        recognition.start();
+        listenText.style.display = "block";
+      });
+
+      recognition.onresult = (event) => {
+        const transcript = event.results?.[0]?.[0]?.transcript || "";
+        searchInput.value = transcript;
+        listenText.style.display = "none";
+        setTimeout(submitSearch, 380);
+      };
+
+      recognition.onend = () => {
+        listenText.style.display = "none";
+      };
+
+      recognition.onerror = () => {
+        listenText.style.display = "none";
+      };
+    } else {
+      micBtn.style.display = "none";
+    }
+
+    function getDomainFromUrl(url) {
+      try {
+        return new URL(normalizeUrl(url)).hostname;
+      } catch {
+        return "";
+      }
+    }
+
+    function getHostnameShort(url) {
+      const host = getDomainFromUrl(url);
+      return host.replace(/^www\./, "") || "Website";
+    }
+
+    function getFaviconUrl(url) {
+      const domain = getDomainFromUrl(url);
+      if (!domain) return "https://www.google.com/s2/favicons?domain=google.com&sz=128";
+      return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`;
+    }
+
+    function predictFolderName(item1, item2) {
+      const getCategory = (url) => {
+        const lower = String(url || "").toLowerCase();
+        for (const cat in CATEGORIES) {
+          if (CATEGORIES[cat].some((key) => lower.includes(key))) return cat;
+        }
+        return null;
+      };
+
+      const c1 = item1.type === "link" ? getCategory(item1.url) : null;
+      const c2 = item2.type === "link" ? getCategory(item2.url) : null;
+
+      if (c1 && c2 && c1 === c2) return c1;
+      if (c1) return c1;
+      if (c2) return c2;
+      return "Folder";
+    }
+
+    function renderBreadcrumb() {
+      if (currentPath.length === 0) {
+        breadcrumbBar.style.display = "none";
+        breadcrumbPath.innerHTML = "";
+        return;
+      }
+
+      breadcrumbBar.style.display = "flex";
+
+      let html = `<span class="breadcrumb-item" onclick="goRoot()" ondrop="dropOnBreadcrumb(event, -1)" ondragover="allowDrop(event)">Home</span>`;
+
+      let tempPath = rootData;
+      currentPath.forEach((idx, level) => {
+        const folder = tempPath[idx];
+        if (!folder) return;
+        html += `<span style="opacity:.38; margin:0 8px;">/</span>`;
+
+        if (level < currentPath.length - 1) {
+          html += `<span class="breadcrumb-item" onclick="goToLevel(${level})" ondrop="dropOnBreadcrumb(event, ${level})" ondragover="allowDrop(event)">${escapeHtml(folder.name)}</span>`;
+        } else {
+          html += `<span style="font-weight:700; color: var(--text);">${escapeHtml(folder.name)}</span>`;
+        }
+
+        tempPath = folder.children || [];
+      });
+
+      breadcrumbPath.innerHTML = html;
+    }
+
+    function render() {
+      const currentList = getCurrentArray();
+      itemCountPill.textContent = `${currentList.length} items`;
+      linksGrid.innerHTML = "";
+      renderBreadcrumb();
+
+      currentList.forEach((item, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.draggable = true;
+        card.dataset.index = index;
+
+        card.addEventListener("dragstart", (e) => dragStart(e, index));
+        card.addEventListener("dragover", (e) => dragOver(e, index));
+        card.addEventListener("dragleave", (e) => dragLeave(e));
+        card.addEventListener("drop", (e) => drop(e, index));
+
+        let iconHTML = "";
+        let sub = "";
+
+        if (item.type === "folder") {
+          const count = Array.isArray(item.children) ? item.children.length : 0;
+          sub = `${count} item${count === 1 ? "" : "s"}`;
+          iconHTML = `
+            <div class="icon-box">
+              <svg class="folder-svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 6h-8l-2-2H4C2.9 4 2 4.9 2 6v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"></path>
+              </svg>
+            </div>
+          `;
+          card.addEventListener("click", () => enterFolder(index));
+        } else {
+          sub = getHostnameShort(item.url);
+          iconHTML = `
+            <div class="icon-box">
+              <img
+                class="favicon"
+                src="${getFaviconUrl(item.url)}"
+                alt=""
+                onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=google.com&sz=128';"
+              />
+            </div>
+          `;
+          card.addEventListener("click", () => {
+            window.location.href = normalizeUrl(item.url);
+          });
+        }
+
+        card.innerHTML = `
+          ${iconHTML}
+          <div class="card-title">${escapeHtml(item.name)}</div>
+          <div class="card-sub">${escapeHtml(sub)}</div>
+        `;
+
+        card.addEventListener("contextmenu", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          showContextMenu(e.clientX, e.clientY, "item", index);
+        });
+
+        linksGrid.appendChild(card);
+      });
+
+      const addCard = document.createElement("div");
+      addCard.className = "card add-card";
+      addCard.innerHTML = `
+        <div class="add-box">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </div>
+        <div class="card-title">新增</div>
+        <div class="card-sub">Shortcut / Folder</div>
+      `;
+
+      addCard.addEventListener("click", () => openModal("link"));
+      addCard.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        showContextMenu(e.clientX, e.clientY, "bg");
+      });
+
+      linksGrid.appendChild(addCard);
+    }
+
+    function dragStart(e, index) {
+      draggedIndex = index;
+      draggedItem = getCurrentArray()[index];
+      e.dataTransfer.effectAllowed = "move";
+      requestAnimationFrame(() => {
+        e.currentTarget.style.opacity = "0.45";
+      });
+    }
+
+    function resetCardDragStyles(card) {
+      card.classList.remove("drag-merge", "drag-sort-left", "drag-sort-right");
+      card.style.opacity = "1";
+    }
+
+    function dragOver(e, targetIndex) {
+      e.preventDefault();
+      if (draggedIndex === null || draggedIndex === targetIndex) return;
+
+      const list = getCurrentArray();
+      const targetItem = list[targetIndex];
+      const card = e.currentTarget;
+      resetCardDragStyles(card);
+
+      if (!targetItem) return;
+
+      if (targetItem.type === "folder") {
+        card.classList.add("drag-merge");
+        dragAction = "folder-in";
+        return;
+      }
+
+      const rect = card.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const centerZone = rect.width * 0.35;
+
+      if (offsetX > centerZone && offsetX < rect.width - centerZone) {
+        card.classList.add("drag-merge");
+        dragAction = "merge";
+      } else if (offsetX <= centerZone) {
+        card.classList.add("drag-sort-left");
+        dragAction = "sort-left";
+      } else {
+        card.classList.add("drag-sort-right");
+        dragAction = "sort-right";
+      }
+    }
+
+    function dragLeave(e) {
+      resetCardDragStyles(e.currentTarget);
+      dragAction = null;
+    }
+
+    function drop(e, targetIndex) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const targetCard = e.currentTarget;
+      resetCardDragStyles(targetCard);
+
+      const cards = document.querySelectorAll(".card");
+      if (cards[draggedIndex]) cards[draggedIndex].style.opacity = "1";
+
+      if (draggedIndex === null || draggedIndex === targetIndex || !dragAction) {
+        draggedIndex = null;
+        draggedItem = null;
+        dragAction = null;
+        return;
+      }
+
+      const list = getCurrentArray();
+      const targetItem = list[targetIndex];
+      if (!targetItem || !draggedItem) return;
+
+      if (dragAction === "folder-in") {
+        targetItem.children.push(draggedItem);
+        list.splice(draggedIndex, 1);
+      } else if (dragAction === "merge") {
+        const folderName = predictFolderName(targetItem, draggedItem);
+        list[targetIndex] = {
+          type: "folder",
+          name: folderName,
+          children: [targetItem, draggedItem]
+        };
+        list.splice(draggedIndex, 1);
+      } else if (dragAction === "sort-left" || dragAction === "sort-right") {
+        const item = list.splice(draggedIndex, 1)[0];
+        let insertIndex = targetIndex;
+        if (draggedIndex < targetIndex) insertIndex -= 1;
+        if (dragAction === "sort-right") insertIndex += 1;
+        if (insertIndex < 0) insertIndex = 0;
+        if (insertIndex > list.length) insertIndex = list.length;
+        list.splice(insertIndex, 0, item);
+      }
+
+      draggedIndex = null;
+      draggedItem = null;
+      dragAction = null;
+      saveData();
+      render();
+    }
+
+    function allowDrop(e) {
+      e.preventDefault();
+    }
+
+    function dropOnBreadcrumb(e, levelIndex) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (draggedIndex === null || !draggedItem) return;
+
+      let targetList = rootData;
+      if (levelIndex > -1) {
+        const path = currentPath.slice(0, levelIndex + 1);
+        for (const idx of path) {
+          if (!targetList[idx] || targetList[idx].type !== "folder") return;
+          targetList = targetList[idx].children;
+        }
+      }
+
+      getCurrentArray().splice(draggedIndex, 1);
+      targetList.push(draggedItem);
+
+      draggedIndex = null;
+      draggedItem = null;
+      dragAction = null;
+      saveData();
+      render();
+    }
+
+    function enterFolder(index) {
+      currentPath.push(index);
+      render();
+    }
+
+    function goUp() {
+      if (currentPath.length > 0) currentPath.pop();
+      render();
+    }
+
+    function goRoot() {
+      currentPath = [];
+      render();
+    }
+
+    function goToLevel(level) {
+      currentPath = currentPath.slice(0, level + 1);
+      render();
+    }
+
+    window.goUp = goUp;
+    window.goRoot = goRoot;
+    window.goToLevel = goToLevel;
+    window.allowDrop = allowDrop;
+    window.dropOnBreadcrumb = dropOnBreadcrumb;
+
+    function showContextMenu(x, y, type, index = -1) {
+      contextTargetIndex = index;
+      contextMenu.style.display = "block";
+
+      if (type === "bg") {
+        menuBgOptions.style.display = "block";
+        menuItemOptions.style.display = "none";
+      } else {
+        menuBgOptions.style.display = "none";
+        menuItemOptions.style.display = "block";
+      }
+
+      const menuWidth = 190;
+      const menuHeight = 124;
+      const left = x + menuWidth > window.innerWidth ? x - menuWidth : x;
+      const top = y + menuHeight > window.innerHeight ? y - menuHeight : y;
+
+      contextMenu.style.left = `${Math.max(8, left)}px`;
+      contextMenu.style.top = `${Math.max(8, top)}px`;
+    }
+
+    document.querySelector(".board").addEventListener("contextmenu", (e) => {
+      if (e.target.closest(".card")) return;
+      e.preventDefault();
+      showContextMenu(e.clientX, e.clientY, "bg");
+    });
+
+    document.getElementById("ctxDelete").addEventListener("click", () => {
+      const list = getCurrentArray();
+      if (contextTargetIndex < 0 || !list[contextTargetIndex]) return;
+      const item = list[contextTargetIndex];
+      const ok = confirm(`確定要刪除「${item.name}」嗎？`);
+      if (!ok) return;
+      list.splice(contextTargetIndex, 1);
+      saveData();
+      render();
+      contextMenu.style.display = "none";
+    });
+
+    document.getElementById("ctxEdit").addEventListener("click", () => {
+      const list = getCurrentArray();
+      if (contextTargetIndex < 0 || !list[contextTargetIndex]) return;
+      openModal(list[contextTargetIndex].type, true);
+      contextMenu.style.display = "none";
+    });
+
+    function openModal(type, editing = false) {
+      currentModalType = type;
+      isEditing = editing;
+      modal.classList.add("active");
+
+      if (type === "folder") {
+        modalTitle.textContent = editing ? "編輯資料夾" : "新增資料夾";
+        modalDesc.textContent = "建立分類資料夾，整理你的常用網站。";
+        urlGroup.style.display = "none";
+        itemNameInput.placeholder = "例如：工作 / 娛樂 / AI";
+      } else {
+        modalTitle.textContent = editing ? "編輯捷徑" : "新增捷徑";
+        modalDesc.textContent = "可輸入網站名稱與網址，建立快速入口。";
+        urlGroup.style.display = "block";
+        itemNameInput.placeholder = "例如：YouTube";
+      }
+
+      if (editing) {
+        const item = getCurrentArray()[contextTargetIndex];
+        if (!item) return;
+        itemNameInput.value = item.name || "";
+        itemUrlInput.value = item.type === "link" ? item.url || "" : "";
+      } else {
+        itemNameInput.value = "";
+        itemUrlInput.value = "";
+      }
+
+      setTimeout(() => itemNameInput.focus(), 30);
+    }
+
+    function closeModal() {
+      modal.classList.remove("active");
+      itemNameInput.value = "";
+      itemUrlInput.value = "";
+    }
+
+    document.getElementById("linkModal").addEventListener("click", (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    function saveItem() {
+      const list = getCurrentArray();
+      const name = itemNameInput.value.trim();
+      if (!name) {
+        itemNameInput.focus();
+        return;
+      }
+
+      if (currentModalType === "folder") {
+        if (isEditing) {
+          if (!list[contextTargetIndex]) return;
+          list[contextTargetIndex].name = name;
+        } else {
+          list.push({
+            type: "folder",
+            name,
+            children: []
+          });
+        }
+      } else {
+        let url = itemUrlInput.value.trim();
+        if (!url) {
+          itemUrlInput.focus();
+          return;
+        }
+
+        url = normalizeUrl(url);
+
+        if (isEditing) {
+          if (!list[contextTargetIndex]) return;
+          list[contextTargetIndex].name = name;
+          list[contextTargetIndex].url = url;
+        } else {
+          list.push({
+            type: "link",
+            name,
+            url
+          });
+        }
+      }
+
+      saveData();
+      render();
+      closeModal();
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeAllPanels();
+        contextMenu.style.display = "none";
+        if (modal.classList.contains("active")) closeModal();
+      }
+
+      if (e.key === "/" && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+
+      if (e.key === "Enter" && modal.classList.contains("active")) {
+        const active = document.activeElement;
+        if (active === itemNameInput || active === itemUrlInput) {
+          e.preventDefault();
+          saveItem();
+        }
+      }
+    });
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
     render();
   </script>
 </body>
