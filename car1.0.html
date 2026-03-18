@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DriveNow 租車平台</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: rgba(255,255,255,0.08);
+      --panel-2: rgba(255,255,255,0.12);
+      --text: #f5f7fb;
+      --muted: #c4cade;
+      --accent: #66a3ff;
+      --accent-2: #7cf3d0;
+      --border: rgba(255,255,255,0.12);
+      --shadow: 0 18px 50px rgba(0,0,0,0.3);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Noto Sans TC", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(102,163,255,0.20), transparent 35%),
+        radial-gradient(circle at top right, rgba(124,243,208,0.14), transparent 30%),
+        linear-gradient(180deg, #0b1020 0%, #121a31 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(11,16,32,0.65);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      gap: 16px;
+    }
+
+    .logo {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .logo span {
+      color: var(--accent-2);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover { color: #fff; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      border-radius: 999px;
+      padding: 13px 20px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .btn-primary {
+      color: #071018;
+      background: linear-gradient(135deg, var(--accent-2), #9fd4ff);
+      box-shadow: 0 10px 25px rgba(124,243,208,0.22);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.03);
+    }
+
+    .btn-secondary {
+      color: #fff;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border);
+    }
+
+    .hero {
+      padding: 72px 0 48px;
+    }
+
+    .hero-wrap {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .hero-copy h1 {
+      margin: 0 0 16px;
+      font-size: clamp(2.2rem, 4vw, 4.4rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-copy p {
+      margin: 0 0 26px;
+      color: var(--muted);
+      max-width: 56ch;
+      font-size: 1.05rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px 16px;
+      min-width: 150px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 32px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.04));
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      min-height: 460px;
+    }
+
+    .hero-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-badge {
+      position: absolute;
+      left: 20px;
+      bottom: 20px;
+      right: 20px;
+      padding: 16px 18px;
+      border-radius: 20px;
+      background: rgba(8,12,24,0.72);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.09);
+    }
+
+    .hero-badge small {
+      display: block;
+      color: var(--accent-2);
+      margin-bottom: 4px;
+    }
+
+    .hero-badge strong {
+      display: block;
+      font-size: 1.2rem;
+      margin-bottom: 6px;
+    }
+
+    section {
+      padding: 34px 0 20px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.6rem, 2.4vw, 2.4rem);
+    }
+
+    .section-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+    }
+
+    .cars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .car-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .car-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(159,212,255,0.34);
+    }
+
+    .car-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .car-body {
+      padding: 18px;
+    }
+
+    .car-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 10px;
+    }
+
+    .car-title {
+      margin: 0;
+      font-size: 1.18rem;
+    }
+
+    .tag {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #08131d;
+      background: linear-gradient(135deg, #9fd4ff, #7cf3d0);
+      white-space: nowrap;
+    }
+
+    .car-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 14px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .feature {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 10px;
+      text-align: center;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .price-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .price strong {
+      font-size: 1.5rem;
+    }
+
+    .price span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 8px;
+    }
+
+    .why-card,
+    .review-card,
+    .booking-box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .why-card {
+      padding: 20px;
+    }
+
+    .why-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+    }
+
+    .why-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .booking {
+      padding-top: 48px;
+      padding-bottom: 68px;
+    }
+
+    .booking-wrap {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .booking-box {
+      padding: 24px;
+    }
+
+    .booking-box h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.4rem;
+    }
+
+    .booking-box p {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .contact-item {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    label {
+      display: block;
+      font-size: 0.92rem;
+      margin-bottom: 8px;
+      color: #dce3f1;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      outline: none;
+      font: inherit;
+    }
+
+    input::placeholder, textarea::placeholder { color: #adb7ce; }
+
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    .reviews {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .review-card {
+      padding: 20px;
+    }
+
+    .review-card p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .review-card strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+      padding: 24px 0 38px;
+    }
+
+    .footer-wrap {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 1100px) {
+      .cars-grid,
+      .why-grid,
+      .reviews {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero-wrap,
+      .booking-wrap {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav {
+        flex-wrap: wrap;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .hero {
+        padding-top: 44px;
+      }
+
+      .cars-grid,
+      .why-grid,
+      .reviews,
+      form,
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card {
+        min-height: 340px;
+      }
+
+      .price-row,
+      .section-head,
+      .footer-wrap {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a href="#top" class="logo">Drive<span>Now</span></a>
+      <nav class="nav-links">
+        <a href="#cars">車款</a>
+        <a href="#why">服務特色</a>
+        <a href="#reviews">客戶評價</a>
+        <a href="#booking">立即預約</a>
+      </nav>
+      <a class="btn btn-primary" href="#booking">立即租車</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-wrap">
+        <div class="hero-copy">
+          <h1>快速預約你想開的車，<br />城市移動更自由。</h1>
+          <p>
+            這是一個租賃汽車網站首頁範例，你可以先拿來展示商品項目、價格與預約流程。
+            目前照片先用示意圖，之後再替換成你自己的車輛照片即可。
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#cars">查看車款</a>
+            <a class="btn btn-secondary" href="#booking">填寫需求</a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat">
+              <strong>120+</strong>
+              <span>可租賃車輛</span>
+            </div>
+            <div class="stat">
+              <strong>24/7</strong>
+              <span>客服支援</span>
+            </div>
+            <div class="stat">
+              <strong>4.9/5</strong>
+              <span>用戶評價</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1200&q=80" alt="租賃汽車主視覺" />
+          <div class="hero-badge">
+            <small>本週精選車款</small>
+            <strong>BMW 3 Series</strong>
+            <span>日租 NT$3,200 起・商務 / 旅遊都適合</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="cars">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>熱門租賃車款</h2>
+            <p>先放幾台示意車型，你之後可改成自己的商品名稱、價格與規格。</p>
+          </div>
+        </div>
+
+        <div class="cars-grid">
+          <article class="car-card">
+            <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=80" alt="Tesla Model 3" />
+            <div class="car-body">
+              <div class="car-top">
+                <h3 class="car-title">Tesla Model 3</h3>
+                <span class="tag">電動車</span>
+              </div>
+              <div class="car-desc">適合市區通勤與短途旅遊，科技感強，外型俐落。</div>
+              <div class="features">
+                <div class="feature">5 人座</div>
+                <div class="feature">自排</div>
+                <div class="feature">空調</div>
+              </div>
+              <div class="price-row">
+                <div class="price"><strong>NT$2,800</strong><br /><span>每日租金</span></div>
+                <a class="btn btn-primary" href="#booking">立即預約</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="car-card">
+            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80" alt="Mercedes-Benz C-Class" />
+            <div class="car-body">
+              <div class="car-top">
+                <h3 class="car-title">Mercedes C-Class</h3>
+                <span class="tag">商務款</span>
+              </div>
+              <div class="car-desc">適合接送、商務會議與正式場合，內裝舒適有質感。</div>
+              <div class="features">
+                <div class="feature">5 人座</div>
+                <div class="feature">豪華內裝</div>
+                <div class="feature">導航</div>
+              </div>
+              <div class="price-row">
+                <div class="price"><strong>NT$3,600</strong><br /><span>每日租金</span></div>
+                <a class="btn btn-primary" href="#booking">立即預約</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="car-card">
+            <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?auto=format&fit=crop&w=1200&q=80" alt="Range Rover Evoque" />
+            <div class="car-body">
+              <div class="car-top">
+                <h3 class="car-title">Range Rover Evoque</h3>
+                <span class="tag">休旅款</span>
+              </div>
+              <div class="car-desc">適合家庭出遊與長途旅行，空間較大，乘坐穩定。</div>
+              <div class="features">
+                <div class="feature">5 人座</div>
+                <div class="feature">休旅空間</div>
+                <div class="feature">行李充足</div>
+              </div>
+              <div class="price-row">
+                <div class="price"><strong>NT$4,200</strong><br /><span>每日租金</span></div>
+                <a class="btn btn-primary" href="#booking">立即預約</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="why">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>為什麼選擇我們</h2>
+            <p>可以拿來強調你的租賃服務優勢。</p>
+          </div>
+        </div>
+
+        <div class="why-grid">
+          <div class="why-card">
+            <h3>車況透明</h3>
+            <p>每台車上架前完成基本清潔與檢查，讓客戶租得安心。</p>
+          </div>
+          <div class="why-card">
+            <h3>價格清楚</h3>
+            <p>日租、週租、長租方案都可以清楚展示，不怕客戶看不懂。</p>
+          </div>
+          <div class="why-card">
+            <h3>快速預約</h3>
+            <p>用表單或 LINE / 電話導流都很方便，適合小型租賃品牌起步。</p>
+          </div>
+          <div class="why-card">
+            <h3>彈性取還車</h3>
+            <p>可依你的實際服務，補上門市取車、機場接送、指定地點還車等內容。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reviews">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>客戶評價</h2>
+            <p>先放示意內容，日後可改成真實評論。</p>
+          </div>
+        </div>
+
+        <div class="reviews">
+          <div class="review-card">
+            <p>「預約流程很快，車子也很乾淨，臨時要用車時很方便。」</p>
+            <strong>王先生</strong>
+            <span>台北 / 商務租車</span>
+          </div>
+          <div class="review-card">
+            <p>「假日帶家人出遊租 SUV，空間很夠，整體體驗不錯。」</p>
+            <strong>陳小姐</strong>
+            <span>新北 / 家庭旅遊</span>
+          </div>
+          <div class="review-card">
+            <p>「網站看起來很專業，價格也清楚，詢問後很快就收到回覆。」</p>
+            <strong>林先生</strong>
+            <span>桃園 / 長租需求</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="booking" id="booking">
+      <div class="container booking-wrap">
+        <div class="booking-box">
+          <h3>立即預約租車</h3>
+          <p>這裡可以先做成表單版，未來再串接資料庫、LINE 或付款系統。</p>
+
+          <div class="contact-list">
+            <div class="contact-item"><strong>客服時間：</strong>09:00 - 21:00</div>
+            <div class="contact-item"><strong>聯絡電話：</strong>0900-123-456</div>
+            <div class="contact-item"><strong>服務地區：</strong>台北 / 新北 / 桃園</div>
+          </div>
+        </div>
+
+        <div class="booking-box">
+          <form>
+            <div>
+              <label for="name">姓名</label>
+              <input id="name" type="text" placeholder="請輸入姓名" />
+            </div>
+            <div>
+              <label for="phone">電話</label>
+              <input id="phone" type="tel" placeholder="請輸入聯絡電話" />
+            </div>
+            <div>
+              <label for="car">選擇車款</label>
+              <select id="car">
+                <option>Tesla Model 3</option>
+                <option>Mercedes C-Class</option>
+                <option>Range Rover Evoque</option>
+              </select>
+            </div>
+            <div>
+              <label for="days">租賃天數</label>
+              <input id="days" type="number" min="1" placeholder="例如：3" />
+            </div>
+            <div>
+              <label for="pickup">取車日期</label>
+              <input id="pickup" type="date" />
+            </div>
+            <div>
+              <label for="return">還車日期</label>
+              <input id="return" type="date" />
+            </div>
+            <div class="full">
+              <label for="message">備註需求</label>
+              <textarea id="message" placeholder="例如：需要兒童座椅 / 指定取車地點 / 商務報價"></textarea>
+            </div>
+            <div class="full">
+              <button class="btn btn-primary" type="button">送出預約需求</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-wrap">
+      <div>© 2026 DriveNow Car Rental. All rights reserved.</div>
+      <div>此頁面為示意版，可再替換品牌名稱、車輛資料、照片與聯絡方式。</div>
+    </div>
+  </footer>
+</body>
+</html>
