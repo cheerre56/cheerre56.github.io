@@ -55,14 +55,18 @@
     .slider-container { width: 100vw; height: 100vh; height: 100dvh; overflow-y: auto; scroll-snap-type: y mandatory; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none; }
     .slider-container::-webkit-scrollbar { display: none; }
     .slide { width: 100vw; height: 100vh; height: 100dvh; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    
+    /* === 核心防變形結構：左右強制切分 47% 比例 === */
     .slide-content { width: 100%; max-width: var(--max-width); height: auto; max-height: 100vh; display: flex; align-items: center; gap: 6%; padding: 0 5%; }
     
-    .visual-area { flex: 1; height: 70vh; display: flex; align-items: center; justify-content: center; }
-    .img-frame { width: 100%; max-width: 420px; aspect-ratio: 3 / 4.2; overflow: hidden; border-radius: 20px; border: 1px solid var(--line-color); opacity: 0; transform: scale(0.95) translateY(20px); transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1), transform 900ms cubic-bezier(0.16, 1, 0.3, 1); background: var(--paper); }
+    .visual-area { flex: 1 1 47%; max-width: 47%; height: 70vh; display: flex; align-items: center; justify-content: center; }
+    .img-frame { width: 100%; max-width: 420px; aspect-ratio: 3 / 4.2; height: auto; overflow: hidden; border-radius: 20px; border: 1px solid var(--line-color); opacity: 0; transform: scale(0.95) translateY(20px); transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1), transform 900ms cubic-bezier(0.16, 1, 0.3, 1); background: var(--paper); flex-shrink: 0; }
     .img-frame video, .img-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .slide.active .img-frame { opacity: 1; transform: scale(1) translateY(0); }
 
-    .text-area { flex: 1; padding-left: 1rem; display: flex; flex-direction: column; }
+    .text-area { flex: 1 1 47%; max-width: 47%; padding-left: 1rem; display: flex; flex-direction: column; }
+    /* ========================================= */
+
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
     .slide.active .reveal { opacity: 1; transform: translateY(0); }
     .slide.active .delay-1 { transition-delay: 80ms; }
@@ -140,10 +144,11 @@
       .slide { padding: 0 1.2rem; }
       .slide-content { flex-direction: column; justify-content: center; padding: 70px 0 20px; gap: 10px; height: 100%; }
       
-      .visual-area { flex: 0 0 auto; height: 28dvh; width: 100%; }
-      .img-frame { max-height: 100%; aspect-ratio: 1 / 1.1; max-width: 200px; margin: 0 auto; }
+      /* 解除綁定，允許手機版佔滿 100% 寬度 */
+      .visual-area { flex: 0 0 auto; max-width: 100%; height: 28dvh; width: 100%; }
+      .img-frame { max-height: 100%; aspect-ratio: 1 / 1.1; max-width: 200px; margin: 0 auto; height: auto; }
       
-      .text-area { padding-left: 0; display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+      .text-area { flex: 0 0 auto; max-width: 100%; padding-left: 0; display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
       .perfume-no { margin-bottom: 0.2rem; font-size: 0.65rem; }
       .perfume-name { font-size: clamp(1.8rem, 7vw, 2.2rem); margin-bottom: 0.3rem; }
       .perfume-name-cn { font-size: 0.85rem; margin-bottom: 0.6rem; }
@@ -239,6 +244,7 @@
       </div>
       <div class="scroll-hint">SCROLL</div>
     </section>
+    
     <section class="slide" data-product-id="perfume-2">
       <div class="slide-content">
         <div class="visual-area">
@@ -284,8 +290,9 @@
           <button class="add-to-cart-btn reveal delay-5" type="button">Add to Cart</button>
         </div>
       </div>
-      
-    </section>  </div>
+    </section>  
+
+  </div>
 
   <script>
     window.onload = () => document.body.classList.add('loaded');
