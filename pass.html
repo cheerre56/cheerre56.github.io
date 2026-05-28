@@ -3,29 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="安全密碼生成器，流暢滑桿與手機觸控優化，支援盲人無障礙功能">
+    <meta name="description" content="安全密碼生成器，流暢滑桿與手機觸控優化，支援無障礙功能">
     <title>安全密碼生成器</title>
     <style>
         :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3f37c9;
-            --success-color: #4895ef;
-            --weak-color: #ef476f;
-            --medium-color: #ffd166;
-            --strong-color: #06d6a0;
-            --text-color: #2b2d42;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --border-radius: 10px;
-            --transition: all 0.15s ease;
-            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-body: #f3f4f6;
+            --bg-card: #ffffff;
+            --bg-input: #f9fafb;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            
+            /* Strength Colors */
+            --c-weak: #ef4444;
+            --c-fair: #f59e0b;
+            --c-good: #3b82f6;
+            --c-strong: #10b981;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         @media (prefers-color-scheme: dark) {
             :root {
-                --text-color: #e0e0e0;
-                --bg-color: #1a1a1a;
-                --card-bg: #2c2c2c;
+                --bg-body: #111827;
+                --bg-card: #1f2937;
+                --bg-input: #111827;
+                --text-main: #f9fafb;
+                --text-muted: #9ca3af;
+                --border: #374151;
             }
         }
 
@@ -36,285 +47,233 @@
         }
 
         body {
-            font-family: 'Microsoft JhengHei', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #f6f8ff 0%, #f1f4ff 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Microsoft JhengHei', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: var(--text-color);
-            line-height: 1.5;
-            padding: 0.8rem;
-            touch-action: manipulation;
+            padding: 1rem;
         }
 
-        @media (prefers-color-scheme: dark) {
-            body {
-                background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
-            }
-        }
-
-        .container {
-            background: var(--card-bg);
-            padding: 1.8rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
+        .card {
+            background: var(--bg-card);
             width: 100%;
-            max-width: 480px;
-            animation: fadeIn 0.4s ease-out;
+            max-width: 420px;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            animation: slideUp 0.4s ease-out;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        h1 {
-            color: var(--primary-color);
+        .header {
             text-align: center;
-            margin-bottom: 1.2rem;
-            font-size: 1.7rem;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
             font-weight: 700;
-            position: relative;
-            padding-bottom: 0.6rem;
+            color: var(--text-main);
         }
 
-        h1::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--success-color));
-            border-radius: 2px;
+        .header p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
         }
 
-        .password-container {
+        /* Password Display Area */
+        .password-box {
             position: relative;
-            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            background: var(--bg-input);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 0.5rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .password-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
 
         #passwordDisplay {
-            width: 100%;
-            padding: 0.7rem;
-            font-size: 0.95rem;
-            border: 2px solid #e9ecef;
-            border-radius: 6px;
-            background: #f8f9fa;
-            color: var(--text-color);
-            font-family: 'Courier New', monospace;
-            transition: var(--transition);
-            text-align: center;
-            touch-action: none;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            #passwordDisplay {
-                background: #3c3c3c;
-                border-color: #555;
-            }
-        }
-
-        #passwordDisplay:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
-        }
-
-        .slider-container {
-            margin: 1rem 0;
-            display: flex;
-            flex-direction: column;
-            gap: 0.3rem;
-            position: relative;
-        }
-
-        #strengthSlider {
-            width: 100%;
-            -webkit-appearance: none;
-            appearance: none;
-            height: 8px;
-            background: linear-gradient(to right, #e9ecef 0%, var(--primary-color) 100%);
-            border-radius: 4px;
-            outline: none;
-            transition: var(--transition);
-            touch-action: pan-x;
-            cursor: pointer;
-        }
-
-        #strengthSlider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 24px;
-            height: 24px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            transition: var(--transition);
-            position: relative;
-            z-index: 2;
-        }
-
-        #strengthSlider::-webkit-slider-thumb:hover,
-        #strengthSlider.touched::-webkit-slider-thumb {
-            transform: scale(1.3);
-            animation: pulse 1.2s infinite ease-in-out;
-        }
-
-        #strengthSlider::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            transition: var(--transition);
-            position: relative;
-            z-index: 2;
-        }
-
-        #strengthSlider::-moz-range-thumb:hover,
-        #strengthSlider.touched::-moz-range-thumb {
-            transform: scale(1.3);
-            animation: pulse 1.2s infinite ease-in-out;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1.3); }
-            50% { transform: scale(1.5); }
-        }
-
-        #strengthSlider:focus {
-            outline: 2px solid var(--primary-color);
-            outline-offset: 2px;
-        }
-
-        #sliderTooltip {
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--card-bg);
-            color: var(--text-color);
-            padding: 0.3rem 0.7rem;
-            border-radius: 4px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            font-size: 0.7rem;
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 1.25rem;
             font-weight: 600;
-            opacity: 0;
-            transition: opacity 0.15s ease;
-            pointer-events: none;
-            white-space: nowrap;
-            z-index: 10;
+            padding: 0.75rem;
+            outline: none;
+            text-align: center;
+            letter-spacing: 1px;
         }
 
-        #sliderTooltip.show {
-            opacity: 1;
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.75rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
         }
 
-        @media (prefers-color-scheme: dark) {
-            #sliderTooltip {
-                background: #3c3c3c;
-            }
+        .icon-btn:hover {
+            background: var(--border);
+            color: var(--text-main);
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Strength Meter (Segmented) */
+        .strength-section {
+            margin-bottom: 2rem;
+        }
+
+        .strength-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .strength-bars {
+            display: flex;
+            gap: 6px;
+            height: 6px;
+        }
+
+        .strength-bar {
+            flex: 1;
+            background-color: var(--border);
+            border-radius: 99px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Slider Controls */
+        .control-section {
+            margin-bottom: 2rem;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
         }
 
         #sliderValue {
-            text-align: center;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-color);
+            color: var(--primary);
+            font-weight: 700;
         }
 
-        .strength-container {
-            margin: 1rem 0;
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+            cursor: pointer;
         }
 
-        #strengthBar {
-            height: 5px;
-            background: #e9ecef;
-            border-radius: 3px;
-            overflow: hidden;
-            margin-bottom: 0.3rem;
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 99px;
         }
 
-        @media (prefers-color-scheme: dark) {
-            #strengthBar {
-                background: #555;
-            }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            margin-top: -7px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.1s;
         }
 
-        #strengthBarFill {
-            height: 100%;
-            width: 0;
-            transition: var(--transition);
-            border-radius: 3px;
+        input[type=range]::-webkit-slider-thumb:hover,
+        input[type=range]:active::-webkit-slider-thumb {
+            transform: scale(1.2);
         }
 
-        #strengthText {
-            text-align: center;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-top: 0.3rem;
-        }
-
-        .button-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.7rem;
-            margin-top: 1rem;
-        }
-
-        button {
-            padding: 0.7rem;
+        /* Generate Button */
+        .primary-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
             border: none;
-            border-radius: 6px;
-            font-size: 0.9rem;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             transition: var(--transition);
-            color: white;
-            position: relative;
-            touch-action: manipulation;
         }
 
-        button:first-child {
-            background: linear-gradient(45deg, var(--primary-color), var(--success-color));
+        .primary-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
         }
 
-        button:last-child {
-            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
-        }
-
-        button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 3px 10px rgba(67, 97, 238, 0.2);
-        }
-
-        button:active {
+        .primary-btn:active {
             transform: translateY(0);
         }
 
-        button:focus {
-            outline: 2px solid var(--primary-color);
-            outline-offset: 2px;
+        .primary-btn svg {
+            width: 20px;
+            height: 20px;
         }
 
-        #message {
-            text-align: center;
-            margin-top: 0.7rem;
-            min-height: 16px;
-            font-size: 0.8rem;
-            color: var(--success-color);
-            font-weight: 600;
+        /* Toast Message */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--text-main);
+            color: var(--bg-card);
+            padding: 0.75rem 1.5rem;
+            border-radius: 99px;
+            font-size: 0.875rem;
+            font-weight: 500;
             opacity: 0;
-            transition: opacity 0.15s ease;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: none;
+            z-index: 100;
         }
 
-        #message.show {
+        .toast.show {
             opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
 
         .sr-only {
@@ -327,134 +286,63 @@
             clip: rect(0, 0, 0, 0);
             border: 0;
         }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 1rem;
-                max-width: 92%;
-            }
-
-            h1 {
-                font-size: 1.3rem;
-                margin-bottom: 0.8rem;
-            }
-
-            h1::after {
-                width: 40px;
-                height: 2px;
-            }
-
-            #passwordDisplay {
-                padding: 0.5rem;
-                font-size: 0.85rem;
-                border-radius: 5px;
-            }
-
-            .slider-container {
-                margin: 0.8rem 0;
-            }
-
-            #strengthSlider {
-                height: 7px;
-            }
-
-            #strengthSlider::-webkit-slider-thumb {
-                width: 20px;
-                height: 20px;
-            }
-
-            #strengthSlider::-moz-range-thumb {
-                width: 20px;
-                height: 20px;
-            }
-
-            #sliderTooltip {
-                font-size: 0.6rem;
-                padding: 0.2rem 0.5rem;
-                top: -28px;
-            }
-
-            #sliderValue {
-                font-size: 0.75rem;
-            }
-
-            .strength-container {
-                margin: 0.8rem 0;
-            }
-
-            #strengthBar {
-                height: 4px;
-            }
-
-            #strengthText {
-                font-size: 0.75rem;
-            }
-
-            .button-group {
-                grid-template-columns: 1fr;
-                gap: 0.5rem;
-            }
-
-            button {
-                padding: 0.6rem;
-                font-size: 0.85rem;
-                border-radius: 5px;
-            }
-
-            #message {
-                font-size: 0.75rem;
-            }
-        }
-
-        @media (max-width: 360px) {
-            .container {
-                padding: 0.8rem;
-            }
-
-            h1 {
-                font-size: 1.2rem;
-            }
-
-            #passwordDisplay {
-                font-size: 0.8rem;
-            }
-
-            #sliderValue {
-                font-size: 0.7rem;
-            }
-
-            button {
-                font-size: 0.8rem;
-            }
-        }
     </style>
 </head>
 <body>
-    <div class="container" role="main">
-        <h1 id="main-title">安全密碼生成器</h1>
-        <div class="password-container">
+    <div class="card" role="main">
+        <div class="header">
+            <h1>密碼生成器</h1>
+            <p>保護您的數位資產</p>
+        </div>
+
+        <div class="password-box">
             <label for="passwordDisplay" class="sr-only">生成的密碼</label>
             <input type="text" id="passwordDisplay" readonly aria-describedby="strengthText">
+            <button id="copyBtn" class="icon-btn" aria-label="複製密碼" title="複製密碼">
+                <svg id="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <svg id="icon-check" viewBox="0 0 24 24" fill="none" stroke="var(--c-strong)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </button>
         </div>
-        <div class="slider-container">
-            <label for="strengthSlider" class="sr-only">調整密碼強度</label>
-            <input type="range" id="strengthSlider" min="0" max="100" value="50" step="1" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-describedby="sliderTooltip">
-            <div id="sliderTooltip" role="tooltip">滑動調整強度</div>
-            <div id="sliderValue">中等強度</div>
-        </div>
-        <div class="strength-container" role="region" aria-live="polite">
-            <label for="strengthBar" class="sr-only">密碼強度指示器</label>
-            <div id="strengthBar">
-                <div id="strengthBarFill"></div>
+
+        <div class="strength-section" role="region" aria-live="polite">
+            <div class="strength-header">
+                <span>密碼強度</span>
+                <span id="strengthText">中等</span>
             </div>
-            <div id="strengthText"></div>
+            <div class="strength-bars">
+                <div class="strength-bar" id="bar-1"></div>
+                <div class="strength-bar" id="bar-2"></div>
+                <div class="strength-bar" id="bar-3"></div>
+                <div class="strength-bar" id="bar-4"></div>
+            </div>
         </div>
-        <div class="button-group">
-            <button id="generateBtn" aria-label="生成新的隨機密碼">生成新密碼</button>
-            <button id="copyBtn" aria-label="複製密碼到剪貼板">複製密碼</button>
+
+        <div class="control-section">
+            <div class="slider-header">
+                <label for="strengthSlider">複雜度與長度</label>
+                <span id="sliderValue">Level 8</span>
+            </div>
+            <input type="range" id="strengthSlider" min="1" max="15" value="8" step="1" aria-valuemin="1" aria-valuemax="15" aria-valuenow="8">
+            <div style="text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;" id="rulesText">
+                10位 (字母+數字+大寫)
+            </div>
         </div>
-        <div id="message" role="alert"></div>
+
+        <button id="generateBtn" class="primary-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path>
+                <path d="M21 3v5h-5"></path>
+            </svg>
+            生成新密碼
+        </button>
     </div>
+
+    <div id="toast" class="toast">密碼已複製！</div>
 
     <script>
         const PasswordGenerator = {
@@ -464,272 +352,211 @@
                 numbers: '0123456789',
                 symbols: '!@#$%^&*()'
             },
-
             configs: [
-                { level: 1, length: 6, charSets: ['lowercase', 'numbers'], expectedStrength: '非常弱' },
-                { level: 2, length: 6, charSets: ['lowercase', 'numbers', 'uppercase'], expectedStrength: '非常弱' },
-                { level: 3, length: 6, charSets: ['lowercase', 'numbers', 'uppercase', 'symbols'], expectedStrength: '弱' },
-                { level: 4, length: 8, charSets: ['lowercase', 'numbers'], expectedStrength: '弱' },
-                { level: 5, length: 8, charSets: ['lowercase', 'numbers', 'uppercase'], expectedStrength: '弱' },
-                { level: 6, length: 8, charSets: ['lowercase', 'numbers', 'uppercase', 'symbols'], expectedStrength: '中等' },
-                { level: 7, length: 10, charSets: ['lowercase', 'numbers'], expectedStrength: '弱' },
-                { level: 8, length: 10, charSets: ['lowercase', 'numbers', 'uppercase'], expectedStrength: '中等' },
-                { level: 9, length: 10, charSets: ['lowercase', 'numbers', 'uppercase', 'symbols'], expectedStrength: '中等' },
-                { level: 10, length: 14, charSets: ['lowercase', 'numbers'], expectedStrength: '中等' },
-                { level: 11, length: 14, charSets: ['lowercase', 'numbers', 'uppercase'], expectedStrength: '強' },
-                { level: 12, length: 14, charSets: ['lowercase', 'numbers', 'uppercase', 'symbols'], expectedStrength: '強' },
-                { level: 13, length: 16, charSets: ['lowercase', 'numbers'], expectedStrength: '強' },
-                { level: 14, length: 16, charSets: ['lowercase', 'numbers', 'uppercase'], expectedStrength: '強' },
-                { level: 15, length: 16, charSets: ['lowercase', 'numbers', 'uppercase', 'symbols'], expectedStrength: '非常強' }
+                { level: 1, length: 6, desc: '字母+數字', expected: '非常弱' },
+                { level: 2, length: 6, desc: '字母+數字+大寫', expected: '非常弱' },
+                { level: 3, length: 6, desc: '包含符號', expected: '弱' },
+                { level: 4, length: 8, desc: '字母+數字', expected: '弱' },
+                { level: 5, length: 8, desc: '字母+數字+大寫', expected: '弱' },
+                { level: 6, length: 8, desc: '包含符號', expected: '中等' },
+                { level: 7, length: 10, desc: '字母+數字', expected: '弱' },
+                { level: 8, length: 10, desc: '字母+數字+大寫', expected: '中等' },
+                { level: 9, length: 10, desc: '包含符號', expected: '中等' },
+                { level: 10, length: 14, desc: '字母+數字', expected: '中等' },
+                { level: 11, length: 14, desc: '字母+數字+大寫', expected: '強' },
+                { level: 12, length: 14, desc: '包含符號', expected: '強' },
+                { level: 13, length: 16, desc: '字母+數字', expected: '強' },
+                { level: 14, length: 16, desc: '字母+數字+大寫', expected: '強' },
+                { level: 15, length: 16, desc: '包含符號', expected: '非常強' }
             ],
 
-            generate(level = 8) {
-                const config = this.configs.find(c => c.level === level) || this.configs[7];
-                const chars = config.charSets.map(set => this.chars[set]).join('');
-                const crypto = window.crypto || window.msCrypto;
-                const array = new Uint32Array(config.length);
-                crypto.getRandomValues(array);
+            // 修正點 2：加入更安全的隨機數產生器，避免舊環境不支援 window.crypto 導致報錯死機
+            getSafeRandom(max) {
+                try {
+                    const cryptoObj = window.crypto || window.msCrypto;
+                    if (cryptoObj && cryptoObj.getRandomValues) {
+                        const array = new Uint32Array(1);
+                        cryptoObj.getRandomValues(array);
+                        return array[0] % max;
+                    }
+                } catch (e) {
+                    console.warn("Crypto API fallback");
+                }
+                return Math.floor(Math.random() * max);
+            },
 
-                let password = [];
-                config.charSets.forEach(set => {
-                    password.push(this.chars[set][Math.floor(crypto.getRandomValues(new Uint32Array(1))[0] / (2 ** 32) * this.chars[set].length)]);
-                });
+            generate(level) {
+                // 確保 level 是數字
+                const safeLevel = parseInt(level, 10) || 8;
+                const config = this.configs.find(function(c) { return c.level === safeLevel; });
+                
+                let charSets = ['lowercase', 'numbers'];
+                if (config.desc.indexOf('大寫') !== -1 || config.desc.indexOf('符號') !== -1) charSets.push('uppercase');
+                if (config.desc.indexOf('符號') !== -1) charSets.push('symbols');
 
-                for (let i = password.length; i < config.length; i++) {
-                    password.push(chars[array[i] % chars.length]);
+                let chars = '';
+                for (let i = 0; i < charSets.length; i++) {
+                    chars += this.chars[charSets[i]];
                 }
 
+                let password = [];
+                
+                // 確保每種要求的字元至少出現一次
+                for (let i = 0; i < charSets.length; i++) {
+                    let setChars = this.chars[charSets[i]];
+                    password.push(setChars[this.getSafeRandom(setChars.length)]);
+                }
+
+                // 填補剩餘長度
+                while (password.length < config.length) {
+                    password.push(chars[this.getSafeRandom(chars.length)]);
+                }
+
+                // 修正點 3：改用傳統變數交換順序 (Fisher-Yates)，取代陣列解構，提升極限相容性
                 for (let i = password.length - 1; i > 0; i--) {
-                    const j = Math.floor(crypto.getRandomValues(new Uint32Array(1))[0] / (2 ** 32) * (i + 1));
-                    [password[i], password[j]] = [password[j], password[i]];
+                    const j = this.getSafeRandom(i + 1);
+                    const temp = password[i];
+                    password[i] = password[j];
+                    password[j] = temp;
                 }
 
                 return password.join('');
             },
 
             evaluateStrength(password) {
-                // Base score for character types
                 let charScore = 0;
                 if (/[A-Z]/.test(password)) charScore += 1;
                 if (/[a-z]/.test(password)) charScore += 1;
                 if (/[0-9]/.test(password)) charScore += 1;
                 if (/[!@#$%^&*()]/.test(password)) charScore += 1;
 
-                // Length-based score with more granularity
                 let lengthScore = 0;
-                if (password.length >= 6) lengthScore += 1; // Minimal length
-                if (password.length >= 8) lengthScore += 1; // Standard length
-                if (password.length >= 10) lengthScore += 1; // Good length
-                if (password.length >= 14) lengthScore += 1; // Strong length
-                if (password.length >= 16) lengthScore += 1; // Very strong length
+                if (password.length >= 8) lengthScore += 1;
+                if (password.length >= 10) lengthScore += 2;
+                if (password.length >= 14) lengthScore += 3;
 
-                // Total score: combine character types and length, but cap to avoid over-scoring short passwords
-                let totalScore = Math.min(charScore + lengthScore, 8);
-
-                // Adjust score based on length to prevent short passwords from scoring too high
-                if (password.length <= 6 && charScore >= 3) totalScore = Math.min(totalScore, 3); // Cap 6-char passwords
-                if (password.length === 8 && charScore >= 3) totalScore = Math.min(totalScore, 4); // Cap 8-char passwords
-                if (password.length === 10 && charScore >= 3) totalScore = Math.min(totalScore, 5); // Cap 10-char passwords
-
-                const levels = [
-                    { score: [0, 1], color: 'var(--weak-color)', text: '非常弱' },
-                    { score: [2, 3], color: 'var(--weak-color)', text: '弱' },
-                    { score: [4, 5], color: 'var(--medium-color)', text: '中等' },
-                    { score: [6, 7], color: 'var(--strong-color)', text: '強' },
-                    { score: [8], color: 'var(--strong-color)', text: '非常強' }
-                ];
-
-                const level = levels.find(l => l.score.includes(totalScore)) || levels[0];
-                return {
-                    percentage: (totalScore / 8) * 100,
-                    color: level.color,
-                    text: `密碼強度：${level.text}`
-                };
+                let totalScore = charScore + lengthScore;
+                
+                if (totalScore <= 3) return { score: 1, text: '太弱了', color: 'var(--c-weak)' };
+                if (totalScore <= 5) return { score: 2, text: '還可以', color: 'var(--c-fair)' };
+                if (totalScore <= 6) return { score: 3, text: '安全', color: 'var(--c-good)' };
+                return { score: 4, text: '非常安全', color: 'var(--c-strong)' };
             }
         };
 
         const UI = {
             elements: {
                 passwordDisplay: document.getElementById('passwordDisplay'),
-                strengthBarFill: document.getElementById('strengthBarFill'),
                 strengthText: document.getElementById('strengthText'),
+                bars: [
+                    document.getElementById('bar-1'),
+                    document.getElementById('bar-2'),
+                    document.getElementById('bar-3'),
+                    document.getElementById('bar-4')
+                ],
                 strengthSlider: document.getElementById('strengthSlider'),
-                sliderTooltip: document.getElementById('sliderTooltip'),
                 sliderValue: document.getElementById('sliderValue'),
-                message: document.getElementById('message'),
+                rulesText: document.getElementById('rulesText'),
                 generateBtn: document.getElementById('generateBtn'),
-                copyBtn: document.getElementById('copyBtn')
-            },
-
-            sliderLabels: {
-                1: '低強度（6 位，字母+數字）',
-                2: '低強度（6 位，字母+數字+大寫）',
-                3: '低強度（6 位，字母+數字+大寫+符號）',
-                4: '中低強度（8 位，字母+數字）',
-                5: '中低強度（8 位，字母+數字+大寫）',
-                6: '中低強度（8 位，字母+數字+大寫+符號）',
-                7: '中等強度（10 位，字母+數字）',
-                8: '中等強度（10 位，字母+數字+大寫）',
-                9: '中等強度（10 位，字母+數字+大寫+符號）',
-                10: '中高等強度（14 位，字母+數字）',
-                11: '中高等強度（14 位，字母+數字+大寫）',
-                12: '中高等強度（14 位，字母+數字+大寫+符號）',
-                13: '高等強度（16 位，字母+數字）',
-                14: '高等強度（16 位，字母+數字+大寫）',
-                15: '高強度（16 位，字母+數字+大寫+符號）'
-            },
-
-            mapSliderValue(value) {
-                const thresholds = [
-                    6.67, 13.34, 20.01, 26.68, 33.35, 40.02, 46.69, 53.36,
-                    60.03, 66.70, 73.37, 80.04, 86.71, 93.38, 100
-                ];
-                for (let i = 0; i < thresholds.length; i++) {
-                    if (value <= thresholds[i]) return i + 1;
-                }
-                return 15;
+                copyBtn: document.getElementById('copyBtn'),
+                iconCopy: document.getElementById('icon-copy'),
+                iconCheck: document.getElementById('icon-check'),
+                toast: document.getElementById('toast')
             },
 
             updatePassword(password) {
                 this.elements.passwordDisplay.value = password;
-                this.elements.message.textContent = '';
-                this.elements.message.classList.remove('show');
                 this.updateStrength(PasswordGenerator.evaluateStrength(password));
+                this.resetCopyIcon();
             },
 
-            updateStrength({ percentage, color, text }) {
-                this.elements.strengthBarFill.style.width = `${percentage}%`;
-                this.elements.strengthBarFill.style.backgroundColor = color;
-                this.elements.strengthText.textContent = text;
-                this.elements.strengthText.style.color = color;
+            updateStrength(data) {
+                this.elements.strengthText.textContent = data.text;
+                this.elements.strengthText.style.color = data.color;
+                
+                for (let i = 0; i < this.elements.bars.length; i++) {
+                    if (i < data.score) {
+                        this.elements.bars[i].style.backgroundColor = data.color;
+                    } else {
+                        this.elements.bars[i].style.backgroundColor = 'var(--border)';
+                    }
+                }
             },
 
-            updateSlider(value) {
-                const level = this.mapSliderValue(value);
-                this.elements.sliderValue.textContent = this.sliderLabels[level];
-                this.elements.strengthSlider.setAttribute('aria-valuenow', value);
-                this.elements.strengthSlider.setAttribute('aria-valuetext', this.sliderLabels[level]);
-                return level;
+            updateSliderUI(level) {
+                const safeLevel = parseInt(level, 10) || 8;
+                const config = PasswordGenerator.configs.find(function(c) { return c.level === safeLevel; });
+                if (!config) return;
+                
+                this.elements.sliderValue.textContent = 'Level ' + safeLevel;
+                this.elements.rulesText.textContent = config.length + '位字元 (' + config.desc + ')';
+                this.elements.strengthSlider.setAttribute('aria-valuenow', safeLevel);
             },
 
-            showTooltip() {
-                this.elements.sliderTooltip.classList.add('show');
-                setTimeout(() => this.hideTooltip(), 1200);
+            showToast(message) {
+                this.elements.toast.textContent = message;
+                this.elements.toast.classList.add('show');
+                
+                this.elements.iconCopy.style.display = 'none';
+                this.elements.iconCheck.style.display = 'block';
+
+                const _this = this;
+                setTimeout(function() {
+                    _this.elements.toast.classList.remove('show');
+                    setTimeout(function() { _this.resetCopyIcon(); }, 300);
+                }, 2000);
             },
 
-            hideTooltip() {
-                this.elements.sliderTooltip.classList.remove('show');
-            },
-
-            showMessage(text, duration = 2000) {
-                this.elements.message.textContent = text;
-                this.elements.message.classList.add('show');
-                setTimeout(() => {
-                    this.elements.message.classList.remove('show');
-                }, duration);
-            },
-
-            debounce(func, wait) {
-                let timeout;
-                return function executedFunction(...args) {
-                    const later = () => {
-                        clearTimeout(timeout);
-                        func(...args);
-                    };
-                    clearTimeout(timeout);
-                    timeout = setTimeout(later, wait);
-                };
+            resetCopyIcon() {
+                this.elements.iconCopy.style.display = 'block';
+                this.elements.iconCheck.style.display = 'none';
             }
         };
 
         function init() {
-            let lastLevel = 8;
+            const initialLevel = UI.elements.strengthSlider.value;
+            UI.updateSliderUI(initialLevel);
+            UI.updatePassword(PasswordGenerator.generate(initialLevel));
 
-            const debouncedUpdate = UI.debounce((level) => {
-                if (level !== lastLevel) {
-                    const password = PasswordGenerator.generate(level);
-                    UI.updatePassword(password);
-                    lastLevel = level;
+            UI.elements.generateBtn.addEventListener('click', function() {
+                const svg = UI.elements.generateBtn.querySelector('svg');
+                if (svg) {
+                    svg.style.transform = 'rotate(180deg)';
+                    svg.style.transition = 'transform 0.3s ease';
+                    setTimeout(function() { 
+                        svg.style.transform = 'none'; 
+                        svg.style.transition = 'none'; 
+                    }, 300);
                 }
-            }, 100);
 
-            UI.elements.generateBtn.addEventListener('click', () => {
-                const level = UI.mapSliderValue(parseInt(UI.elements.strengthSlider.value, 10));
-                const password = PasswordGenerator.generate(level);
-                UI.updatePassword(password);
-                lastLevel = level;
+                const level = UI.elements.strengthSlider.value;
+                UI.updatePassword(PasswordGenerator.generate(level));
             });
 
-            UI.elements.copyBtn.addEventListener('click', () => {
+            UI.elements.copyBtn.addEventListener('click', function() {
                 UI.elements.passwordDisplay.select();
                 UI.elements.passwordDisplay.setSelectionRange(0, 99999);
                 try {
                     navigator.clipboard.writeText(UI.elements.passwordDisplay.value);
-                    UI.showMessage('密碼已複製到剪貼板！');
+                    UI.showToast('密碼已成功複製！');
                 } catch (err) {
-                    UI.showMessage('複製失敗，請手動複製！');
+                    UI.showToast('複製失敗，請手動複製');
                 }
             });
 
-            UI.elements.strengthSlider.addEventListener('input', () => {
-                const value = parseInt(UI.elements.strengthSlider.value, 10);
-                const level = UI.updateSlider(value);
-                debouncedUpdate(level);
+            UI.elements.strengthSlider.addEventListener('input', function(e) {
+                const level = e.target.value;
+                UI.updateSliderUI(level);
+                UI.updatePassword(PasswordGenerator.generate(level));
             });
-
-            UI.elements.strengthSlider.addEventListener('mouseover', () => {
-                UI.showTooltip();
-            });
-
-            UI.elements.strengthSlider.addEventListener('mouseout', () => {
-                UI.hideTooltip();
-            });
-
-            UI.elements.strengthSlider.addEventListener('focus', () => {
-                UI.showTooltip();
-            });
-
-            UI.elements.strengthSlider.addEventListener('blur', () => {
-                UI.hideTooltip();
-            });
-
-            UI.elements.strengthSlider.addEventListener('touchstart', (e) => {
-                UI.elements.strengthSlider.classList.add('touched');
-                UI.showTooltip();
-                e.preventDefault();
-            });
-
-            UI.elements.strengthSlider.addEventListener('touchend', () => {
-                UI.elements.strengthSlider.classList.remove('touched');
-                UI.hideTooltip();
-            });
-
-            UI.elements.strengthSlider.addEventListener('touchmove', () => {
-                UI.hideTooltip();
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && e.target === UI.elements.generateBtn) {
-                    UI.elements.generateBtn.click();
-                }
-                if (e.key === 'Enter' && e.target === UI.elements.copyBtn) {
-                    UI.elements.copyBtn.click();
-                }
-                if (e.key === 'ArrowLeft' && e.target === UI.elements.strengthSlider) {
-                    UI.elements.strengthSlider.value = Math.max(0, parseInt(UI.elements.strengthSlider.value) - 6.67);
-                    UI.elements.strengthSlider.dispatchEvent(new Event('input'));
-                }
-                if (e.key === 'ArrowRight' && e.target === UI.elements.strengthSlider) {
-                    UI.elements.strengthSlider.value = Math.min(100, parseInt(UI.elements.strengthSlider.value) + 6.67);
-                    UI.elements.strengthSlider.dispatchEvent(new Event('input'));
-                }
-            });
-
-            UI.updateSlider(50);
-            UI.updatePassword(PasswordGenerator.generate(8));
         }
 
-        init();
+        // 確保 DOM 元素載入完畢後再執行
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
     </script>
 </body>
 </html>
