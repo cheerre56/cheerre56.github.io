@@ -1,125 +1,363 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Luminescence | Naha Parfums</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Space+Grotesk:wght@300;400&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/chapter-base.css">
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+  
   <style>
-    :root {
-      --bg-radial-1: rgba(70, 60, 150, 0.15);
-      --bg-radial-2: rgba(40, 120, 110, 0.12);
+    :root { --max-width: 1400px; }
+    
+    body {
+      --bg-color: #f5f1eb; --paper: rgba(251, 248, 244, 0.22); --text-main: #1f1a17; 
+      --text-sub: #6f645c; --accent: #b58b63; --line-color: rgba(111, 100, 92, 0.18);
+      --gradient-1: rgba(181, 139, 99, 0.18); --gradient-2: rgba(138, 90, 82, 0.16); --gradient-3: rgba(255, 255, 255, 0.28);
+      --title-grad: linear-gradient(45deg, #1f1a17, #8a7a6c);
+    }
+    body.dark {
+      --bg-color: #050505; --paper: rgba(5, 5, 5, 0.5); --text-main: #ffffff; 
+      --text-sub: #a0a0a0; --accent: #c5a367; --line-color: rgba(255, 255, 255, 0.1);
+      --gradient-1: rgba(70, 60, 150, 0.25); --gradient-2: rgba(40, 120, 110, 0.2); --gradient-3: transparent;
+      --title-grad: linear-gradient(45deg, #fff, #aaa);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
+    body {
+      background-color: var(--bg-color); color: var(--text-main); font-family: "Space Grotesk", sans-serif;
+      overflow: hidden; opacity: 0; transition: opacity 900ms ease-out, background-color 0.45s ease, color 0.45s ease;
+    }
+    body.loaded { opacity: 1; }
+
+    .bg-container { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+    .gradient-bg {
+      width: 100%; height: 100%;
+      background: radial-gradient(circle at 20% 40%, var(--gradient-1), transparent 50%),
+                  radial-gradient(circle at 80% 60%, var(--gradient-2), transparent 50%),
+                  radial-gradient(circle at 50% 50%, var(--gradient-3), transparent 52%);
+      filter: blur(80px); animation: breathe 10s infinite alternate ease-in-out; transition: background 0.45s ease;
+    }
+    @keyframes breathe { from { transform: scale(1); opacity: 0.6; } to { transform: scale(1.1); opacity: 1; } }
+
+    nav { position: fixed; top: 0; width: 100%; padding: 1.8rem 3rem; display: flex; align-items: center; justify-content: space-between; z-index: 100; }
+    .logo { font-family: "Italiana", serif; font-size: 1.4rem; color: var(--text-main); text-decoration: none; transition: opacity 250ms ease; }
+    .logo:hover { opacity: 0.75; }
+    .chapter-name { font-size: 0.7rem; color: var(--text-sub); text-transform: uppercase; letter-spacing: 2px; }
+    .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+    .close-btn { color: var(--text-main); text-decoration: none; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid transparent; transition: border-color 200ms ease; }
+    .close-btn:hover { border-color: var(--text-main); }
+    .mode-btn { width: 34px; height: 34px; border-radius: 999px; border: 1px solid var(--line-color); background: transparent; color: var(--text-main); cursor: pointer; backdrop-filter: blur(8px); transition: all 0.35s ease; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+    .mode-btn:hover { background: var(--accent); color: var(--bg-color); border-color: var(--accent); }
+
+    .slider-container { width: 100vw; height: 100vh; height: 100dvh; overflow-y: auto; scroll-snap-type: y mandatory; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none; }
+    .slider-container::-webkit-scrollbar { display: none; }
+    .slide { width: 100vw; height: 100vh; height: 100dvh; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .slide-content { width: 100%; max-width: var(--max-width); height: auto; max-height: 100vh; display: flex; align-items: center; gap: 6%; padding: 0 5%; }
+    
+    .visual-area { flex: 1; height: 70vh; display: flex; align-items: center; justify-content: center; }
+    .img-frame { width: 100%; max-width: 420px; aspect-ratio: 3 / 4.2; overflow: hidden; border-radius: 20px; border: 1px solid var(--line-color); opacity: 0; transform: scale(0.95) translateY(20px); transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1), transform 900ms cubic-bezier(0.16, 1, 0.3, 1); background: var(--paper); }
+    .img-frame video, .img-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .slide.active .img-frame { opacity: 1; transform: scale(1) translateY(0); }
+
+    .text-area { flex: 1; padding-left: 1rem; display: flex; flex-direction: column; }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+    .slide.active .reveal { opacity: 1; transform: translateY(0); }
+    .slide.active .delay-1 { transition-delay: 80ms; }
+    .slide.active .delay-2 { transition-delay: 150ms; }
+    .slide.active .delay-3 { transition-delay: 220ms; }
+    .slide.active .delay-4 { transition-delay: 280ms; }
+    .slide.active .delay-5 { transition-delay: 330ms; }
+
+    .perfume-no { display: block; margin-bottom: 1.2rem; font-size: 0.75rem; letter-spacing: 0.25em; color: var(--accent); text-transform: uppercase; }
+    .perfume-name { font-family: "Italiana", serif; font-size: clamp(2.2rem, 8vw, 5.5rem); line-height: 1; margin-bottom: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: var(--title-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; transition: background 0.45s ease;}
+    .perfume-name-cn { font-family: "Noto Sans TC", sans-serif; font-size: 0.95rem; font-weight: 400; color: var(--accent); letter-spacing: 0.15em; margin-bottom: 1.2rem; }
+    
+    .perfume-desc { max-width: 480px; margin-bottom: 1.4rem; color: var(--text-sub); font-family: "Noto Sans TC", sans-serif; font-size: 0.95rem; line-height: 1.75; font-weight: 300; letter-spacing: 0.02em; max-height: 20vh; overflow-y: auto; padding-right: 15px; }
+    .perfume-desc::-webkit-scrollbar { width: 4px; }
+    .perfume-desc::-webkit-scrollbar-thumb { background: var(--line-color); border-radius: 4px; }
+    .perfume-desc::-webkit-scrollbar-track { background: transparent; }
+
+    /* === 香調網格與 Tooltip 樣式 === */
+    .notes-grid { display: grid; grid-template-columns: auto 1fr; gap: 12px 25px; border-top: 1px solid var(--line-color); padding-top: 1.6rem; width: fit-content; margin-bottom: 1.7rem; }
+    .note-row { display: contents; }
+    .note-label { padding-top: 2px; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-sub); font-weight: 500;}
+    
+    .note-val { color: var(--text-main); font-family: "Italiana", serif; font-size: 0.9rem; letter-spacing: 0.02em; position: relative; cursor: pointer; display: flex; align-items: center; width: fit-content; }
+    
+    .info-icon { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 50%; border: 1px solid currentColor; font-size: 9px; margin-left: 6px; opacity: 0.5; font-family: "Space Grotesk", sans-serif; transition: 0.3s; }
+    .note-val:hover .info-icon { opacity: 1; }
+
+    .note-tooltip {
+      position: absolute; bottom: calc(100% + 8px); left: 0;
+      background: var(--text-main); color: var(--bg-color);
+      padding: 0.6rem 0.8rem; border-radius: 6px; font-family: "Noto Sans TC", sans-serif;
+      font-size: 0.75rem; line-height: 1.5; width: max-content; max-width: 240px;
+      opacity: 0; visibility: hidden; transform: translateY(5px);
+      transition: all 0.3s ease; z-index: 50; pointer-events: none;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15); letter-spacing: 0.05em; font-weight: 300;
+    }
+    .note-tooltip::after { content: ''; position: absolute; top: 100%; left: 20px; border-width: 5px; border-style: solid; border-color: var(--text-main) transparent transparent transparent; }
+    
+    /* Hover 電腦版觸發 */
+    @media (hover: hover) { .note-val:hover .note-tooltip { opacity: 1; visibility: visible; transform: translateY(0); } }
+    /* Click 手機版觸發 */
+    .note-val.show-tooltip .note-tooltip { opacity: 1; visibility: visible; transform: translateY(0); }
+
+    .capacity-selector { margin-bottom: 1.4rem; }
+    .capacity-selector > label { display: block; margin-bottom: 0.8rem; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; font-size: 0.75rem; }
+    .capacity-options { display: flex; flex-wrap: wrap; gap: 10px; }
+    .capacity-btn { flex: 1; min-height: 36px; min-width: 70px; padding: 0.6rem 0.5rem; border: 1px solid var(--line-color); border-radius: 4px; background: transparent; color: var(--text-sub); cursor: pointer; font-family: "Space Grotesk", sans-serif; font-size: 0.7rem; letter-spacing: 0.5px; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; transition: all 200ms ease; }
+    .capacity-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .capacity-btn.active { background: var(--accent); color: var(--bg-color); border-color: var(--accent); }
+
+    .price-section { display: flex; align-items: baseline; gap: 0.8rem; margin-bottom: 1.8rem; }
+    .product-price { color: var(--accent); font-family: "Italiana", serif; font-size: 2.5rem; font-weight: 400; transition: color 0.3s ease;}
+    .price-label { color: var(--text-sub); font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase; }
+
+    .add-to-cart-btn { min-height: 44px; display: inline-block; padding: 0.85rem 2rem; border: 1px solid var(--accent); border-radius: 4px; background: transparent; color: var(--accent); cursor: pointer; font-family: "Space Grotesk", sans-serif; font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; transition: transform 180ms ease, background-color 180ms ease, color 180ms ease; }
+    .add-to-cart-btn:hover { background: var(--accent); color: var(--bg-color); transform: scale(1.03); }
+    .cart-icon { position: fixed; right: 2rem; bottom: 2rem; width: 50px; height: 50px; border: 1px solid var(--accent); border-radius: 999px; color: var(--accent); background: transparent; text-decoration: none; z-index: 99; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: transform 200ms ease, background-color 200ms ease, color 200ms ease; }
+    .cart-icon:hover { background: var(--accent); color: var(--bg-color); transform: scale(1.06); }
+
+    .indicators { position: fixed; right: 2rem; top: 50%; transform: translateY(-50%); z-index: 100; display: flex; flex-direction: column; gap: 15px; }
+    .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--line-color); transition: transform 350ms ease, background-color 350ms ease; cursor: pointer;}
+    .dot.active { transform: scale(1.8); background: var(--accent); }
+
+    .scroll-hint { position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); color: var(--text-sub); letter-spacing: 3px; font-size: 0.6rem; animation: floatUp 2s infinite; text-transform: uppercase;}
+    @keyframes floatUp { 0%, 100% { transform: translate(-50%, 0); opacity: 0.4; } 50% { transform: translate(-50%, -8px); opacity: 0.8; } }
+
+    /* === 手機版專屬排版優化 === */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.2rem; } 
+      .logo { font-size: 1.1rem; }
+      .chapter-name { display: none; }
+      .close-btn { font-size: 0.65rem; }
+      .indicators { right: 10px; gap: 10px; }
+      
+      .slide { padding: 0 1.2rem; }
+      .slide-content { flex-direction: column; justify-content: center; padding: 70px 0 20px; gap: 10px; height: 100%; }
+      
+      .visual-area { flex: 0 0 auto; height: 28dvh; width: 100%; }
+      .img-frame { max-height: 100%; aspect-ratio: 1 / 1.1; max-width: 200px; margin: 0 auto; }
+      
+      .text-area { padding-left: 0; display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+      .perfume-no { margin-bottom: 0.2rem; font-size: 0.65rem; }
+      .perfume-name { font-size: clamp(1.8rem, 7vw, 2.2rem); margin-bottom: 0.3rem; }
+      .perfume-name-cn { font-size: 0.85rem; margin-bottom: 0.6rem; }
+      
+      .perfume-desc { font-size: 0.85rem; line-height: 1.5; margin-bottom: 0.8rem; max-height: 16vh; overflow-y: auto; padding-right: 5px; }
+      
+      .notes-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 12px; border-top: none; padding-top: 0; margin-bottom: 0.8rem; }
+      .note-row { flex-direction: column; gap: 2px; }
+      
+      .note-val { justify-content: center; }
+      .note-tooltip { left: 50%; transform: translate(-50%, 5px); text-align: left; width: 220px; max-width: 80vw; }
+      .note-tooltip::after { left: 50%; transform: translateX(-50%); }
+      .note-val.show-tooltip .note-tooltip { transform: translate(-50%, 0); }
+      
+      .capacity-selector { width: 100%; max-width: 320px; margin-bottom: 0.8rem; }
+      .capacity-options { gap: 6px; }
+      .capacity-btn { padding: 0.4rem 0.2rem; font-size: 0.65rem; }
+      
+      .price-section { margin-bottom: 0.8rem; gap: 0.5rem; align-items: baseline; }
+      .product-price { font-size: 1.6rem; }
+      
+      .add-to-cart-btn { width: 100%; max-width: 320px; padding: 0.75rem; }
+      .cart-icon { width: 42px; height: 42px; right: 1rem; bottom: 1rem; font-size: 1rem; }
+      .scroll-hint { display: none; }
     }
   </style>
 </head>
 <body>
-  <div class="bg-container">
-    <div class="gradient-bg"></div>
-  </div>
+  <div class="bg-container"><div class="gradient-bg"></div></div>
 
-  <a href="cart.html" class="cart-icon" aria-label="Open cart">
-    &#128722;
-    <span class="cart-badge" id="cartBadge">0</span>
-  </a>
+  <a href="cart.html" class="cart-icon" aria-label="Open cart">🛒<span class="cart-badge" id="cartBadge">0</span></a>
 
   <nav>
     <a href="index.html" class="logo">naha.</a>
-    <div class="chapter-name">Luminescence | The Floral Series</div>
-    <a href="index.html" class="close-btn">Back to Home</a>
+    <div class="chapter-name">Luminescence | Ⅰ. 花香調 (Floral Collection)</div>
+    <div class="nav-right">
+      <button id="modeToggle" class="mode-btn">🌙</button>
+      <a href="index.html" class="close-btn">Back to Home</a>
+    </div>
   </nav>
 
   <div class="indicators">
     <div class="dot active"></div>
-    <div class="dot"></div>
+    <div class="dot "></div>
   </div>
 
   <div class="slider-container" id="slider">
-    <section class="slide" data-product-id="autumn-brew">
+
+    <section class="slide" data-product-id="perfume-1">
       <div class="slide-content">
         <div class="visual-area">
           <div class="img-frame">
-            <video muted loop playsinline preload="metadata">
-              <source src="assets/media/videos/Autumn.mp4" type="video/mp4">
-            </video>
+            <video muted loop autoplay playsinline preload="metadata"><source src="http://naha.one/assets/media/videos/Forest.mp4" type="video/mp4"></video>
           </div>
         </div>
         <div class="text-area">
           <span class="perfume-no reveal delay-1">NO.01</span>
-          <h1 class="perfume-name reveal delay-2">Autumn Brew</h1>
-          <p class="perfume-desc reveal delay-3">
-            A glowing floral opening with airy pear and soft freesia, then settles into a warm patchouli trail.
-            <br><br>
-            A golden symphony captured in amber shadows.
-          </p>
+          <h1 class="perfume-name reveal delay-2">Orchard Stroll</h1>
+          <div class="perfume-name-cn reveal delay-2">漫步梨園</div>
+          <div class="perfume-desc reveal delay-3"><b>金黃色的果園與純白花海，寫給初秋的一封情書。</b><br>
+捕捉初秋清晨的第一縷陽光，飽滿多汁的威廉梨拉開序幕，清脆的果香帶著一絲清涼。隨之綻放的是純白無瑕的小蒼蘭，細膩而輕盈的花香溫柔地包裹住梨子的清甜，散發出乾淨且毫無攻擊性的氣質。最終，廣藿香帶來了大地般的沉穩與微木質氣息，留下優雅、不費力的完美餘韻。</div>
+          
           <div class="notes-grid reveal delay-4">
-            <div class="note-row"><span class="note-label">Top</span> <span class="note-val">William Pear</span></div>
-            <div class="note-row"><span class="note-label">Heart</span> <span class="note-val">Freesia</span></div>
-            <div class="note-row"><span class="note-label">Base</span> <span class="note-val">Patchouli</span></div>
+            <div class="note-row">
+              <span class="note-label">Top</span> 
+              <div class="note-val"><span>威廉梨</span> <span class="info-icon">i</span><div class="note-tooltip">金黃威廉梨，散發著清脆、鮮活且帶有水潤感的甜美果香，瞬間喚醒感官。</div></div>
+            </div>
+            <div class="note-row">
+              <span class="note-label">Heart</span> 
+              <div class="note-val"><span>小蒼蘭</span> <span class="info-icon">i</span><div class="note-tooltip">細膩空靈的純白小蒼蘭，以其特有的清幽花香，為果香注入了一股優雅而輕盈的透明感。</div></div>
+            </div>
+            <div class="note-row">
+              <span class="note-label">Base</span> 
+              <div class="note-val"><span>廣藿香</span> <span class="info-icon">i</span><div class="note-tooltip">帶有深邃泥土氣息與微木質香的廣藿香，巧妙地平衡了整體的清甜，留下溫暖且貼膚的悠長尾韻。</div></div>
+            </div>
           </div>
+          
           <div class="capacity-selector reveal delay-4">
             <label>Capacity:</label>
             <div class="capacity-options">
-              <button class="capacity-btn" data-ml="10" data-price="259" type="button">10ml - NT$ 259</button>
-              <button class="capacity-btn active" data-ml="30" data-price="495" type="button">30ml - NT$ 495</button>
-              <button class="capacity-btn" data-ml="50" data-price="765" type="button">50ml - NT$ 765</button>
+              <button class="capacity-btn" data-ml="10" data-price="489" type="button">10ml</button>
+              <button class="capacity-btn active" data-ml="30" data-price="689" type="button">30ml</button>
+              <button class="capacity-btn" data-ml="50" data-price="989" type="button">50ml</button>
             </div>
           </div>
+          
           <div class="price-section reveal delay-5">
-            <span class="product-price" data-price-display>NT$ 495</span>
-            <span class="price-label" data-capacity-display>/ 30ml</span>
+            <span class="product-price">NT$ 689</span>
+            <span class="price-label">/ 30ml</span>
           </div>
           <button class="add-to-cart-btn reveal delay-5" type="button">Add to Cart</button>
         </div>
       </div>
       <div class="scroll-hint">SCROLL</div>
     </section>
-
-    <section class="slide" data-product-id="forest-whispers">
+    <section class="slide" data-product-id="perfume-2">
       <div class="slide-content">
         <div class="visual-area">
           <div class="img-frame">
-            <video muted loop playsinline preload="metadata">
-              <source src="assets/media/videos/Forest.mp4" type="video/mp4">
-            </video>
+            <video muted loop autoplay playsinline preload="metadata"><source src="http://naha.one/assets/media/videos/Autumn.mp4" type="video/mp4"></video>
           </div>
         </div>
         <div class="text-area">
           <span class="perfume-no reveal delay-1">NO.02</span>
-          <h1 class="perfume-name reveal delay-2">Forest Whispers</h1>
-          <p class="perfume-desc reveal delay-3">
-            Cool floral tones drift through translucent mist and rest on a soft musky base.
-            <br><br>
-            A dreamlike encounter in a forest carpeted with blue blooms.
-          </p>
+          <h1 class="perfume-name reveal delay-2">The Rose Paradox</h1>
+          <div class="perfume-name-cn reveal delay-2">玫瑰悖論</div>
+          <div class="perfume-desc reveal delay-3"><b>解構傳統，以辛香與黑木重新定義的東方玫瑰。</b><br>
+顛覆玫瑰既有的甜美柔弱，以大膽的對比手法描繪東方木質畫卷。開場由極具張力的孜然切入，為鮮活的玫瑰注入一絲辛辣的生命力。核心由雙重玫瑰交織乾燥的雪松與香根草，剔除甜膩，保留鋒芒；基調則迎來沉香與愈創木的幽暗森林，在溫潤麝香包裹下化作華麗絲絨。深沉、內斂、卻又無比強大。</div>
+          
           <div class="notes-grid reveal delay-4">
-            <div class="note-row"><span class="note-label">Top</span> <span class="note-val">Bluebell</span></div>
-            <div class="note-row"><span class="note-label">Heart</span> <span class="note-val">Persimmon</span></div>
-            <div class="note-row"><span class="note-label">Base</span> <span class="note-val">White Musk</span></div>
+            <div class="note-row">
+              <span class="note-label">Top</span> 
+              <div class="note-val"><span>玫瑰、孜然</span> <span class="info-icon">i</span><div class="note-tooltip">熱浪與破曉的初綻交織，帶來令人驚豔的異國開場。</div></div>
+            </div>
+            <div class="note-row">
+              <span class="note-label">Heart</span> 
+              <div class="note-val"><span>雪松</span> <span class="info-icon">i</span><div class="note-tooltip">乾燥純粹的木質紋理中，盛放著堅韌而優雅的紅玫瑰。</div></div>
+            </div>
+            <div class="note-row">
+              <span class="note-label">Base</span> 
+              <div class="note-val"><span>麝香、愈創木</span> <span class="info-icon">i</span><div class="note-tooltip">深邃的烏木與微煙燻的皮革感，在麝香的烘托下化作無盡的餘韻。</div></div>
+            </div>
           </div>
+          
           <div class="capacity-selector reveal delay-4">
             <label>Capacity:</label>
             <div class="capacity-options">
-              <button class="capacity-btn" data-ml="10" data-price="259" type="button">10ml - NT$ 259</button>
-              <button class="capacity-btn active" data-ml="30" data-price="495" type="button">30ml - NT$ 495</button>
-              <button class="capacity-btn" data-ml="50" data-price="765" type="button">50ml - NT$ 765</button>
+              <button class="capacity-btn" data-ml="10" data-price="489" type="button">10ml</button>
+              <button class="capacity-btn active" data-ml="30" data-price="689" type="button">30ml</button>
+              <button class="capacity-btn" data-ml="50" data-price="989" type="button">50ml</button>
             </div>
           </div>
+          
           <div class="price-section reveal delay-5">
-            <span class="product-price" data-price-display>NT$ 495</span>
-            <span class="price-label" data-capacity-display>/ 30ml</span>
+            <span class="product-price">NT$ 689</span>
+            <span class="price-label">/ 30ml</span>
           </div>
           <button class="add-to-cart-btn reveal delay-5" type="button">Add to Cart</button>
         </div>
       </div>
-    </section>
-  </div>
+      
+    </section>  </div>
 
-  <script src="assets/js/naha-catalog.js"></script>
-  <script src="assets/js/naha-cart.js"></script>
-  <script src="assets/js/chapter-page.js"></script>
+  <script>
+    window.onload = () => document.body.classList.add('loaded');
+
+    // 日夜模式
+    const modeToggle = document.getElementById('modeToggle');
+    function updateMode() {
+      const isDark = document.body.classList.contains('dark');
+      modeToggle.textContent = isDark ? '☀' : '🌙';
+      localStorage.setItem('naha-mode', isDark ? 'dark' : 'light');
+    }
+    if (localStorage.getItem('naha-mode') === 'dark') { document.body.classList.add('dark'); }
+    updateMode();
+    modeToggle.addEventListener('click', () => { document.body.classList.toggle('dark'); updateMode(); });
+
+    // 圓點滑動邏輯
+    const dots = document.querySelectorAll('.dot');
+    const slides = document.querySelectorAll('.slide');
+    
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => slides[index].scrollIntoView({ behavior: 'smooth' }));
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          slides.forEach(s => s.classList.remove('active'));
+          dots.forEach(d => d.classList.remove('active'));
+          entry.target.classList.add('active');
+          const index = Array.from(slides).indexOf(entry.target);
+          if(dots[index]) dots[index].classList.add('active');
+        }
+      });
+    }, { threshold: 0.5 });
+    slides.forEach(slide => observer.observe(slide));
+    if(slides.length > 0) slides[0].classList.add('active');
+
+    // 容量與價格切換
+    const capacityBtns = document.querySelectorAll('.capacity-btn');
+    capacityBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const parent = this.closest('.capacity-options');
+        parent.querySelectorAll('.capacity-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        const ml = this.getAttribute('data-ml');
+        const price = this.getAttribute('data-price');
+        const slide = this.closest('.text-area');
+        const priceDisplay = slide.querySelector('.product-price');
+        const capacityDisplay = slide.querySelector('.price-label');
+
+        if(priceDisplay) priceDisplay.textContent = 'NT$ ' + price;
+        if(capacityDisplay) capacityDisplay.textContent = '/ ' + ml + 'ml';
+      });
+    });
+
+    // 香調提示框 (Tooltip) 點擊邏輯 (專為手機版設計)
+    const noteVals = document.querySelectorAll('.note-val');
+    noteVals.forEach(val => {
+      val.addEventListener('click', (e) => {
+        // 先關閉其他展開的提示框
+        noteVals.forEach(v => { if(v !== val) v.classList.remove('show-tooltip'); });
+        // 切換自己的提示框
+        val.classList.toggle('show-tooltip');
+        e.stopPropagation(); // 防止點擊事件往上冒泡
+      });
+    });
+
+    // 點擊網頁其他空白處，自動收合提示框
+    document.addEventListener('click', () => {
+      noteVals.forEach(v => v.classList.remove('show-tooltip'));
+    });
+  </script>
 </body>
 </html>
-
