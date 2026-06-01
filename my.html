@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NIKGAME - 個人網頁XD</title>
+    <title>NIKGAME - 終極個人領域</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
     <style>
         /* =========================================
@@ -60,12 +60,20 @@
         /* =========================================
            主介面：高品質新粗野主義 (Premium Neo-Brutalism)
            ========================================= */
+        
+        /* 【優化】背景滾動微動畫 */
+        @keyframes bg-scroll {
+            0% { background-position: 0px 0px; }
+            100% { background-position: 30px 30px; }
+        }
+
         #main-layout {
             position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
             background-color: #eaddcf; background-image: radial-gradient(#ccc6b1 2px, transparent 2px); background-size: 30px 30px;
             z-index: 10; opacity: 0; display: flex; justify-content: center; align-items: flex-start;
             overflow-y: auto; overflow-x: hidden; padding: 20px;
             transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: bg-scroll 5s linear infinite; /* 套用無縫滾動背景 */
         }
 
         #main-layout.arrived { opacity: 1; }
@@ -81,14 +89,16 @@
         }
 
         .panel-left { display: flex; flex-direction: column; align-items: center; background: #ffe3e8; }
+        
+        /* 【優化】圖片頭像處理 */
         .avatar-container {
             width: 130px; height: 130px; border-radius: 50%; background: #ffcc00; border: 4px solid #111; box-shadow: 6px 6px 0px #111;
             margin-bottom: 25px; display: flex; justify-content: center; align-items: center; overflow: hidden;
         }
-        .avatar { font-family: 'Press Start 2P', cursive; font-size: 3rem; color: #111; margin-top: 10px; }
+        .avatar-container img { width: 100%; height: 100%; object-fit: cover; }
+        
         .nik-name { font-family: 'Press Start 2P', cursive; font-size: 1.2rem; color: #111; margin-bottom: 35px; text-align: center; line-height: 1.5; }
 
-        /* 【優化】社群按鈕：圖上字下、完美置中 */
         .social-btns { width: 100%; max-width: 300px; display: flex; flex-direction: column; gap: 15px; margin-top: auto; }
         .btn {
             width: 100%; padding: 15px 0; text-align: center; font-family: 'Press Start 2P', cursive; font-size: 0.8rem; 
@@ -101,7 +111,6 @@
         .btn:active { transform: translate(6px, 6px); box-shadow: 0px 0px 0px #111; }
         .btn-steam { background: #66c0f4; } .btn-discord { background: #7289da; color: #fff; } .btn-ig { background: #ff0055; color: #fff; }
 
-        /* 【優化】藍色資訊框：乾淨俐落的閃爍游標 */
         .panel-top { 
             background: #e3f2fd; 
             display: flex; align-items: center; justify-content: center;
@@ -175,10 +184,9 @@
             .retro-card { padding: 35px; box-shadow: 10px 10px 0px #111; }
             .panel-left { grid-column: 1 / 2; grid-row: 1 / 3; padding: 40px; justify-content: flex-start;}
             .avatar-container { width: 140px; height: 140px; border-width: 4px; box-shadow: 6px 6px 0px #111; margin-bottom: 25px;}
-            .avatar { font-size: 3rem; }
             .social-btns { flex-direction: column; width: 100%; gap: 20px; margin-top: auto;}
             
-            .panel-top { grid-column: 2 / 3; grid-row: 1 / 2; }
+            .panel-top { grid-column: 2 / 3; grid-row: 1 / 2; padding: 30px 40px; }
             .panel-bottom { grid-column: 2 / 3; grid-row: 2 / 3; padding: 30px; }
             
             .game-top-bar { flex-wrap: nowrap; margin-bottom: 20px; }
@@ -204,12 +212,14 @@
 
     <div id="main-layout">
         <div class="bento-grid">
-            
             <div class="retro-card panel-left">
-                <div class="avatar-container"><div class="avatar">N</div></div>
+                <!-- 頭像替換為圖片 -->
+                <div class="avatar-container">
+                    <img src="https://naha.one/assets/media/daf150e0a9023f31fe0c63006aa8f313.jpg" alt="NIK">
+                </div>
+                <!-- 去除換行 -->
                 <div class="nik-name">NIKGAME</div>
                 
-                <!-- SVG 社群按鈕：圖上字下 -->
                 <div class="social-btns">
                     <a href="https://steamcommunity.com/id/TWDL/" target="_blank" class="btn btn-steam">
                         <svg viewBox="0 0 24 24" fill="currentColor">
