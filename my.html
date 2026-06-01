@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NIKGAME - 個人領域</title>
+    <title>NIKGAME - 街機個人網頁XD</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
     <style>
         /* =========================================
@@ -21,7 +21,7 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 9999; pointer-events: none;
             transform: scale(1); transform-origin: center center;
-            transition: transform 0.5s cubic-bezier(0.8, 0, 0.2, 1), opacity 0.3s ease-in-out;
+            transition: transform 0.4s cubic-bezier(0.8, 0, 0.2, 1), opacity 0.3s ease-in-out;
         }
 
         #intro-top {
@@ -58,10 +58,8 @@
         }
 
         /* =========================================
-           主介面：高品質新粗野主義 (Premium Neo-Brutalism)
+           主介面：野主義
            ========================================= */
-        
-        /* 【優化】背景滾動微動畫 */
         @keyframes bg-scroll {
             0% { background-position: 0px 0px; }
             100% { background-position: 30px 30px; }
@@ -73,7 +71,7 @@
             z-index: 10; opacity: 0; display: flex; justify-content: center; align-items: flex-start;
             overflow-y: auto; overflow-x: hidden; padding: 20px;
             transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            animation: bg-scroll 5s linear infinite; /* 套用無縫滾動背景 */
+            animation: bg-scroll 5s linear infinite; 
         }
 
         #main-layout.arrived { opacity: 1; }
@@ -89,8 +87,6 @@
         }
 
         .panel-left { display: flex; flex-direction: column; align-items: center; background: #ffe3e8; }
-        
-        /* 【優化】圖片頭像處理 */
         .avatar-container {
             width: 130px; height: 130px; border-radius: 50%; background: #ffcc00; border: 4px solid #111; box-shadow: 6px 6px 0px #111;
             margin-bottom: 25px; display: flex; justify-content: center; align-items: center; overflow: hidden;
@@ -186,7 +182,7 @@
             .avatar-container { width: 140px; height: 140px; border-width: 4px; box-shadow: 6px 6px 0px #111; margin-bottom: 25px;}
             .social-btns { flex-direction: column; width: 100%; gap: 20px; margin-top: auto;}
             
-            .panel-top { grid-column: 2 / 3; grid-row: 1 / 2; padding: 30px 40px; }
+            .panel-top { grid-column: 2 / 3; grid-row: 1 / 2; }
             .panel-bottom { grid-column: 2 / 3; grid-row: 2 / 3; padding: 30px; }
             
             .game-top-bar { flex-wrap: nowrap; margin-bottom: 20px; }
@@ -213,12 +209,10 @@
     <div id="main-layout">
         <div class="bento-grid">
             <div class="retro-card panel-left">
-                <!-- 頭像替換為圖片 -->
                 <div class="avatar-container">
                     <img src="https://naha.one/assets/media/daf150e0a9023f31fe0c63006aa8f313.jpg" alt="NIK">
                 </div>
-                <!-- 去除換行 -->
-                <div class="nik-name">NIK GAME</div>
+                <div class="nik-name">NIKGAME</div>
                 
                 <div class="social-btns">
                     <a href="https://steamcommunity.com/id/TWDL/" target="_blank" class="btn btn-steam">
@@ -244,7 +238,6 @@
                 </div>
             </div>
 
-            <!-- 【優化】極簡打字閃爍標題 -->
             <div class="retro-card panel-top">
                 <h1 class="welcome-text">Welcome !<span class="blink-cursor">_</span></h1>
             </div>
@@ -278,7 +271,7 @@
 
     <script>
         // ==========================================
-        // 1. 進場動畫 
+        // 1. 進場動畫 (精準修正時間軸)
         // ==========================================
         const canvas = document.getElementById('warp-canvas');
         const ctx = canvas.getContext('2d');
@@ -320,15 +313,16 @@
         }
         animateWarp();
 
-        setTimeout(() => { isAccelerating = true; }, 400); 
+        // 【精準時間軸修正】
+        setTimeout(() => { isAccelerating = true; }, 600);  // 1. 觸發加速前延長至 600ms (0.6秒)
         setTimeout(() => {
             document.getElementById('intro-top').classList.add('hide-text'); document.getElementById('intro-sub').classList.add('hide-text');
             introWrapper.classList.add('zoom-to-i');
-        }, 800); 
+        }, 1000); // 2. 加速維持 400ms，在 1000ms 時開始放大
         setTimeout(() => {
             introWrapper.classList.add('fade-out-wrapper'); canvas.style.opacity = '0'; mainLayout.classList.add('arrived');
             setTimeout(() => { cancelAnimationFrame(aniId); canvas.style.display = 'none'; introWrapper.style.display = 'none'; simulateLoading(); }, 300); 
-        }, 1300); 
+        }, 1450); // 3. 滿版放大改回 400ms (1000 + 400)，加點緩衝於 1450ms 浮現主畫面
 
         function simulateLoading() {
             let progress = 0;
@@ -473,7 +467,7 @@
                 let v = false, o = {x:0, y:0};
                 while(!v) {
                     o = { x: Math.floor(Math.random() * this.cols), y: Math.floor(Math.random() * this.rows) };
-                    v = !(o.x===this.pacman.x && o.y===this.pacman.y) && !this.dots.some(d=>d.x===o.x && d.y===o.y);
+                    v = !(o.x===this.pacman.x && o.y===this.dots.some(d=>d.x===o.x && d.y===o.y));
                 }
                 return o;
             },
