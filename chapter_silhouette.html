@@ -54,13 +54,10 @@
 
     .slider-container { width: 100vw; height: 100vh; height: 100dvh; overflow-y: auto; scroll-snap-type: y mandatory; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none; }
     .slider-container::-webkit-scrollbar { display: none; }
-    
     .slide { width: 100vw; height: 100vh; height: 100dvh; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
     
-    /* 核心防變形結構：左右強制切分比例 */
     .slide-content { width: 100%; max-width: var(--max-width); height: auto; max-height: 100vh; display: flex; align-items: center; gap: 6%; padding: 0 5%; }
     
-    /* 強制綁定 47% 寬度 (配合 gap 6% 總和剛好 100%)，杜絕因為文字太長導致排版被擠壓 */
     .visual-area { flex: 1 1 47%; max-width: 47%; height: 70vh; display: flex; align-items: center; justify-content: center; }
     .img-frame { width: 100%; max-width: 420px; aspect-ratio: 3 / 4.2; height: auto; overflow: hidden; border-radius: 20px; border: 1px solid var(--line-color); opacity: 0; transform: scale(0.95) translateY(20px); transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1), transform 900ms cubic-bezier(0.16, 1, 0.3, 1); background: var(--paper); flex-shrink: 0; }
     .img-frame video, .img-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -141,7 +138,6 @@
       .slide { padding: 0 1.2rem; }
       .slide-content { flex-direction: column; justify-content: center; padding: 70px 0 20px; gap: 10px; height: 100%; }
       
-      /* 解除綁定，允許手機版佔滿 100% 寬度 */
       .visual-area { flex: 0 0 auto; max-width: 100%; height: 28dvh; width: 100%; }
       .img-frame { max-height: 100%; aspect-ratio: 1 / 1.1; max-width: 200px; margin: 0 auto; height: auto; }
       
@@ -180,7 +176,7 @@
 
   <nav>
     <a href="index.html" class="logo">naha.</a>
-    <div class="chapter-name">Silhouette | Woody Collection</div>
+    <div class="chapter-name">${gChapter}</div>
     <div class="nav-right">
       <button id="modeToggle" class="mode-btn">🌙</button>
       <a href="index.html" class="close-btn">Back to Home</a>
@@ -188,57 +184,11 @@
   </nav>
 
   <div class="indicators">
-    <div class="dot active"></div>
+    ${indicatorsHTML.trim()}
   </div>
 
   <div class="slider-container" id="slider">
-
-    <section class="slide" data-product-id="perfume-1">
-      <div class="slide-content">
-        <div class="visual-area">
-          <div class="img-frame">
-            <video muted loop autoplay playsinline preload="metadata"><source src="https://naha.one/assets/media/videos/Ambre.mp4" type="video/mp4"></video>
-          </div>
-        </div>
-        <div class="text-area">
-          <span class="perfume-no reveal delay-1">NO.03</span>
-          <h1 class="perfume-name reveal delay-2">After the Sunbath</h1>
-          <div class="perfume-name-cn reveal delay-2">日光浴後</div>
-          <div class="perfume-desc reveal delay-3"><b>陽光、微風與海鹽，揉合出宛如天生自帶的高級體香。</b><br>一款毫不費力、渾然天成的中性香水。開場的珍稀黃葵籽散發著極致溫柔的植物麝香，與肌膚溫度完美融合。核心的海鹽香調宛如未乾的純淨海水，晶瑩剔透且清爽；基調的鼠尾草則以略帶粗獷的草本氣息注入一絲率性。宛如在無人海灘漫步一整天後，微風與暖陽留在身上的自然印記。</div>
-          
-          <div class="notes-grid reveal delay-4">
-            <div class="note-row">
-              <span class="note-label">Top</span> 
-              <div class="note-val"><span>黃葵籽</span> <span class="info-icon">i</span><div class="note-tooltip">珍稀的植物性麝香，帶來宛如柔軟純棉衣物與微溫肌膚相貼的純淨感，溫柔而安撫。</div></div>
-            </div>
-            <div class="note-row">
-              <span class="note-label">Heart</span> 
-              <div class="note-val"><span>海鹽</span> <span class="info-icon">i</span><div class="note-tooltip">捕捉了海浪化為水沫瞬間的清透與微鹹，純粹的礦物氣息帶來令人振奮的呼吸感。</div></div>
-            </div>
-            <div class="note-row">
-              <span class="note-label">Base</span> 
-              <div class="note-val"><span>鼠尾草</span> <span class="info-icon">i</span><div class="note-tooltip">揉合了乾燥草本與漂流木的沉穩底蘊，將海風的輕盈穩穩接住，留下踏實且率性的自然尾韻。</div></div>
-            </div>
-          </div>
-          
-          <div class="capacity-selector reveal delay-4">
-            <label>Capacity:</label>
-            <div class="capacity-options">
-              <button class="capacity-btn" data-ml="10" data-price="489" type="button">10ml</button>
-              <button class="capacity-btn active" data-ml="30" data-price="689" type="button">30ml</button>
-              <button class="capacity-btn" data-ml="50" data-price="889" type="button">50ml</button>
-            </div>
-          </div>
-          
-          <div class="price-section reveal delay-5">
-            <span class="product-price">NT$ 689</span>
-            <span class="price-label">/ 30ml</span>
-          </div>
-          <button class="add-to-cart-btn reveal delay-5" type="button">Add to Cart</button>
-        </div>
-      </div>
-      <div class="scroll-hint">SCROLL</div>
-    </section>  </div>
+${slidesHTML}  </div>
 
   <script>
     window.onload = () => document.body.classList.add('loaded');
