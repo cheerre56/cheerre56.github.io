@@ -2,306 +2,222 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NIKGAME-個人網頁XD</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>NIKGAME - 終極效能領域</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <style>
-        /* =========================================
-           基礎與進場動畫
-           ========================================= */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body {
-            background-color: #eaddcf; color: #111; font-family: 'VT323', 'Noto Sans TC', monospace; 
-            overflow: hidden; width: 100vw; height: 100vh; -webkit-font-smoothing: antialiased; 
-            user-select: none; -webkit-user-select: none;
-            transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        body { background-color: #050505; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; width: 100vw; height: 100vh; -webkit-font-smoothing: antialiased; user-select: none; -webkit-user-select: none; transition: background-color 0.8s ease; }
+        .bg-grid { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 50px 50px; z-index: 1; pointer-events: none; animation: grid-scroll 20s linear infinite; }
+        @keyframes grid-scroll { 0% { background-position: 0px 0px; } 100% { background-position: 50px 50px; } }
+        .orb { position: fixed; border-radius: 50%; filter: blur(100px); opacity: 0.6; z-index: 2; pointer-events: none; transition: all 1s ease;}
+        .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(0, 240, 255, 0.4); animation: float1 15s infinite alternate ease-in-out; }
+        .orb-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: rgba(255, 0, 85, 0.3); animation: float2 18s infinite alternate ease-in-out; }
+        @keyframes float1 { to { transform: translate(15vw, 15vh); } }
+        @keyframes float2 { to { transform: translate(-15vw, -15vh); } }
+        body.page2-active .orb-1 { transform: scale(1.2) translate(5vw, 5vh); opacity: 0.8; }
+        body.gameover-active .orb { opacity: 0; } 
 
-        #intro-wrapper {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 9999; pointer-events: none;
-            transform: scale(1); transform-origin: center center;
-            transition: transform 0.4s cubic-bezier(0.8, 0, 0.2, 1), opacity 0.3s ease-in-out;
-        }
-
-        #intro-top {
-            font-family: 'Press Start 2P', cursive; color: #888; font-size: clamp(0.6rem, 2vw, 1rem); 
-            margin-bottom: 20px; opacity: 0; transform: translateY(15px);
-            animation: textFadeIn 0.4s cubic-bezier(0.2, 0, 0, 1) 0.1s forwards;
-            transition: opacity 0.3s ease, transform 0.3s ease; 
-        }
-
-        #intro-slogan {
-            font-family: 'Press Start 2P', cursive; line-height: 1.2; 
-            font-size: clamp(3rem, 12vw, 6rem); letter-spacing: clamp(0.5rem, 2vw, 1rem); padding-left: clamp(0.5rem, 2vw, 1rem); 
-            background: linear-gradient(180deg, #ffcc00 0%, #ff6600 50%, #ff0055 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(4px 4px 0px #111);
-            opacity: 0; transform: translateY(20px);
-            animation: textFadeIn 0.6s cubic-bezier(0.2, 0, 0, 1) 0.2s forwards; 
-        }
-
-        #intro-sub {
-            font-family: 'Press Start 2P', cursive; color: #888; font-size: clamp(0.5rem, 1.5vw, 0.8rem); 
-            margin-top: 20px; opacity: 0; transform: translateY(10px);
-            animation: textFadeIn 0.4s cubic-bezier(0.2, 0, 0, 1) 0.3s forwards;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
+        #intro-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; pointer-events: none; transform: scale(1); transform-origin: center center; transition: transform 0.4s cubic-bezier(0.8, 0, 0.2, 1), opacity 0.3s ease-in-out; }
+        #intro-top { font-family: 'Press Start 2P', cursive; color: #888; font-size: clamp(0.6rem, 2vw, 1rem); margin-bottom: 20px; opacity: 0; transform: translateY(15px); animation: textFadeIn 0.4s cubic-bezier(0.2, 0, 0, 1) 0.1s forwards; }
+        #intro-slogan { font-family: 'Press Start 2P', cursive; line-height: 1.2; font-size: clamp(3rem, 12vw, 6rem); letter-spacing: clamp(0.5rem, 2vw, 1rem); background: linear-gradient(180deg, #00f0ff 0%, #ff0055 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; opacity: 0; transform: translateY(20px); animation: textFadeIn 0.6s cubic-bezier(0.2, 0, 0, 1) 0.2s forwards; }
+        #intro-sub { font-family: 'Press Start 2P', cursive; color: #888; font-size: clamp(0.5rem, 1.5vw, 0.8rem); margin-top: 20px; opacity: 0; transform: translateY(10px); animation: textFadeIn 0.4s cubic-bezier(0.2, 0, 0, 1) 0.3s forwards; }
         @keyframes textFadeIn { to { opacity: 1; transform: translateY(0); } }
         .hide-text { opacity: 0 !important; transform: scale(0.8) !important; }
         .zoom-to-i { transform: scale(300) !important; filter: drop-shadow(0 0 0 transparent) !important; }
         .fade-out-wrapper { opacity: 0 !important; }
+        #warp-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9998; background: #050505; transition: opacity 0.5s ease; }
 
-        #warp-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 9998; background: #eaddcf; transition: opacity 0.5s ease;
-        }
-
-        /* =========================================
-           主佈局：三頁式滾動系統 (Three-Page Scroll System)
-           ========================================= */
-        @keyframes bg-scroll { 0% { background-position: 0px 0px; } 100% { background-position: 30px 30px; } }
-
-        #main-layout {
-            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: transparent; background-image: radial-gradient(#ccc6b1 2px, transparent 2px); background-size: 30px 30px;
-            z-index: 10; opacity: 0; 
-            overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth;
-            transition: opacity 0.6s ease;
-            animation: bg-scroll 5s linear infinite; 
-        }
+        #main-layout { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 10; opacity: 0; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; transition: opacity 0.6s ease; }
         #main-layout.arrived { opacity: 1; }
-
-        /* 場景背景色動態漸變 */
         body.page2-active { background-color: #1a1917; }
-        body.gameover-active { background-color: #080004; } /* 死機深淵黑 */
+        body.gameover-active { background-color: #080004; }
 
-        .page-section { position: relative; width: 100%; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        #page1 { justify-content: flex-start; }
-        #page2 { justify-content: center; } 
-        #page3 { justify-content: center; min-height: 120vh; } /* 碎裂緩衝頁 */
+        .page-section { position: relative; width: 100%; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; z-index: 10; }
+        #page1 { justify-content: flex-start; padding-top: 5vh; }
+        #page2, #page3 { justify-content: center; } 
+        #page3 { min-height: 120vh; } 
 
-        .scroll-indicator {
-            font-family: 'Press Start 2P', cursive; font-size: 0.6rem; color: #888;
-            text-align: center; margin-top: auto; margin-bottom: 20px; letter-spacing: 1px;
-            animation: bounce 1.5s infinite ease-in-out; transition: opacity 0.3s;
-        }
-        #scrollIndicator2 { position: absolute; bottom: 30px; color: #555; }
+        .scroll-indicator { font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 600; color: rgba(255,255,255,0.4); text-align: center; margin-top: auto; margin-bottom: 20px; letter-spacing: 2px; text-transform: uppercase; animation: bounce 2s infinite ease-in-out; transition: opacity 0.3s; }
+        #scrollIndicator2 { position: absolute; bottom: 30px; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
 
-        /* --- 第一頁：Bento 網格系統 --- */
-        .bento-grid { 
-            width: 100%; max-width: 1200px; display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 30px;
+        .modern-card { background: rgba(20, 20, 25, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 30px; width: 100%; max-width: 900px; box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 20px; margin-bottom: 30px; }
+        .card-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;}
+        .card-profile { display: flex; align-items: center; gap: 15px; }
+        .avatar-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 0 20px rgba(255,0,85,0.3); }
+        .profile-info { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .brand-title { font-family: 'Press Start 2P', cursive; font-size: 0.9rem; background: linear-gradient(90deg, #00f0ff, #ff0055); -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent; margin: 0; letter-spacing: 1px; }
+        .badge { padding: 4px 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #e4e4e7;}
+        .live { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 500; color: #a1a1aa; background: rgba(0,0,0,0.3); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);}
+        .live-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 10px #22c55e; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); } 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); } }
+        
+        .card-title { margin-bottom: 5px; margin-top: 10px; min-height: 1.2em; display: flex; align-items: center; }
+        
+        /* 【修改】縮小 Welcome 字體 */
+        .welcome-text { 
+            font-family: 'Inter', sans-serif; font-weight: 800; 
+            font-size: clamp(2.2rem, 5vw, 3.8rem); 
+            letter-spacing: -1.5px; color: #fff; margin: 0; line-height: 1.1; display: inline-block; min-height: 1.2em; 
+        }
+        .blink-cursor { animation: blink 1s step-end infinite; color: #00f0ff; }
+        
+        .social-links { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 5px;}
+        
+        /* 【修改】按鈕放大、加入周圍泛光 */
+        .social-links .btn { 
+            display: flex; align-items: center; justify-content: center; gap: 12px; padding: 15px 20px; flex: 1; min-width: 150px; 
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); 
+            border-radius: 16px; color: #fff; font-size: 0.95rem; font-weight: 600; 
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); text-decoration: none; backdrop-filter: blur(10px); 
+            /* 按鈕預設泛光 */
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.05), inset 0 0 10px rgba(255, 255, 255, 0.02);
+        }
+        .social-links .btn:hover { 
+            background: rgba(255,255,255,0.1); transform: translateY(-4px); 
+            border-color: rgba(255,255,255,0.4); 
+            /* 按鈕 Hover 強化泛光 */
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.15), 0 10px 20px rgba(0,0,0,0.5), inset 0 0 15px rgba(255, 255, 255, 0.05);
         }
         
-        .retro-card { 
-            background: #fff; border: 4px solid #111; border-radius: 16px; 
-            padding: 30px; box-shadow: 8px 8px 0px #111; position: relative; 
+        /* 【修改】圖標放大、修正 IG SVG 比例、加入自體發光 */
+        .social-links .btn svg { 
+            width: 24px; height: 24px; 
+            filter: drop-shadow(0 0 6px rgba(255,255,255,0.4)); 
         }
 
-        .panel-left { display: flex; flex-direction: column; align-items: center; background: #ffe3e8; }
-        .avatar-container {
-            width: 130px; height: 130px; border-radius: 50%; background: #ffcc00; border: 4px solid #111; box-shadow: 6px 6px 0px #111;
-            margin-bottom: 25px; display: flex; justify-content: center; align-items: center; overflow: hidden;
-        }
-        .avatar-container img { width: 100%; height: 100%; object-fit: cover; }
-        .nik-name { font-family: 'Press Start 2P', cursive; font-size: 1.2rem; color: #111; margin-bottom: 35px; text-align: center; line-height: 1.5; }
-
-        .social-btns { width: 100%; max-width: 300px; display: flex; flex-direction: column; gap: 15px; margin-top: auto; }
-        .btn {
-            width: 100%; padding: 15px 0; text-align: center; font-family: 'Press Start 2P', cursive; font-size: 0.8rem; 
-            text-decoration: none; border-radius: 8px; color: #111; border: 4px solid #111; box-shadow: 6px 6px 0px #111;
-            transition: transform 0.1s, box-shadow 0.1s; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
-        }
-        .btn svg { width: 26px; height: 26px; }
-        .btn:hover { transform: translate(2px, 2px); box-shadow: 4px 4px 0px #111; }
-        .btn:active { transform: translate(6px, 6px); box-shadow: 0px 0px 0px #111; }
-        .btn-steam { background: #66c0f4; } .btn-discord { background: #7289da; color: #fff; } .btn-ig { background: #ff0055; color: #fff; }
-
-        .panel-top { background: #e3f2fd; display: flex; align-items: center; justify-content: center; padding: 30px; text-align: center; }
-        .welcome-text { font-family: 'Press Start 2P', cursive; font-size: clamp(1.2rem, 4vw, 2.5rem); color: #111; margin: 0; line-height: 1.5; }
-        .blink-cursor { animation: blink 1s step-end infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
-
-        .panel-bottom-placeholder { width: 100%; min-height: 480px; visibility: hidden; }
+        .panel-bottom-placeholder { width: 100%; min-height: 400px; visibility: hidden; }
 
         /* =========================================
-           獨立懸浮的遊戲面板 (Dynamic FLIP Panel)
+           真正 FLIP 懸浮遊戲面板 (效能升級)
            ========================================= */
         #gamePanel {
-            position: fixed; z-index: 100;
-            display: flex; flex-direction: column; background: #fff; overflow: hidden;
-            will-change: top, left, width, height, transform, opacity;
+            position: fixed; z-index: 100; display: flex; flex-direction: column; 
+            background: rgba(15, 15, 20, 0.6); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1); overflow: hidden;
+            will-change: transform, width, height, opacity; /* 效能優化 */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5); padding: 15px; margin: 0 !important; border-radius: 20px;
+            transform-origin: top left; /* 以左上角為基準進行計算 */
+        }
+        #gamePanel.fullscreen-mode { 
+            /* 絕對置中，由 JS 加上 Translate(-50%, -50%) */
+            background: rgba(10, 10, 12, 0.85) !important; border-color: rgba(0, 240, 255, 0.3) !important;
+            box-shadow: 0px 0px 40px rgba(0, 240, 255, 0.15), inset 0 1px 0 rgba(255,255,255,0.1) !important;
         }
 
-        /* 視窗化大畫面模式 (Arcade Window Style) */
-        #gamePanel.fullscreen-mode { 
-            background-color: #151518 !important; border-color: #ff0055 !important;
-            box-shadow: 0px 0px 25px rgba(255, 0, 85, 0.3), 12px 12px 0px #111 !important;
-        }
-        #gamePanel.fullscreen-mode .game-top-bar { background-color: #222; padding: 12px 18px; border-radius: 12px; border: 3px solid #111;}
-        #gamePanel.fullscreen-mode .game-tab { background: #333; color: #888; border-color: #111; box-shadow: 3px 3px 0px #111; }
-        #gamePanel.fullscreen-mode .game-tab:hover { background: #444; }
-        #gamePanel.fullscreen-mode .game-tab.active { background: #ff0055; color: #fff; box-shadow: 0px 0px 0px #111; }
-        #gamePanel.fullscreen-mode .mode-btn { border-color: #111; box-shadow: 3px 3px 0px #111; }
-        #gamePanel.fullscreen-mode .score-display { background: #111; border-color: #111; color: #fff; box-shadow: 3px 3px 0px #111;}
-        #gamePanel.fullscreen-mode .score-val { color: #39ff14; }
-        #gamePanel.fullscreen-mode .game-instructions { background: #222; border-color: #111; color: #00f0ff; border-style: solid; }
-        
-        .back-to-grid-btn {
-            font-family: 'Press Start 2P', cursive; font-size: 0.5rem; color: #fff; background: #111;
-            border: 2px solid #ff0055; padding: 10px 12px; border-radius: 6px; cursor: pointer;
-            display: none; box-shadow: 3px 3px 0px #000;
-        }
+        .game-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 10px; flex-wrap: wrap; width: 100%; transition: all 0.3s;}
+        .game-tabs { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; background: rgba(0,0,0,0.4); padding: 5px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.05);}
+        .game-tab { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 600; background: transparent; color: #888; border: none; padding: 8px 12px; border-radius: 100px; cursor: pointer; transition: all 0.2s; }
+        .game-tab:hover { color: #fff; }
+        .game-tab.active { background: #fff; color: #000; box-shadow: 0 4px 10px rgba(255,255,255,0.2); }
+        .game-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .mode-btn { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.6rem; background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 8px 12px; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+        .mode-btn.manual { background: rgba(57, 255, 20, 0.2); border-color: #39ff14; color: #39ff14; }
+        .score-display { font-family: 'Press Start 2P', cursive; font-size: 0.55rem; color: #888; display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); padding: 8px 12px; border-radius: 10px; transition: all 0.3s;}
+        .score-val { color: #00f0ff; font-size: 0.75rem; transition: text-shadow 0.1s, color 0.1s; }
+        .score-val.flash { color: #fff; text-shadow: 0 0 15px #00f0ff, 0 0 30px #00f0ff; }
+        .back-to-grid-btn { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.6rem; color: #fff; background: rgba(255,0,85,0.2); border: 1px solid rgba(255,0,85,0.5); padding: 8px 12px; border-radius: 10px; cursor: pointer; display: none; transition: all 0.2s; }
+        .back-to-grid-btn:hover { background: rgba(255,0,85,0.4); }
         #gamePanel.fullscreen-mode .back-to-grid-btn { display: inline-block; }
 
-        .game-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 15px; flex-wrap: wrap; width: 100%; transition: all 0.3s;}
-        .game-tabs { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-        .game-tab { font-family: 'Press Start 2P', cursive; font-size: 0.6rem; background: #f0f0f0; color: #555; border: 3px solid #111; padding: 10px 12px; border-radius: 6px; cursor: pointer; box-shadow: 3px 3px 0px #111; transition: all 0.1s; text-align: center; }
-        .game-tab.active { background: #ff0055; color: #fff; box-shadow: 0px 0px 0px #111; transform: translate(3px, 3px); }
-        .game-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .mode-btn { font-family: 'Press Start 2P', cursive; font-size: 0.6rem; background: #ffcc00; color: #111; border: 3px solid #111; padding: 10px 12px; border-radius: 6px; cursor: pointer; transition: all 0.1s; box-shadow: 3px 3px 0px #111; }
-        .mode-btn.manual { background: #39ff14; }
-        .score-display { font-family: 'Press Start 2P', cursive; font-size: 0.6rem; color: #111; display: flex; align-items: center; gap: 8px; background: #fff; border: 3px solid #111; padding: 10px 12px; border-radius: 6px; box-shadow: 3px 3px 0px #111; transition: all 0.3s;}
-        .score-val { color: #ff0055; font-size: 0.7rem; transition: text-shadow 0.1s, color 0.1s; font-weight: bold;}
-        .score-val.flash { color: #fff; text-shadow: 0 0 10px #ff0055, 0 0 20px #ff0055; }
-
-        .canvas-container { flex: 1; width: 100%; background: #111; position: relative; touch-action: none; min-height: 250px; display: flex; justify-content: center; align-items: center; border: 4px solid #111; border-radius: 8px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); transition: border 0.3s;}
+        .canvas-container { flex: 1; width: 100%; background: #000; position: relative; touch-action: none; min-height: 250px; display: flex; justify-content: center; align-items: center; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; box-shadow: inset 0 0 30px rgba(0,0,0,0.8); }
         #gameCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block; cursor: crosshair; }
+        .game-instructions { margin-top: 12px; padding: 10px; font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.75rem; color: rgba(255,255,255,0.5); text-align: center; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.1); transition: all 0.3s;}
 
-        .game-instructions { margin-top: 15px; padding: 12px; font-family: 'VT323', monospace; font-size: 1.2rem; color: #555; text-align: center; border-radius: 8px; background: #f0f0f0; border: 2px dashed #ccc; transition: all 0.3s;}
-
-        #loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #111; z-index: 10; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #00f0ff; font-family: 'Press Start 2P', cursive; }
-        .progress-bar { width: 60%; height: 20px; border: 3px solid #fff; background: #111; padding: 2px; margin-top: 15px;}
-        .progress-fill { width: 0%; height: 100%; background: #ff0055; }
+        #loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 10; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #00f0ff; font-family: 'Press Start 2P', cursive; }
+        .progress-bar { width: 50%; max-width: 300px; height: 10px; border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.5); border-radius: 10px; padding: 2px; margin-top: 20px; overflow: hidden;}
+        .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #00f0ff, #ff0055); border-radius: 10px;}
 
         /* =========================================
-           碎裂特效與 GAME OVER 畫面
+           碎裂特效與 GAME OVER
            ========================================= */
-        #shatterContainer {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: 150; pointer-events: none; overflow: hidden; display: none;
-        }
-        .canvas-shard, .panel-shard {
-            position: absolute; background-repeat: no-repeat;
-            /* 物理彈射過場動畫 */
-            transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.5s ease-in;
-            will-change: transform, opacity;
-        }
-        .panel-shard { background-color: #151518; border: 2px solid #333; }
+        #shatterContainer { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 150; pointer-events: none; overflow: hidden; display: none; }
+        .canvas-shard, .panel-shard { position: absolute; transition: transform 1s cubic-bezier(0.5, 0, 0.2, 1), opacity 0.8s ease; will-change: transform, opacity; }
+        .canvas-shard { background-repeat: no-repeat; box-shadow: 0 0 10px rgba(0,240,255,0.3); }
+        .panel-shard { background: rgba(255,255,255,0.03); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 20px rgba(0,0,0,0.5); border-radius: 8px;}
 
-        /* 【修復】取消 GAME OVER 畫面的事件攔截，允許直接滑鼠滾輪滾動 */
-        #gameOverScreen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 900; pointer-events: none; /* 關鍵修復：讓滾動事件穿透到 #main-layout */
-            opacity: 0; transform: scale(0.5);
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-        }
-        #gameOverScreen.show { opacity: 1; transform: scale(1); pointer-events: none; }
-        
-        /* 復古掃描線遮罩 */
-        #gameOverScreen::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 4px, 3px 100%; z-index: 901; pointer-events: none;
-        }
-
-        #gameOverScreen h1 {
-            font-family: 'Press Start 2P', cursive; font-size: clamp(3rem, 8vw, 7rem);
-            color: #ff0055; text-shadow: 6px 6px 0px #111, 0 0 30px rgba(255,0,85,0.8);
-            text-align: center; letter-spacing: 5px; animation: glitch 2s infinite; z-index: 902;
-        }
-        #gameOverScreen p {
-            font-family: 'Press Start 2P', cursive; font-size: 0.8rem; color: #fff;
-            margin-top: 30px; animation: blink 1.5s infinite; z-index: 902;
-        }
-
-        @keyframes glitch {
-            0% { transform: translate(0) }
-            20% { transform: translate(-2px, 2px) }
-            40% { transform: translate(-2px, -2px) }
-            60% { transform: translate(2px, 2px) }
-            80% { transform: translate(2px, -2px) }
-            100% { transform: translate(0) }
-        }
+        #gameOverScreen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 900; pointer-events: none; opacity: 0; transform: scale(0.8); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; }
+        #gameOverScreen.show { opacity: 1; transform: scale(1); pointer-events: auto; }
+        #gameOverScreen::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.04)); background-size: 100% 4px, 3px 100%; z-index: 901; pointer-events: none; }
+        #gameOverScreen h1 { font-family: 'Press Start 2P', cursive; font-size: clamp(2.5rem, 8vw, 7rem); color: #ff0055; text-shadow: 4px 4px 0px rgba(255,255,255,0.1), 0 0 40px rgba(255,0,85,0.6); text-align: center; letter-spacing: 5px; animation: glitch 2s infinite; z-index: 902; }
+        .restart-hint { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.85rem; color: #fff; margin-top: 40px; animation: blink 1.5s infinite; z-index: 902; letter-spacing: 2px; text-align: center; background: rgba(255,0,85,0.2); border: 1px solid rgba(255,0,85,0.5); padding: 12px 24px; border-radius: 12px; }
+        @keyframes glitch { 0%, 100% { transform: translate(0) } 20% { transform: translate(-2px, 2px) } 40% { transform: translate(-2px, -2px) } 60% { transform: translate(2px, 2px) } 80% { transform: translate(2px, -2px) } }
 
         @media (min-width: 900px) {
             .page-section { padding: 40px; }
-            .bento-grid { grid-template-columns: 320px 1fr; grid-template-rows: auto 1fr; gap: 30px; height: 85vh; padding: 0; }
-            .panel-left { grid-column: 1 / 2; grid-row: 1 / 3; padding: 40px; justify-content: flex-start;}
-            .avatar-container { width: 140px; height: 140px; border-width: 4px; box-shadow: 6px 6px 0px #111; margin-bottom: 25px;}
-            .social-btns { flex-direction: column; width: 100%; gap: 20px; margin-top: auto;}
-            .panel-top { grid-column: 2 / 3; grid-row: 1 / 2; }
-            .panel-bottom-placeholder { grid-column: 2 / 3; grid-row: 2 / 3; min-height: unset; height: 100%; }
+            .modern-card { padding: 40px; border-radius: 24px; gap: 30px;}
+            .card-top { flex-wrap: nowrap; }
+            .avatar-img { width: 60px; height: 60px; }
+            .brand-title { font-size: 1.2rem; }
+            .social-links { flex-wrap: nowrap; margin-top: 10px;}
+            /* 【修改】按鈕更大 */
+            .social-links .btn { font-size: 1.05rem; padding: 18px 28px; border-radius: 18px; }
+            .social-links .btn svg { width: 28px; height: 28px; }
             
-            .game-top-bar { flex-wrap: nowrap; margin-bottom: 20px; }
-            .game-tab { font-size: 0.7rem; padding: 12px 15px; box-shadow: 4px 4px 0px #111; }
-            .mode-btn { font-size: 0.7rem; padding: 12px 15px; box-shadow: 4px 4px 0px #111; }
-            .score-display { font-size: 0.7rem; padding: 12px 15px; box-shadow: 4px 4px 0px #111; }
+            #gamePanel { padding: 40px; border-radius: 24px; }
+            #gamePanel.fullscreen-mode { padding: 30px !important; }
+            .game-tab { font-size: 0.8rem; padding: 10px 20px; }
+            .mode-btn { font-size: 0.8rem; padding: 10px 18px; }
+            .score-display { font-size: 0.6rem; padding: 12px 20px; }
             .score-val { font-size: 0.9rem; }
-            .game-instructions { font-size: 1.4rem; padding: 15px; }
-            .back-to-grid-btn { font-size: 0.8rem; padding: 15px 25px; top: 30px; left: 30px;}
+            .back-to-grid-btn { font-size: 0.8rem; padding: 10px 18px; }
+            .game-instructions { font-size: 0.85rem; padding: 12px; }
         }
     </style>
 </head>
 <body>
-
     <div id="intro-wrapper">
-        <div id="intro-top">INSERT COIN</div>
-        <div id="intro-slogan">NIK</div>
-        <div id="intro-sub">PLAYER 1 START</div>
+        <div id="intro-top">SYSTEM BOOT</div>
+        <div id="intro-slogan">NIKGAME</div>
+        <div id="intro-sub">ESTABLISHING CONNECTION...</div>
     </div>
     <canvas id="warp-canvas"></canvas>
-
+    <div class="bg-grid"></div><div class="orb orb-1"></div><div class="orb orb-2"></div>
     <div id="shatterContainer"></div>
-
-    <div id="gameOverScreen">
-        <h1>GAME<br>OVER</h1>
-        <p>▲ SCROLL UP TO RESPAWN</p>
-    </div>
+    <div id="gameOverScreen"><h1>GAME<br>OVER</h1><div class="restart-hint">TAP OR SCROLL UP TO REBUILD</div></div>
 
     <div id="main-layout">
-        
         <div class="page-section" id="page1">
-            <div class="bento-grid">
-                <div class="retro-card panel-left">
-                    <div class="avatar-container"><img src="https://naha.one/assets/media/daf150e0a9023f31fe0c63006aa8f313.jpg" alt="NIK"></div>
-                    <div class="nik-name">NIKGAME</div>
-                    <div class="social-btns">
-                        <a href="https://steamcommunity.com/id/TWDL/" target="_blank" class="btn btn-steam">
-                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.97 0C5.36 0 0 5.37 0 12c0 6.63 5.36 12 11.97 12 6.61 0 11.97-5.37 11.97-12C23.94 5.37 18.58 0 11.97 0zm6.81 8.87c.07.25.12.52.12.8 0 1.51-1.23 2.73-2.73 2.73-.1 0-.2-.01-.3-.03l-2.82 4.09c.08.26.13.53.13.82 0 1.51-1.23 2.73-2.73 2.73-1.5 0-2.73-1.22-2.73-2.73 0-1.36.98-2.48 2.27-2.68l2.99-3.8c-.04-.15-.06-.31-.06-.47 0-1.51 1.23-2.73 2.73-2.73 1.5 0 2.73 1.22 2.73 2.73zm-4.08 1.15c-.65 0-1.18-.53-1.18-1.18 0-.65.53-1.18 1.18-1.18.65 0 1.18.53 1.18 1.18 0 .65-.53 1.18-1.18 1.18zm-4.32 7.63c-.65 0-1.18-.53-1.18-1.18 0-.65.53-1.18 1.18-1.18.65 0 1.18.53 1.18 1.18 0 .65-.53 1.18-1.18 1.18z"/></svg>
-                            <span>STEAM</span>
+            <div class="modern-card">
+                <div class="card-top">
+                    <div class="card-profile">
+                        <img src="https://naha.one/assets/media/daf150e0a9023f31fe0c63006aa8f313.jpg" alt="NIK" class="avatar-img">
+                        <div class="profile-info"><h2 class="brand-title">NIKGAME</h2><span class="badge">Creator</span></div>
+                    </div>
+                    <div class="live"><div class="live-dot"></div> System Online</div>
+                </div>
+                <div class="card-title"><h1 class="welcome-text" id="typewriter-text"></h1></div>
+                <div class="panel-bottom-placeholder" id="gamePlaceholder"></div>
+                <div class="card-bottom">
+                    <div class="social-links">
+                        <a href="https://steamcommunity.com/id/TWDL/" target="_blank" class="btn">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.97 0C5.36 0 0 5.37 0 12c0 6.63 5.36 12 11.97 12 6.61 0 11.97-5.37 11.97-12C23.94 5.37 18.58 0 11.97 0zm6.81 8.87c.07.25.12.52.12.8 0 1.51-1.23 2.73-2.73 2.73-.1 0-.2-.01-.3-.03l-2.82 4.09c.08.26.13.53.13.82 0 1.51-1.23 2.73-2.73 2.73-1.5 0-2.73-1.22-2.73-2.73 0-1.36.98-2.48 2.27-2.68l2.99-3.8c-.04-.15-.06-.31-.06-.47 0-1.51 1.23-2.73 2.73-2.73 1.5 0 2.73 1.22 2.73 2.73zm-4.08 1.15c-.65 0-1.18-.53-1.18-1.18 0-.65.53-1.18 1.18-1.18.65 0 1.18.53 1.18 1.18 0 .65-.53 1.18-1.18 1.18zm-4.32 7.63c-.65 0-1.18-.53-1.18-1.18 0-.65.53-1.18 1.18-1.18.65 0 1.18.53 1.18 1.18 0 .65-.53 1.18-1.18 1.18z"/></svg> 
+                            Steam
                         </a>
-                        <a href="https://discord.gg/YMGpsatqzt" target="_blank" class="btn btn-discord">
-                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.445.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.618-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.028C.533 9.046-.32 13.58.099 18.058a.082.082 0 00.031.056 19.908 19.908 0 005.993 3.029.078.078 0 00.084-.028c.462-.63.873-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.099.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.106c.36.698.772 1.363 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.029zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.419 0 1.333-.956 2.419-2.157 2.419zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.419 0 1.333-.946 2.419-2.157 2.419z"/></svg>
-                            <span>DISCORD</span>
+                        <a href="https://discord.gg/YMGpsatqzt" target="_blank" class="btn">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.445.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.618-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.028C.533 9.046-.32 13.58.099 18.058a.082.082 0 00.031.056 19.908 19.908 0 005.993 3.029.078.078 0 00.084-.028c.462-.63.873-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.099.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.106c.36.698.772 1.363 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.029zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.419 0 1.333-.956 2.419-2.157 2.419zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.419 0 1.333-.946 2.419-2.157 2.419z"/></svg> 
+                            Discord
                         </a>
-                        <a href="https://www.instagram.com/lin_lcx/" target="_blank" class="btn btn-ig">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-                            <span>INSTAGRAM</span>
+                        <a href="https://www.instagram.com/lin_lcx/" target="_blank" class="btn">
+                            <!-- 【修復】加入 viewBox="0 0 24 24" 解決圖示變形問題 -->
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg> 
+                            Instagram
                         </a>
                     </div>
                 </div>
-                <div class="retro-card panel-top">
-                    <h1 class="welcome-text">Welcome !<span class="blink-cursor">_</span></h1>
-                </div>
-                <div class="panel-bottom-placeholder" id="gamePlaceholder"></div>
             </div>
-            <div class="scroll-indicator" id="scrollIndicator">SCROLL DOWN TO EXPAND<br>▼</div>
+            <div class="scroll-indicator" id="scrollIndicator">SCROLL DOWN TO EXPAND ▼</div>
         </div>
-
-        <div class="page-section" id="page2">
-            <div class="scroll-indicator" id="scrollIndicator2">SCROLL DOWN TO SHATTER<br>▼</div>
-        </div>
-        
+        <div class="page-section" id="page2"><div class="scroll-indicator" id="scrollIndicator2">SCROLL DOWN TO SHATTER ▼</div></div>
         <div class="page-section" id="page3"></div>
 
-        <div class="retro-card" id="gamePanel" style="opacity: 0; pointer-events: none;">
+        <div class="modern-card" id="gamePanel" style="opacity: 0; pointer-events: none;">
             <div class="game-top-bar">
                 <div class="game-tabs" id="gameTabs">
-                    <button id="backToGridBtn" class="back-to-grid-btn">▲ RETURN</button>
+                    <button id="backToGridBtn" class="back-to-grid-btn">▲ Return</button>
                     <button class="game-tab active" data-game="pacman">PAC-MAN</button>
                     <button class="game-tab" data-game="shooter">SHOOTER</button>
                     <button class="game-tab" data-game="snake">SNAKE</button>
@@ -312,392 +228,300 @@
                 </div>
             </div>
             <div class="canvas-container" id="canvasContainer">
-                <div id="loading-overlay">
-                    <div class="loading-text">LOADING <span id="load-progress">0</span>%</div>
-                    <div class="progress-bar"><div class="progress-fill" id="load-fill"></div></div>
-                </div>
+                <div id="loading-overlay"><div class="loading-text">LOADING <span id="load-progress">0</span>%</div><div class="progress-bar"><div class="progress-fill" id="load-fill"></div></div></div>
                 <canvas id="gameCanvas"></canvas>
             </div>
             <div class="game-instructions" id="gameInstructions">LOADING SYSTEM...</div>
         </div>
-        
     </div>
 
     <script>
-        // ==========================================
-        // 1. 進場與載入動畫
-        // ==========================================
-        const canvas = document.getElementById('warp-canvas');
-        const ctx = canvas.getContext('2d');
-        const introWrapper = document.getElementById('intro-wrapper');
-        const mainLayout = document.getElementById('main-layout');
+        // --- 1. 進場動畫 ---
+        const canvas = document.getElementById('warp-canvas'), ctx = canvas.getContext('2d'), introWrapper = document.getElementById('intro-wrapper'), mainLayout = document.getElementById('main-layout');
         let width, height, centerX, centerY, warpParticles = [], speed = 0.5, maxSpeed = 35, isAccelerating = false, aniId;
-
-        function resizeWarp() {
-            const dpr = window.devicePixelRatio || 1;
-            width = window.innerWidth; height = window.innerHeight;
-            canvas.width = width * dpr; canvas.height = height * dpr;
-            canvas.style.width = width + 'px'; canvas.style.height = height + 'px';
-            ctx.scale(dpr, dpr); centerX = width / 2; centerY = height / 2;
-        }
+        function resizeWarp() { const dpr=window.devicePixelRatio||1; width=window.innerWidth; height=window.innerHeight; canvas.width=width*dpr; canvas.height=height*dpr; canvas.style.width=width+'px'; canvas.style.height=height+'px'; ctx.scale(dpr,dpr); centerX=width/2; centerY=height/2; }
         window.addEventListener('resize', resizeWarp); resizeWarp();
-
-        class WarpParticle {
-            constructor() { this.reset(); }
-            reset() { this.x = (Math.random()-0.5)*width*2; this.y = (Math.random()-0.5)*height*2; this.z = Math.random()*width; this.pz = this.z; this.alpha = Math.random()*0.8+0.2; this.thickness = Math.random()*2+1; }
-            update() { this.z -= speed; if (this.z < 1) this.reset(); }
-            draw() { const fov=300, sx=(this.x/this.z)*fov+centerX, sy=(this.y/this.z)*fov+centerY; const px=(this.x/this.pz)*fov+centerX, py=(this.y/this.pz)*fov+centerY; this.pz=this.z; ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(sx,sy); ctx.lineWidth=Math.max(0.5,(1-this.z/width)*this.thickness); ctx.strokeStyle=`rgba(17,17,17,${(1-this.z/width)*this.alpha})`; ctx.stroke(); }
-        }
+        class WarpParticle { constructor(){this.reset();} reset(){this.x=(Math.random()-0.5)*width*2; this.y=(Math.random()-0.5)*height*2; this.z=Math.random()*width; this.pz=this.z; this.alpha=Math.random()*0.8+0.2; this.thickness=Math.random()*2+1;} update(){this.z-=speed; if(this.z<1)this.reset();} draw(){const fov=300, sx=(this.x/this.z)*fov+centerX, sy=(this.y/this.z)*fov+centerY, px=(this.x/this.pz)*fov+centerX, py=(this.y/this.pz)*fov+centerY; this.pz=this.z; ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(sx,sy); ctx.lineWidth=Math.max(0.5,(1-this.z/width)*this.thickness); ctx.strokeStyle=`rgba(255,255,255,${(1-this.z/width)*this.alpha})`; ctx.stroke();} }
         for(let i=0; i<400; i++) warpParticles.push(new WarpParticle());
-        function animateWarp() { ctx.fillStyle='rgba(234,221,207,0.3)'; ctx.fillRect(0,0,width,height); if(isAccelerating){speed+=1.5; if(speed>maxSpeed) speed=maxSpeed;} warpParticles.forEach(p=>{p.update();p.draw();}); aniId=requestAnimationFrame(animateWarp); }
+        function animateWarp() { ctx.fillStyle='rgba(5,5,5,0.4)'; ctx.fillRect(0,0,width,height); if(isAccelerating){speed+=1.5; if(speed>maxSpeed)speed=maxSpeed;} warpParticles.forEach(p=>{p.update();p.draw();}); aniId=requestAnimationFrame(animateWarp); }
         animateWarp();
 
         setTimeout(() => isAccelerating = true, 600);
         setTimeout(() => { document.getElementById('intro-top').classList.add('hide-text'); document.getElementById('intro-sub').classList.add('hide-text'); introWrapper.classList.add('zoom-to-i'); }, 1000);
         setTimeout(() => { introWrapper.classList.add('fade-out-wrapper'); canvas.style.opacity='0'; mainLayout.classList.add('arrived'); setTimeout(() => { cancelAnimationFrame(aniId); canvas.style.display='none'; introWrapper.style.display='none'; simulateLoading(); }, 300); }, 1450);
 
-        // ==========================================
-        // 2. 懸浮面板與碎裂重生核心邏輯
-        // ==========================================
-        const placeholder = document.getElementById('gamePlaceholder');
-        const gamePanel = document.getElementById('gamePanel');
-        const shatterContainer = document.getElementById('shatterContainer');
-        const gameOverScreen = document.getElementById('gameOverScreen');
-        let panelState = 'GRID'; // GRID, EXPANDING, FULLSCREEN, SHRINKING, GAMEOVER, ANIMATING
+        const TypeWriter = {
+            text: "Welcome", index: 0, timer: null,
+            start() { const el=document.getElementById('typewriter-text'); el.innerHTML=''; this.index=0; clearInterval(this.timer); this.timer=setInterval(()=>{ if(this.index<this.text.length){el.innerHTML+=this.text.charAt(this.index); this.index++;} else{clearInterval(this.timer); el.innerHTML+='<span class="blink-cursor">_</span>';} if(panelState === 'GRID') syncPanelPosition(); }, 150); }
+        };
 
+        // --- 2. 真・FLIP 動畫與絕對置中 ---
+        const placeholder = document.getElementById('gamePlaceholder'), gamePanel = document.getElementById('gamePanel'), shatterContainer = document.getElementById('shatterContainer'), gameOverScreen = document.getElementById('gameOverScreen');
+        let panelState = 'GRID'; 
+        
         function syncPanelPosition() {
             if (panelState !== 'GRID' && panelState !== 'SHRINKING') return;
             const rect = placeholder.getBoundingClientRect();
-            Object.assign(gamePanel.style, {
-                top: `${rect.top}px`, left: `${rect.left}px`, width: `${rect.width}px`, height: `${rect.height}px`,
-                borderRadius: '16px', borderWidth: '4px', padding: window.innerWidth>=900 ? '30px' : '25px', transition: 'none'
-            });
+            const bRadius = window.innerWidth >= 900 ? '24px' : '20px';
+            Object.assign(gamePanel.style, { transform: `translate(${rect.left}px, ${rect.top}px)`, width: `${rect.width}px`, height: `${rect.height}px`, borderRadius: bRadius, transition: 'none', top: '0', left: '0' });
         }
 
-        // --- 碎裂引擎 ---
         function triggerShatter() {
             if(panelState === 'GAMEOVER' || panelState === 'ANIMATING') return;
-            panelState = 'ANIMATING';
-            GameEngine.stopCurrent(); // 暫停遊戲
-
-            const panelRect = gamePanel.getBoundingClientRect();
-            const canvasRect = GameEngine.gCanvas.getBoundingClientRect();
-            
+            panelState = 'ANIMATING'; GameEngine.stopCurrent(); 
+            const panelRect = gamePanel.getBoundingClientRect(), canvasRect = GameEngine.gCanvas.getBoundingClientRect();
             if(canvasRect.width > 0 && canvasRect.height > 0) {
-                const dataUrl = GameEngine.gCanvas.toDataURL(); // 擷取殘影
-                shatterContainer.innerHTML = ''; shatterContainer.style.display = 'block';
-
-                const rows = 8, cols = 10;
-                const shardW = canvasRect.width / cols, shardH = canvasRect.height / rows;
-
+                const dataUrl = GameEngine.gCanvas.toDataURL(); shatterContainer.innerHTML = ''; shatterContainer.style.display = 'block';
+                const rows = 8, cols = 10, shardW = canvasRect.width/cols, shardH = canvasRect.height/rows;
                 for(let i=0; i<rows; i++) {
                     for(let j=0; j<cols; j++) {
-                        let shard = document.createElement('div');
-                        shard.className = 'canvas-shard';
-                        Object.assign(shard.style, {
-                            width: `${shardW}px`, height: `${shardH}px`, left: `${canvasRect.left + j*shardW}px`, top: `${canvasRect.top + i*shardH}px`,
-                            backgroundImage: `url(${dataUrl})`, backgroundPosition: `-${j*shardW}px -${i*shardH}px`, backgroundSize: `${canvasRect.width}px ${canvasRect.height}px`
-                        });
+                        let shard = document.createElement('div'); shard.className = 'canvas-shard';
+                        Object.assign(shard.style, { width: `${shardW}px`, height: `${shardH}px`, left: `${canvasRect.left+j*shardW}px`, top: `${canvasRect.top+i*shardH}px`, backgroundImage: `url(${dataUrl})`, backgroundPosition: `-${j*shardW}px -${i*shardH}px`, backgroundSize: `${canvasRect.width}px ${canvasRect.height}px` });
                         shatterContainer.appendChild(shard);
-                        
-                        setTimeout(() => {
-                            const angle = Math.random()*Math.PI*2; const dist = Math.random()*500+200;
-                            shard.dataset.tx = Math.cos(angle)*dist; shard.dataset.ty = Math.sin(angle)*dist + 300;
-                            shard.dataset.rot = (Math.random()-0.5)*720;
-                            shard.style.transform = `translate(${shard.dataset.tx}px, ${shard.dataset.ty}px) rotate(${shard.dataset.rot}deg)`;
-                            shard.style.opacity = '0';
-                        }, 20);
+                        setTimeout(() => { const angle=Math.random()*Math.PI*2, dist=Math.random()*500+200; shard.dataset.tx=Math.cos(angle)*dist; shard.dataset.ty=Math.sin(angle)*dist+300; shard.style.transform=`translate(${shard.dataset.tx}px, ${shard.dataset.ty}px) rotate(${(Math.random()-0.5)*720}deg)`; shard.style.opacity='0'; }, 20);
                     }
                 }
+                for(let k=0; k<12; k++) {
+                    let pShard = document.createElement('div'); pShard.className = 'panel-shard';
+                    Object.assign(pShard.style, { width: `${Math.random()*150+50}px`, height: `${Math.random()*150+50}px`, left: `${panelRect.left+Math.random()*panelRect.width}px`, top: `${panelRect.top+Math.random()*panelRect.height}px` });
+                    shatterContainer.appendChild(pShard);
+                    setTimeout(() => { const angle=Math.random()*Math.PI*2, dist=Math.random()*window.innerWidth*0.6; pShard.style.transform=`translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist+200}px) rotate(${(Math.random()-0.5)*1080}deg)`; pShard.style.opacity='0'; }, 20);
+                }
             }
-            
-            gamePanel.style.opacity = '0';
-            document.body.classList.add('gameover-active');
+            gamePanel.style.opacity = '0'; document.body.classList.add('gameover-active');
             setTimeout(() => { gameOverScreen.classList.add('show'); panelState = 'GAMEOVER'; }, 300);
         }
 
-        // --- 重生引擎 (拼回碎片) ---
         function reassembleShatter() {
-            if(panelState !== 'GAMEOVER') return;
-            panelState = 'ANIMATING';
-            gameOverScreen.classList.remove('show');
-            document.body.classList.remove('gameover-active');
-
-            const shards = document.querySelectorAll('.canvas-shard');
-            shards.forEach(shard => {
-                shard.style.transition = 'transform 0.6s cubic-bezier(0.5, 0, 0.2, 1), opacity 0.4s ease';
-                shard.style.transform = 'translate(0, 0) rotate(0deg)';
-                shard.style.opacity = '1';
-            });
-
-            setTimeout(() => {
-                shatterContainer.style.display = 'none';
-                gamePanel.style.opacity = '1';
-                expandToFullscreen(true); // 直接無縫進入全螢幕狀態
-                GameEngine.reset();
-                GameEngine.startGame();
-            }, 650);
+            if(panelState !== 'GAMEOVER') return; panelState = 'ANIMATING';
+            gameOverScreen.classList.remove('show'); document.body.classList.remove('gameover-active');
+            document.querySelectorAll('.canvas-shard, .panel-shard').forEach(shard => { shard.style.transition='transform 0.6s cubic-bezier(0.5,0,0.2,1), opacity 0.4s ease'; shard.style.transform='translate(0, 0) rotate(0deg)'; shard.style.opacity='1'; });
+            setTimeout(() => { shatterContainer.style.display='none'; gamePanel.style.opacity='1'; expandToFullscreen(true); GameEngine.reset(); GameEngine.startGame(); }, 650);
         }
 
         function expandToFullscreen(instant = false) {
-            panelState = instant ? 'FULLSCREEN' : 'EXPANDING';
-            gamePanel.classList.add('fullscreen-mode');
-            document.body.classList.add('page2-active');
-            
-            const winW = Math.min(1140, window.innerWidth * 0.92), winH = window.innerHeight * 0.82;
-            Object.assign(gamePanel.style, {
-                transition: instant ? 'none' : 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-                top: `${(window.innerHeight-winH)/2}px`, left: `${(window.innerWidth-winW)/2}px`,
-                width: `${winW}px`, height: `${winH}px`, borderRadius: '24px', borderWidth: '4px'
-            });
+            panelState = instant ? 'FULLSCREEN' : 'EXPANDING'; gamePanel.classList.add('fullscreen-mode'); document.body.classList.add('page2-active');
+            const isDesktop = window.innerWidth >= 900, winW = isDesktop ? Math.min(1140, window.innerWidth*0.92) : (window.innerWidth-20), winH = isDesktop ? window.innerHeight*0.82 : (window.innerHeight-40);
+            Object.assign(gamePanel.style, { transition: instant ? 'none' : 'transform 0.6s cubic-bezier(0.16,1,0.3,1), width 0.6s cubic-bezier(0.16,1,0.3,1), height 0.6s cubic-bezier(0.16,1,0.3,1)', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: `${winW}px`, height: `${winH}px`, borderRadius: isDesktop ? '24px' : '16px' });
             if(!instant) setTimeout(() => panelState = 'FULLSCREEN', 600);
         }
 
         function shrinkToGrid() {
-            panelState = 'SHRINKING';
-            gamePanel.classList.remove('fullscreen-mode');
-            document.body.classList.remove('page2-active');
-            const rect = placeholder.getBoundingClientRect();
-            Object.assign(gamePanel.style, {
-                transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-                top: `${rect.top}px`, left: `${rect.left}px`, width: `${rect.width}px`, height: `${rect.height}px`,
-                borderRadius: '16px', borderWidth: '4px'
-            });
+            panelState = 'SHRINKING'; gamePanel.classList.remove('fullscreen-mode'); document.body.classList.remove('page2-active');
+            const rect = placeholder.getBoundingClientRect(), bRadius = window.innerWidth >= 900 ? '24px' : '20px';
+            Object.assign(gamePanel.style, { transition: 'transform 0.6s cubic-bezier(0.16,1,0.3,1), width 0.6s cubic-bezier(0.16,1,0.3,1), height 0.6s cubic-bezier(0.16,1,0.3,1)', top: '0', left: '0', transform: `translate(${rect.left}px, ${rect.top}px)`, width: `${rect.width}px`, height: `${rect.height}px`, borderRadius: bRadius });
             setTimeout(() => { panelState = 'GRID'; syncPanelPosition(); }, 600);
         }
 
-        // 滾動監聽 (掌控頁面狀態)
         mainLayout.addEventListener('scroll', () => {
-            const page2T = document.getElementById('page2').getBoundingClientRect().top;
-            const page3T = document.getElementById('page3').getBoundingClientRect().top;
-            const threshold = window.innerHeight * 0.45;
+            const page2T = document.getElementById('page2').getBoundingClientRect().top, page3T = document.getElementById('page3').getBoundingClientRect().top, thres = window.innerHeight * 0.45;
+            if(page3T < thres) { if(panelState !== 'GAMEOVER') triggerShatter(); } 
+            else if(page2T < thres) { if(panelState === 'GAMEOVER') reassembleShatter(); else if(panelState === 'GRID') expandToFullscreen(); } 
+            else { if(panelState === 'FULLSCREEN') shrinkToGrid(); else syncPanelPosition(); }
+        }, {passive: true});
 
-            if (page3T < threshold) {
-                if(panelState !== 'GAMEOVER') triggerShatter();
-            } else if (page2T < threshold) {
-                if(panelState === 'GAMEOVER') reassembleShatter();
-                else if(panelState === 'GRID') expandToFullscreen();
-            } else {
-                if(panelState === 'FULLSCREEN') shrinkToGrid();
-                else syncPanelPosition();
-            }
-        });
-
+        function forceRebuild() { if(panelState === 'GAMEOVER'){ mainLayout.scrollTo({top: document.getElementById('page2').offsetTop, behavior: 'smooth'}); reassembleShatter(); } }
+        gameOverScreen.addEventListener('click', forceRebuild); gameOverScreen.addEventListener('wheel', e => { if(e.deltaY < 0) forceRebuild(); });
+        let touchY = 0; gameOverScreen.addEventListener('touchstart', e => touchY=e.touches[0].clientY, {passive:true}); gameOverScreen.addEventListener('touchmove', e => { if(e.touches[0].clientY > touchY+30) forceRebuild(); }, {passive:true});
         document.getElementById('backToGridBtn').addEventListener('click', () => mainLayout.scrollTo({ top: 0, behavior: 'smooth' }));
         window.addEventListener('resize', () => { if(panelState==='GRID') syncPanelPosition(); else if(panelState==='FULLSCREEN') expandToFullscreen(true); });
 
-        // 確保初始獲取正確的 DOM 尺寸
         function simulateLoading() {
-            syncPanelPosition(); 
-            gamePanel.style.opacity = '1';
-            let progress = 0; const progressEl = document.getElementById('load-progress'), fillEl = document.getElementById('load-fill'), overlay = document.getElementById('loading-overlay'), modeBtn = document.getElementById('modeBtn');
+            syncPanelPosition(); gamePanel.style.opacity = '1';
+            let progress = 0; const progressEl = document.getElementById('load-progress'), fillEl = document.getElementById('load-fill');
             const loadInt = setInterval(() => {
                 progress += Math.floor(Math.random()*25)+15;
                 if (progress >= 100) {
                     clearInterval(loadInt); progressEl.innerText = '100'; fillEl.style.width = '100%';
-                    setTimeout(() => { overlay.style.display='none'; modeBtn.style.display='block'; gamePanel.style.pointerEvents='auto'; GameEngine.init(); }, 400); 
+                    setTimeout(() => { document.getElementById('loading-overlay').style.display='none'; document.getElementById('modeBtn').style.display='block'; gamePanel.style.pointerEvents='auto'; TypeWriter.start(); GameEngine.init(); }, 400); 
                 } else { progressEl.innerText = progress; fillEl.style.width = progress + '%'; }
             }, 80);
         }
 
         // ==========================================
-        // 3. 完美修復與展開的遊戲引擎
+        // 3. 完美零死角遊戲引擎 (含防縮放重疊與 AI 防死循環)
         // ==========================================
         const GameEngine = {
-            activeGame: 'pacman', isAutoMode: true, score: 0, gCanvas: null, gCtx: null, rectW: 0, rectH: 0, reqId: null,
+            activeGame: localStorage.getItem('nikgame_lastPlayed') || 'pacman',
+            isAutoMode: localStorage.getItem('nikgame_aiMode') !== 'false',
+            score: 0, gCanvas: null, gCtx: null, rectW: 0, rectH: 0, reqId: null, ro: null,
             input: { dx: 1, dy: 0, left: false, right: false, mouseX: null },
 
             init() {
                 this.gCanvas = document.getElementById('gameCanvas'); this.gCtx = this.gCanvas.getContext('2d');
-                this.bindEvents(); 
-                
-                // 強制初始化畫布尺寸
+                document.querySelectorAll('.game-tab').forEach(t=>t.classList.remove('active'));
+                const activeTab = document.querySelector(`.game-tab[data-game="${this.activeGame}"]`);
+                if(activeTab) activeTab.classList.add('active');
+                const mBtn = document.getElementById('modeBtn'); mBtn.innerText = this.isAutoMode ? "AI MODE" : "MANUAL"; mBtn.classList.toggle('manual', !this.isAutoMode);
+                this.bindEvents(); this.syncCanvasSize(); this.setupResizeObserver(); this.startGame();
+            },
+            syncCanvasSize() {
                 const rect = document.getElementById('canvasContainer').getBoundingClientRect();
-                this.rectW = rect.width; this.rectH = rect.height;
-                const dpr = window.devicePixelRatio || 1; 
-                this.gCanvas.width = rect.width*dpr; this.gCanvas.height = rect.height*dpr; 
-                this.gCtx.scale(dpr,dpr);
-                
-                this.setupResizeObserver(); this.startGame();
+                if (rect.width > 0 && rect.height > 0) {
+                    this.rectW = rect.width; this.rectH = rect.height; const dpr = window.devicePixelRatio || 1; 
+                    this.gCanvas.width = rect.width*dpr; this.gCanvas.height = rect.height*dpr; 
+                    this.gCtx.setTransform(1,0,0,1,0,0); this.gCtx.scale(dpr,dpr); return true;
+                } return false;
             },
             setupResizeObserver() {
-                new ResizeObserver(entries => {
-                    for (let entry of entries) {
-                        const rect = entry.contentRect;
-                        if (rect.width > 0 && rect.height > 0) {
-                            if (Math.abs(this.rectW - rect.width) > 1 || Math.abs(this.rectH - rect.height) > 1) {
-                                this.rectW = rect.width; this.rectH = rect.height;
-                                const dpr = window.devicePixelRatio || 1; 
-                                this.gCanvas.width = rect.width*dpr; this.gCanvas.height = rect.height*dpr; 
-                                this.gCtx.scale(dpr,dpr);
-                                if(this.activeGame === 'pacman') PacmanGame.updateBounds();
-                                else if(this.activeGame === 'snake') SnakeGame.updateBounds();
-                                else if(this.activeGame === 'shooter') ShooterGame.updateBounds();
-                            }
+                if(this.ro) this.ro.disconnect(); 
+                this.ro = new ResizeObserver(entries => {
+                    for (let e of entries) {
+                        if (e.contentRect.width > 0 && e.contentRect.height > 0 && (Math.abs(this.rectW-e.contentRect.width)>1 || Math.abs(this.rectH-e.contentRect.height)>1)) {
+                            this.syncCanvasSize();
+                            if(this.activeGame === 'pacman') PacmanGame.updateBounds(); else if(this.activeGame === 'snake') SnakeGame.updateBounds(); else if(this.activeGame === 'shooter') ShooterGame.updateBounds();
                         }
                     }
-                }).observe(document.getElementById('canvasContainer'));
+                }); this.ro.observe(document.getElementById('canvasContainer'));
             },
             bindEvents() {
-                document.getElementById('modeBtn').addEventListener('click', e => { this.isAutoMode = !this.isAutoMode; e.target.innerText = this.isAutoMode ? "AI MODE" : "MANUAL"; e.target.classList.toggle('manual', !this.isAutoMode); this.updateInstructions(); });
-                document.querySelectorAll('.game-tab').forEach(tab => { tab.addEventListener('click', () => { if(tab.classList.contains('active')) return; document.querySelectorAll('.game-tab').forEach(t=>t.classList.remove('active')); tab.classList.add('active'); this.activeGame = tab.dataset.game; this.stopCurrent(); this.startGame(); }); });
-                
+                document.getElementById('modeBtn').addEventListener('click', e => { this.isAutoMode = !this.isAutoMode; localStorage.setItem('nikgame_aiMode', this.isAutoMode); e.target.innerText = this.isAutoMode ? "AI MODE" : "MANUAL"; e.target.classList.toggle('manual', !this.isAutoMode); this.updateInstructions(); });
+                document.querySelectorAll('.game-tab').forEach(tab => { tab.addEventListener('click', () => { if(tab.classList.contains('active')) return; document.querySelectorAll('.game-tab').forEach(t=>t.classList.remove('active')); tab.classList.add('active'); this.activeGame = tab.dataset.game; localStorage.setItem('nikgame_lastPlayed', this.activeGame); this.stopCurrent(); this.startGame(); }); });
                 window.addEventListener('keydown', e => {
-                    if(this.isAutoMode) return;
-                    if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
-                    if(this.activeGame === 'pacman' || this.activeGame === 'snake'){
-                        if(e.key==='ArrowUp' && this.input.dy!==1){this.input.dx=0; this.input.dy=-1;}
-                        if(e.key==='ArrowDown' && this.input.dy!==-1){this.input.dx=0; this.input.dy=1;}
-                        if(e.key==='ArrowLeft' && this.input.dx!==1){this.input.dx=-1; this.input.dy=0;}
-                        if(e.key==='ArrowRight' && this.input.dx!==-1){this.input.dx=1; this.input.dy=0;}
-                    } else if (this.activeGame === 'shooter') {
-                        if(e.key==='ArrowLeft') this.input.left=true; if(e.key==='ArrowRight') this.input.right=true;
-                    }
+                    if(this.isAutoMode) return; if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
+                    if(this.activeGame==='pacman' || this.activeGame==='snake'){
+                        if(e.key==='ArrowUp' && this.input.dy!==1){this.input.dx=0; this.input.dy=-1;} if(e.key==='ArrowDown' && this.input.dy!==-1){this.input.dx=0; this.input.dy=1;}
+                        if(e.key==='ArrowLeft' && this.input.dx!==1){this.input.dx=-1; this.input.dy=0;} if(e.key==='ArrowRight' && this.input.dx!==-1){this.input.dx=1; this.input.dy=0;}
+                    } else if (this.activeGame==='shooter') { if(e.key==='ArrowLeft') this.input.left=true; if(e.key==='ArrowRight') this.input.right=true; }
                 });
-                window.addEventListener('keyup', e => { if (this.activeGame === 'shooter') { if(e.key==='ArrowLeft') this.input.left=false; if(e.key==='ArrowRight') this.input.right=false; } });
-
+                window.addEventListener('keyup', e => { if (this.activeGame==='shooter') { if(e.key==='ArrowLeft') this.input.left=false; if(e.key==='ArrowRight') this.input.right=false; } });
                 const handlePointer = (x, y) => { 
-                    if(this.isAutoMode) return; 
-                    const rect = this.gCanvas.getBoundingClientRect(); const cx = x-rect.left, cy = y-rect.top; 
+                    if(this.isAutoMode) return; const rect = this.gCanvas.getBoundingClientRect(); const cx=x-rect.left, cy=y-rect.top; 
                     if(this.activeGame==='shooter') this.input.mouseX=cx; 
-                    else { 
-                        const mx=rect.width/2, my=rect.height/2; 
-                        if(Math.abs(cx-mx)>Math.abs(cy-my)){ if(cx>mx && this.input.dx!==-1){this.input.dx=1;this.input.dy=0;} else if(cx<mx && this.input.dx!==1){this.input.dx=-1;this.input.dy=0;} } 
-                        else { if(cy>my && this.input.dy!==-1){this.input.dx=0;this.input.dy=1;} else if(cy<my && this.input.dy!==1){this.input.dx=0;this.input.dy=-1;} } 
-                    } 
+                    else { const mx=rect.width/2, my=rect.height/2; if(Math.abs(cx-mx)>Math.abs(cy-my)){ if(cx>mx && this.input.dx!==-1){this.input.dx=1;this.input.dy=0;} else if(cx<mx && this.input.dx!==1){this.input.dx=-1;this.input.dy=0;} } else { if(cy>my && this.input.dy!==-1){this.input.dx=0;this.input.dy=1;} else if(cy<my && this.input.dy!==1){this.input.dx=0;this.input.dy=-1;} } } 
                 };
-                this.gCanvas.addEventListener('mousedown', e => handlePointer(e.clientX, e.clientY));
-                this.gCanvas.addEventListener('mousemove', e => { if(e.buttons > 0) handlePointer(e.clientX, e.clientY); });
-                this.gCanvas.addEventListener('mouseup', () => this.input.mouseX = null);
-                this.gCanvas.addEventListener('touchstart', e => handlePointer(e.touches[0].clientX, e.touches[0].clientY), {passive:true});
-                this.gCanvas.addEventListener('touchmove', e => { e.preventDefault(); handlePointer(e.touches[0].clientX, e.touches[0].clientY); }, {passive:false});
+                this.gCanvas.addEventListener('mousedown', e => handlePointer(e.clientX, e.clientY)); this.gCanvas.addEventListener('mousemove', e => { if(e.buttons>0) handlePointer(e.clientX, e.clientY); }); this.gCanvas.addEventListener('mouseup', () => this.input.mouseX=null);
+                this.gCanvas.addEventListener('touchstart', e => handlePointer(e.touches[0].clientX, e.touches[0].clientY), {passive:true}); 
+                this.gCanvas.addEventListener('touchmove', e => { if(!this.isAutoMode) e.preventDefault(); handlePointer(e.touches[0].clientX, e.touches[0].clientY); }, {passive:false}); 
                 this.gCanvas.addEventListener('touchend', () => this.input.mouseX = null);
             },
             addScore(pts) { this.score += pts; const scoreEl = document.getElementById('score'); scoreEl.innerText = this.score; scoreEl.classList.add('flash'); setTimeout(() => scoreEl.classList.remove('flash'), 100); },
             reset() { this.score = 0; document.getElementById('score').innerText = 0; this.input = { dx: 1, dy: 0, left: false, right: false, mouseX: null }; },
             stopCurrent() { cancelAnimationFrame(this.reqId); },
-            startGame() { this.updateInstructions(); if (this.activeGame === 'pacman') PacmanGame.start(this); else if (this.activeGame === 'shooter') ShooterGame.start(this); else if (this.activeGame === 'snake') SnakeGame.start(this); },
-            updateInstructions() { const el = document.getElementById('gameInstructions'); el.innerText = this.isAutoMode ? ">> AI 掛機中。點擊 MANUAL 即可親自遊玩。" : "[操作] 點擊/滑動畫面控制方向。"; }
+            startGame() { this.updateInstructions(); if (this.activeGame==='pacman') PacmanGame.start(this); else if (this.activeGame==='shooter') ShooterGame.start(this); else if (this.activeGame==='snake') SnakeGame.start(this); },
+            updateInstructions() { document.getElementById('gameInstructions').innerText = this.isAutoMode ? ">> AI AUTOPLAY ACTIVE. CLICK MANUAL TO PLAY." : "CONTROLS: SWIPE OR CLICK EDGES TO MOVE."; }
         };
 
-        // --- 完整重構：模組 A PAC-MAN ---
+        // --- PAC-MAN ---
         const PacmanGame = {
             engine: null, grid: 24, cols: 0, rows: 0, offsetX: 0, offsetY: 0, pacman: {}, dots: [], ghosts: [], particles: [], popups: [], trail: [], shake: 0, lastTick: 0,
-            start(engine) { this.engine = engine; this.updateBounds(); this.reset(); this.loop = this.loop.bind(this); this.engine.reqId = requestAnimationFrame(this.loop); },
-            updateBounds() { if(!this.engine || this.engine.rectW === 0) return; this.grid = Math.max(22, Math.floor(this.engine.rectW/24)); this.cols = Math.floor(this.engine.rectW/this.grid); this.rows = Math.floor(this.engine.rectH/this.grid); this.offsetX = (this.engine.rectW - this.cols*this.grid)/2; this.offsetY = (this.engine.rectH - this.rows*this.grid)/2; },
-            reset() { if(this.cols < 3) return; this.pacman = { x: Math.floor(this.cols/2), y: Math.floor(this.rows/2), mouth: 0, mouthDir: 0.03 }; this.dots = []; this.particles = []; this.popups = []; this.trail = []; this.shake = 0; this.engine.reset(); this.ghosts = [{ x: 1, y: 1, dx: 1, dy: 0, color: '#ff0055' }, { x: this.cols-2, y: this.rows-2, dx: 0, dy: -1, color: '#00f0ff' }]; for(let i=0; i<3; i++) this.dots.push(this.spawnObj()); },
-            spawnObj() { let v = false, o = {x:0, y:0}; while(!v) { o = { x: Math.floor(Math.random()*this.cols), y: Math.floor(Math.random()*this.rows) }; v = !(o.x===this.pacman.x && o.y===this.pacman.y) && !this.dots.some(d=>d.x===o.x && d.y===o.y); } return o; },
-            spawnParts(x, y, color) { for(let i=0; i<15; i++) this.particles.push({ x, y, vx: (Math.random()-0.5)*8, vy: (Math.random()-0.5)*8, life: 1, c: color }); },
+            start(engine) { this.engine=engine; this.updateBounds(); this.reset(); this.loop=this.loop.bind(this); this.engine.reqId=requestAnimationFrame(this.loop); },
+            updateBounds() { if(!this.engine || this.engine.rectW===0) return; this.grid=Math.max(22, Math.floor(this.engine.rectW/24)); this.cols=Math.floor(this.engine.rectW/this.grid); this.rows=Math.floor(this.engine.rectH/this.grid); this.offsetX=(this.engine.rectW-this.cols*this.grid)/2; this.offsetY=(this.engine.rectH-this.rows*this.grid)/2; },
+            reset() { if(this.cols<3) return; this.pacman={x:Math.floor(this.cols/2), y:Math.floor(this.rows/2), mouth:0, mouthDir:0.03}; this.dots=[]; this.particles=[]; this.popups=[]; this.trail=[]; this.shake=0; if(this.engine)this.engine.reset(); this.ghosts=[{x:1, y:1, dx:1, dy:0, color:'#ff0055'}, {x:this.cols-2, y:this.rows-2, dx:0, dy:-1, color:'#00f0ff'}]; for(let i=0; i<3; i++) this.dots.push(this.spawnObj()); },
+            spawnObj() { let v=false, o={x:0,y:0}, att=0; while(!v && att<50) { o={x:Math.floor(Math.random()*this.cols), y:Math.floor(Math.random()*this.rows)}; v=!(o.x===this.pacman.x && o.y===this.pacman.y) && !this.dots.some(d=>d.x===o.x && d.y===o.y); att++; } return o; },
+            spawnParts(x, y, color) { for(let i=0; i<15; i++) this.particles.push({ x, y, vx:(Math.random()-0.5)*8, vy:(Math.random()-0.5)*8, life:1, c:color }); },
             aiMove() {
-                let moves = [{dx: 1, dy: 0}, {dx: -1, dy: 0}, {dx: 0, dy: 1}, {dx: 0, dy: -1}]; moves = moves.filter(m => !(m.dx === -this.engine.input.dx && m.dy === -this.engine.input.dy));
-                let safe = moves.filter(m => { let nx = (this.pacman.x+m.dx+this.cols)%this.cols, ny = (this.pacman.y+m.dy+this.rows)%this.rows; return !this.ghosts.some(g => Math.abs(nx-g.x)+Math.abs(ny-g.y) <= 1); });
-                if(safe.length > 0) { let best = safe[0], minD = Infinity; safe.forEach(m => { let nx = (this.pacman.x+m.dx+this.cols)%this.cols, ny = (this.pacman.y+m.dy+this.rows)%this.rows; this.dots.forEach(d => { let dist = Math.abs(nx-d.x)+Math.abs(ny-d.y); if(dist < minD) { minD = dist; best = m; } }); }); this.engine.input.dx = best.dx; this.engine.input.dy = best.dy; }
+                let moves = [{dx:1,dy:0}, {dx:-1,dy:0}, {dx:0,dy:1}, {dx:0,dy:-1}].filter(m => !(m.dx===-this.engine.input.dx && m.dy===-this.engine.input.dy));
+                let safe = moves.filter(m => { let nx=(this.pacman.x+m.dx+this.cols)%this.cols, ny=(this.pacman.y+m.dy+this.rows)%this.rows; return !this.ghosts.some(g => Math.abs(nx-g.x)+Math.abs(ny-g.y) <= 1); });
+                if(safe.length > 0) { let best=safe[0], minD=Infinity; safe.forEach(m => { let nx=(this.pacman.x+m.dx+this.cols)%this.cols, ny=(this.pacman.y+m.dy+this.rows)%this.rows; this.dots.forEach(d => { let dist=Math.abs(nx-d.x)+Math.abs(ny-d.y); if(dist<minD) { minD=dist; best=m; } }); }); this.engine.input.dx=best.dx; this.engine.input.dy=best.dy; }
             },
             loop(time) {
-                this.engine.reqId = requestAnimationFrame(this.loop); if(this.cols < 3) return;
-                if (time - this.lastTick >= 140) {
-                    if (this.shake === 0) {
-                        if (this.engine.isAutoMode) this.aiMove();
-                        this.trail.push({x: this.pacman.x, y: this.pacman.y, alpha: 0.5}); if (this.trail.length > 4) this.trail.shift();
-                        this.pacman.x = (this.pacman.x + this.engine.input.dx + this.cols) % this.cols; this.pacman.y = (this.pacman.y + this.engine.input.dy + this.rows) % this.rows;
-                        this.ghosts.forEach(g => { let ms = [{dx:1, dy:0}, {dx:-1, dy:0}, {dx:0, dy:1}, {dx:0, dy:-1}]; if(Math.random() < 0.15) { let rm = ms[Math.floor(Math.random()*ms.length)]; if(!(rm.dx===-g.dx && rm.dy===-g.dy)) { g.dx=rm.dx; g.dy=rm.dy; } } g.x = (g.x + g.dx + this.cols) % this.cols; g.y = (g.y + g.dy + this.rows) % this.rows; });
-                        if (this.ghosts.some(g => g.x === this.pacman.x && g.y === this.pacman.y)) { this.shake = 12; this.spawnParts(this.pacman.x*this.grid+this.grid/2, this.pacman.y*this.grid+this.grid/2, '#ffcc00'); setTimeout(()=>this.reset(), 600); } 
-                        else { let ate = this.dots.findIndex(d => d.x === this.pacman.x && d.y === this.pacman.y); if (ate !== -1) { this.engine.addScore(10); let e = this.dots.splice(ate, 1)[0]; this.popups.push({x: e.x*this.grid+this.grid/2, y: e.y*this.grid, text: '+10', alpha: 1}); this.dots.push(this.spawnObj()); this.spawnParts(e.x*this.grid+this.grid/2, e.y*this.grid+this.grid/2, '#fff'); } }
-                    }
-                    this.lastTick = time;
+                this.engine.reqId=requestAnimationFrame(this.loop); if(this.engine.rectW===0) { if(this.engine.syncCanvasSize()) this.updateBounds(); else return; } if(this.cols<3) return;
+                if (time-this.lastTick >= 140) {
+                    if (this.shake===0) {
+                        if(this.engine.isAutoMode) this.aiMove(); this.trail.push({x:this.pacman.x, y:this.pacman.y, alpha:0.5}); if(this.trail.length>4) this.trail.shift();
+                        this.pacman.x=(this.pacman.x+this.engine.input.dx+this.cols)%this.cols; this.pacman.y=(this.pacman.y+this.engine.input.dy+this.rows)%this.rows;
+                        this.ghosts.forEach(g => { let ms=[{dx:1,dy:0},{dx:-1,dy:0},{dx:0,dy:1},{dx:0,dy:-1}]; if(Math.random()<0.15) { let rm=ms[Math.floor(Math.random()*ms.length)]; if(!(rm.dx===-g.dx && rm.dy===-g.dy)){g.dx=rm.dx; g.dy=rm.dy;} } g.x=(g.x+g.dx+this.cols)%this.cols; g.y=(g.y+g.dy+this.rows)%this.rows; });
+                        if(this.ghosts.some(g => g.x===this.pacman.x && g.y===this.pacman.y)) { this.shake=12; this.spawnParts(this.pacman.x*this.grid+this.grid/2, this.pacman.y*this.grid+this.grid/2, '#ffcc00'); setTimeout(()=>this.reset(), 600); } 
+                        else { let ate=this.dots.findIndex(d=>d.x===this.pacman.x && d.y===this.pacman.y); if(ate!==-1) { this.engine.addScore(10); let e=this.dots.splice(ate,1)[0]; this.popups.push({x:e.x*this.grid+this.grid/2, y:e.y*this.grid, text:'+10', alpha:1}); this.dots.push(this.spawnObj()); this.spawnParts(e.x*this.grid+this.grid/2, e.y*this.grid+this.grid/2, '#fff'); } }
+                    } this.lastTick = time;
                 }
-                const ctx = this.engine.gCtx; ctx.fillStyle = '#111'; ctx.fillRect(0, 0, this.engine.rectW, this.engine.rectH); ctx.save();
-                if(this.shake > 0) { ctx.translate((Math.random()-0.5)*12, (Math.random()-0.5)*12); this.shake--; } ctx.translate(this.offsetX, this.offsetY);
-                ctx.strokeStyle = 'rgba(0, 240, 255, 0.4)'; ctx.lineWidth = 4; ctx.strokeRect(0, 0, this.cols*this.grid, this.rows*this.grid);
-                this.trail.forEach(t => { t.alpha -= 0.02; if(t.alpha > 0) { ctx.fillStyle = `rgba(255, 204, 0, ${t.alpha})`; ctx.beginPath(); ctx.arc(t.x*this.grid+this.grid/2, t.y*this.grid+this.grid/2, this.grid/3, 0, Math.PI*2); ctx.fill(); } });
-                ctx.fillStyle = '#fff'; this.dots.forEach(d => { ctx.fillRect(d.x*this.grid+this.grid/2-3, d.y*this.grid+this.grid/2-3, 6, 6); });
-                this.ghosts.forEach(g => { let gx = g.x*this.grid+this.grid/2, gy = g.y*this.grid+this.grid/2, r = this.grid/2-2; ctx.fillStyle = g.color; ctx.beginPath(); ctx.arc(gx, gy, r, Math.PI, 0); ctx.lineTo(gx+r, gy+r); ctx.lineTo(gx-r, gy+r); ctx.fill(); });
-                if(this.shake === 0) { let px = this.pacman.x*this.grid+this.grid/2, py = this.pacman.y*this.grid+this.grid/2, ang = 0; if(this.engine.input.dx===-1) ang=Math.PI; if(this.engine.input.dy===1) ang=Math.PI/2; if(this.engine.input.dy===-1) ang=-Math.PI/2; this.pacman.mouth += this.pacman.mouthDir; if(this.pacman.mouth>0.25 || this.pacman.mouth<0) this.pacman.mouthDir*=-1; ctx.fillStyle = '#ffcc00'; ctx.beginPath(); ctx.arc(px, py, this.grid/2-2, ang+this.pacman.mouth*Math.PI, ang+(2-this.pacman.mouth)*Math.PI); ctx.lineTo(px, py); ctx.fill(); }
-                ctx.font = "12px 'Press Start 2P'"; this.popups.forEach((p, i) => { p.y -= 0.5; p.alpha -= 0.02; if(p.alpha<=0) { this.popups.splice(i, 1); return;} ctx.fillStyle = `rgba(255,204,0,${p.alpha})`; ctx.fillText(p.text, p.x-10, p.y); });
-                for(let i = this.particles.length-1; i>=0; i--) { let p = this.particles[i]; p.x += p.vx; p.y += p.vy; p.life -= 0.03; if(p.life <= 0) { this.particles.splice(i, 1); continue; } ctx.fillStyle = p.c; ctx.globalAlpha = p.life; ctx.fillRect(p.x, p.y, 4, 4); ctx.globalAlpha = 1; }
+                const ctx = this.engine.gCtx; ctx.fillStyle='#000'; ctx.fillRect(0,0,this.engine.rectW,this.engine.rectH); ctx.save();
+                if(this.shake>0){ ctx.translate((Math.random()-0.5)*12, (Math.random()-0.5)*12); this.shake--; } ctx.translate(this.offsetX, this.offsetY);
+                ctx.strokeStyle='rgba(0, 240, 255, 0.2)'; ctx.lineWidth=2; ctx.strokeRect(0,0,this.cols*this.grid,this.rows*this.grid);
+                this.trail.forEach(t=>{ t.alpha-=0.02; if(t.alpha>0){ ctx.fillStyle=`rgba(255, 204, 0, ${t.alpha})`; ctx.beginPath(); ctx.arc(t.x*this.grid+this.grid/2, t.y*this.grid+this.grid/2, this.grid/3, 0, Math.PI*2); ctx.fill(); } });
+                ctx.fillStyle='#fff'; this.dots.forEach(d=>ctx.fillRect(d.x*this.grid+this.grid/2-3, d.y*this.grid+this.grid/2-3, 6, 6));
+                this.ghosts.forEach(g=>{ let gx=g.x*this.grid+this.grid/2, gy=g.y*this.grid+this.grid/2, r=this.grid/2-2; ctx.fillStyle=g.color; ctx.beginPath(); ctx.arc(gx,gy,r,Math.PI,0); ctx.lineTo(gx+r,gy+r); ctx.lineTo(gx-r,gy+r); ctx.fill(); });
+                if(this.shake===0){ let px=this.pacman.x*this.grid+this.grid/2, py=this.pacman.y*this.grid+this.grid/2, ang=0; if(this.engine.input.dx===-1) ang=Math.PI; if(this.engine.input.dy===1) ang=Math.PI/2; if(this.engine.input.dy===-1) ang=-Math.PI/2; this.pacman.mouth+=this.pacman.mouthDir; if(this.pacman.mouth>0.25 || this.pacman.mouth<0) this.pacman.mouthDir*=-1; ctx.fillStyle='#ffcc00'; ctx.beginPath(); ctx.arc(px,py,this.grid/2-2,ang+this.pacman.mouth*Math.PI,ang+(2-this.pacman.mouth)*Math.PI); ctx.lineTo(px,py); ctx.fill(); }
+                ctx.font="12px 'Press Start 2P'"; this.popups.forEach((p,i)=>{ p.y-=0.5; p.alpha-=0.02; if(p.alpha<=0){this.popups.splice(i,1); return;} ctx.fillStyle=`rgba(255,204,0,${p.alpha})`; ctx.fillText(p.text, p.x-10, p.y); });
+                for(let i=this.particles.length-1; i>=0; i--){ let p=this.particles[i]; p.x+=p.vx; p.y+=p.vy; p.life-=0.03; if(p.life<=0){this.particles.splice(i,1); continue;} ctx.fillStyle=p.c; ctx.globalAlpha=p.life; ctx.fillRect(p.x, p.y, 4, 4); ctx.globalAlpha=1; }
                 ctx.restore();
             }
         };
 
-        // --- 完整重構：模組 B SHOOTER ---
+        // --- SHOOTER ---
         const ShooterGame = {
-            engine: null, player: {}, bullets: [], enemies: [], stars: [], shake: 0, enemyTimer: 0, frame: 0, particles: [], popups: [],
-            start(engine) { this.engine = engine; this.updateBounds(); this.reset(); this.loop = this.loop.bind(this); this.engine.reqId = requestAnimationFrame(this.loop); },
-            updateBounds() { if(!this.engine || this.engine.rectW === 0) return; if(this.player.x > this.engine.rectW - this.player.w) this.player.x = this.engine.rectW - this.player.w; },
-            reset() { let w = this.engine.rectW, h = this.engine.rectH; this.player = { x: w/2 - 15, y: h - 60, w: 30, h: 30, cooldown: 0 }; this.bullets = []; this.enemies = []; this.shake = 0; this.enemyTimer = 0; this.frame = 0; this.stars = []; this.particles = []; this.popups = []; if (this.engine) this.engine.reset(); for(let i=0; i<40; i++) this.stars.push({x: Math.random()*w, y: Math.random()*h, s: Math.random()*2+1}); },
-            spawnParts(x, y, color, speedScale=1) { for(let i=0; i<20; i++) this.particles.push({ x, y, vx: (Math.random()-0.5)*10*speedScale, vy: (Math.random()-0.5)*10*speedScale, life: 1, c: color }); },
-            loop() {
-                this.engine.reqId = requestAnimationFrame(this.loop); let w = this.engine.rectW, h = this.engine.rectH; const ctx = this.engine.gCtx; this.frame++;
+            engine: null, player: {x:0, y:0, w:30, h:30}, enemies: [], lastEnemy: 0,
+            start(engine) { this.engine = engine; this.reset(); this.loop = this.loop.bind(this); this.engine.reqId = requestAnimationFrame(this.loop); },
+            updateBounds() { if(!this.engine || this.engine.rectW===0) return; if(this.player.x > this.engine.rectW-30) this.player.x = this.engine.rectW-30; },
+            reset() { let w=this.engine.rectW, h=this.engine.rectH; this.player={x:w/2-15, y:h-60, w:30, h:30, cooldown:0}; this.bullets=[]; this.enemies=[]; this.shake=0; this.enemyTimer=0; this.frame=0; this.stars=[]; this.particles=[]; this.popups=[]; if(this.engine)this.engine.reset(); for(let i=0; i<40; i++) this.stars.push({x:Math.random()*w, y:Math.random()*h, s:Math.random()*2+1}); },
+            spawnParts(x, y, color, speedScale=1) { for(let i=0; i<20; i++) this.particles.push({x, y, vx:(Math.random()-0.5)*10*speedScale, vy:(Math.random()-0.5)*10*speedScale, life:1, c:color}); },
+            loop(time) {
+                this.engine.reqId = requestAnimationFrame(this.loop);
+                if(this.engine.rectW===0) { if(this.engine.syncCanvasSize()){this.updateBounds(); this.reset();} else return; }
+                let w=this.engine.rectW, h=this.engine.rectH; const ctx=this.engine.gCtx; this.frame++;
                 if (this.shake === 0) {
-                    if (this.engine.isAutoMode) { let targetX = w/2; if (this.enemies.length > 0) { let lowest = this.enemies.reduce((a,b) => a.y > b.y ? a : b); targetX = lowest.x + lowest.w/2; } this.player.x += (targetX - (this.player.x + this.player.w/2)) * 0.12; } 
-                    else { if (this.engine.input.mouseX !== null) this.player.x += (this.engine.input.mouseX - (this.player.x + this.player.w/2)) * 0.25; else { if (this.engine.input.left) this.player.x -= 6; if (this.engine.input.right) this.player.x += 6; } }
-                    if (this.player.cooldown <= 0) { this.bullets.push({x: this.player.x + this.player.w/2 - 2, y: this.player.y, vy: -12}); this.player.cooldown = 10; }
-                    this.player.cooldown--; if (this.player.x < 0) this.player.x = 0; if (this.player.x > w - this.player.w) this.player.x = w - this.player.w;
-                    this.enemyTimer--; if (this.enemyTimer <= 0) { this.enemies.push({x: Math.random()*(w-30), y: -30, w: 30, h: 30, vy: 4.5 }); this.enemyTimer = 40; }
+                    if (this.engine.isAutoMode) { let targetX=w/2; if (this.enemies.length>0) { let lowest=this.enemies.reduce((a,b)=>a.y>b.y?a:b); targetX=lowest.x+lowest.w/2 + (Math.random()*10-5); } this.player.x+=(targetX-(this.player.x+this.player.w/2))*0.15; } 
+                    else { if (this.engine.input.mouseX!==null) this.player.x+=(this.engine.input.mouseX-(this.player.x+this.player.w/2))*0.3; else { if(this.engine.input.left) this.player.x-=7; if(this.engine.input.right) this.player.x+=7; } }
+                    if (this.player.cooldown<=0) { this.bullets.push({x:this.player.x+this.player.w/2-2, y:this.player.y, vy:-15}); this.player.cooldown=8; }
+                    this.player.cooldown--; if(this.player.x<0) this.player.x=0; if(this.player.x>w-this.player.w) this.player.x=w-this.player.w;
+                    if(time-this.lastEnemy>1000) { this.enemies.push({x:Math.random()*(w-30), y:-30, w:30, h:30, vy:4.5}); this.lastEnemy=time; }
                 }
-                for(let i = this.bullets.length-1; i>=0; i--) { let b = this.bullets[i]; b.y += b.vy; if(b.y < -10) { this.bullets.splice(i, 1); continue; } for(let j = this.enemies.length-1; j>=0; j--) { let e = this.enemies[j]; if (b.x < e.x + e.w && b.x + 4 > e.x && b.y < e.y + e.h && b.y + 10 > e.y) { this.engine.addScore(20); this.spawnParts(e.x+e.w/2, e.y+e.h/2, '#ffcc00', 1.2); this.popups.push({x: e.x, y: e.y, text: '+20', alpha: 1}); this.enemies.splice(j, 1); this.bullets.splice(i, 1); break; } } }
-                for(let i = this.enemies.length-1; i>=0; i--) { let e = this.enemies[i]; e.y += e.vy; if (e.x < this.player.x + this.player.w && e.x + e.w > this.player.x && e.y < this.player.y + this.player.h && e.y + e.h > this.player.y) { this.shake = 15; this.spawnParts(this.player.x+this.player.w/2, this.player.y+this.player.h/2, '#ff0055', 1.5); setTimeout(() => this.reset(), 700); } if(e.y > h) this.enemies.splice(i, 1); }
-                ctx.fillStyle = '#0a0a14'; ctx.fillRect(0, 0, w, h); ctx.save(); if(this.shake > 0) { ctx.translate((Math.random()-0.5)*15, (Math.random()-0.5)*15); this.shake--; }
-                ctx.strokeStyle = 'rgba(255, 0, 85, 0.4)'; ctx.lineWidth = 4; ctx.strokeRect(2, 2, w-4, h-4);
-                ctx.fillStyle = '#fff'; this.stars.forEach(s => { s.y += s.s; if(s.y > h) s.y = 0; ctx.fillRect(s.x, s.y, s.s, s.s); });
-                ctx.fillStyle = '#ffcc00'; ctx.shadowBlur = 10; ctx.shadowColor = '#ffcc00'; this.bullets.forEach(b => ctx.fillRect(b.x, b.y, 4, 12));
-                ctx.shadowColor = '#ff0055'; this.enemies.forEach(e => { ctx.fillStyle = '#ff0055'; ctx.beginPath(); ctx.moveTo(e.x+e.w/2, e.y+e.h); ctx.lineTo(e.x, e.y); ctx.lineTo(e.x+e.w, e.y); ctx.fill(); ctx.fillStyle = '#fff'; ctx.fillRect(e.x+e.w/2-4, e.y+5, 8, 8); });
-                if (this.shake === 0) { ctx.shadowColor = '#00f0ff'; ctx.fillStyle = '#00f0ff'; ctx.beginPath(); ctx.moveTo(this.player.x+this.player.w/2, this.player.y); ctx.lineTo(this.player.x, this.player.y+this.player.h); ctx.lineTo(this.player.x+this.player.w, this.player.y+this.player.h); ctx.fill(); ctx.fillStyle = (this.frame % 4 < 2) ? '#ff0055' : '#ffcc00'; ctx.fillRect(this.player.x+this.player.w/2-4, this.player.y+this.player.h, 8, 10); }
-                ctx.shadowBlur = 0; for(let i = this.particles.length-1; i>=0; i--) { let p = this.particles[i]; p.x += p.vx; p.y += p.vy; p.life -= 0.03; if(p.life <= 0) { this.particles.splice(i, 1); continue; } ctx.fillStyle = p.c; ctx.globalAlpha = p.life; ctx.fillRect(p.x, p.y, 4, 4); ctx.globalAlpha = 1; }
-                ctx.font = "14px 'Press Start 2P'"; for(let i = this.popups.length-1; i>=0; i--) { let p = this.popups[i]; p.y -= 1; p.alpha -= 0.03; if(p.alpha <= 0) { this.popups.splice(i, 1); continue; } ctx.fillStyle = `rgba(255, 0, 85, ${p.alpha})`; ctx.fillText(p.text, p.x-10, p.y); }
+                for(let i=this.bullets.length-1; i>=0; i--) {
+                    let b=this.bullets[i]; b.y+=b.vy; if(b.y<-10) { this.bullets.splice(i,1); continue; }
+                    for(let j=this.enemies.length-1; j>=0; j--) { let e=this.enemies[j]; if(b.x<e.x+e.w && b.x+4>e.x && b.y<e.y+e.h && b.y+10>e.y) { this.engine.addScore(20); this.spawnParts(e.x+e.w/2, e.y+e.h/2, '#00f0ff', 1.2); this.popups.push({x:e.x, y:e.y, text:'+20', alpha:1}); this.enemies.splice(j,1); this.bullets.splice(i,1); break; } }
+                }
+                for(let i=this.enemies.length-1; i>=0; i--) {
+                    let e=this.enemies[i]; e.y+=e.vy;
+                    if (e.x<this.player.x+this.player.w && e.x+e.w>this.player.x && e.y<this.player.y+this.player.h && e.y+e.h>this.player.y) { this.shake=15; this.spawnParts(this.player.x+this.player.w/2, this.player.y+this.player.h/2, '#ff0055', 1.5); setTimeout(()=>this.reset(), 700); }
+                    if(e.y>h) this.enemies.splice(i,1); 
+                }
+                ctx.fillStyle='#000'; ctx.fillRect(0,0,w,h); ctx.save(); if(this.shake>0){ ctx.translate((Math.random()-0.5)*15, (Math.random()-0.5)*15); this.shake--; }
+                ctx.strokeStyle='rgba(255, 0, 85, 0.2)'; ctx.lineWidth=2; ctx.strokeRect(0,0,w,h);
+                ctx.fillStyle='#fff'; this.stars.forEach(s=>{ s.y+=s.s; if(s.y>h)s.y=0; ctx.fillRect(s.x, s.y, s.s, s.s); });
+                ctx.fillStyle='#ff0055'; ctx.shadowBlur=10; ctx.shadowColor='#ff0055'; this.bullets.forEach(b=>ctx.fillRect(b.x, b.y, 4, 12));
+                ctx.shadowColor='#00f0ff'; this.enemies.forEach(e=>{ ctx.fillStyle='#00f0ff'; ctx.beginPath(); ctx.moveTo(e.x+e.w/2, e.y+e.h); ctx.lineTo(e.x, e.y); ctx.lineTo(e.x+e.w, e.y); ctx.fill(); ctx.fillStyle='#fff'; ctx.fillRect(e.x+e.w/2-4, e.y+5, 8, 8); });
+                if(this.shake===0) { ctx.shadowColor='#fff'; ctx.fillStyle='#fff'; ctx.beginPath(); ctx.moveTo(this.player.x+this.player.w/2, this.player.y); ctx.lineTo(this.player.x, this.player.y+this.player.h); ctx.lineTo(this.player.x+this.player.w, this.player.y+this.player.h); ctx.fill(); ctx.fillStyle=(this.frame%4<2)?'#00f0ff':'#ff0055'; ctx.fillRect(this.player.x+this.player.w/2-4, this.player.y+this.player.h, 8, 10); }
+                ctx.shadowBlur=0; for(let i=this.particles.length-1; i>=0; i--) { let p=this.particles[i]; p.x+=p.vx; p.y+=p.vy; p.life-=0.03; if(p.life<=0){this.particles.splice(i,1); continue;} ctx.fillStyle=p.c; ctx.globalAlpha=p.life; ctx.fillRect(p.x, p.y, 4, 4); ctx.globalAlpha=1; }
+                ctx.font="14px 'Press Start 2P'"; for(let i=this.popups.length-1; i>=0; i--) { let p=this.popups[i]; p.y-=1; p.alpha-=0.03; if(p.alpha<=0){this.popups.splice(i,1); continue;} ctx.fillStyle=`rgba(0, 240, 255, ${p.alpha})`; ctx.fillText(p.text, p.x-10, p.y); }
                 ctx.restore();
             }
         };
 
-        // --- 完整重構：模組 C SNAKE ---
+        // --- SNAKE ---
         const SnakeGame = {
             engine: null, grid: 16, cols: 0, rows: 0, offsetX: 0, offsetY: 0, snake: [], foods: [], shake: 0, lastTick: 0, particles: [], popups: [],
             start(engine) { this.engine = engine; this.updateBounds(); this.reset(); this.loop = this.loop.bind(this); this.engine.reqId = requestAnimationFrame(this.loop); },
-            updateBounds() { if(!this.engine || this.engine.rectW === 0) return; this.grid = 16; this.cols = Math.floor(this.engine.rectW/this.grid); this.rows = Math.floor(this.engine.rectH/this.grid); this.offsetX = (this.engine.rectW - this.cols*this.grid)/2; this.offsetY = (this.engine.rectH - this.rows*this.grid)/2; },
-            reset() { if(this.cols < 5) return; let midX = Math.floor(this.cols/2), midY = Math.floor(this.rows/2); this.snake = [{x: midX, y: midY}, {x: midX-1, y: midY}, {x: midX-2, y: midY}]; this.foods = []; this.particles = []; this.popups = []; this.shake = 0; if (this.engine) this.engine.reset(); for(let i=0; i<3; i++) this.foods.push(this.spawnFood()); },
-            spawnFood() { let v = false, f = {}; while(!v) { f = { x: Math.floor(Math.random()*this.cols), y: Math.floor(Math.random()*this.rows) }; v = !this.snake.some(s=>s.x===f.x && s.y===f.y) && !this.foods.some(fd=>fd.x===f.x && fd.y===f.y); } return f; },
-            spawnParts(x, y, color) { for(let i=0; i<15; i++) this.particles.push({ x, y, vx: (Math.random()-0.5)*8, vy: (Math.random()-0.5)*8, life: 1, c: color }); },
+            updateBounds() { if(!this.engine || this.engine.rectW===0) return; this.grid=16; this.cols=Math.floor(this.engine.rectW/this.grid); this.rows=Math.floor(this.engine.rectH/this.grid); this.offsetX=(this.engine.rectW-this.cols*this.grid)/2; this.offsetY=(this.engine.rectH-this.rows*this.grid)/2; },
+            reset() { if(this.cols<5) return; let midX=Math.floor(this.cols/2), midY=Math.floor(this.rows/2); this.snake=[{x:midX,y:midY}, {x:midX-1,y:midY}, {x:midX-2,y:midY}]; this.foods=[]; this.particles=[]; this.popups=[]; this.shake=0; if(this.engine)this.engine.reset(); for(let i=0; i<3; i++) this.foods.push(this.spawnFood()); },
+            spawnFood() { let v=false, f={}, att=0; while(!v && att<50) { f={x:Math.floor(Math.random()*this.cols), y:Math.floor(Math.random()*this.rows)}; v=!this.snake.some(s=>s.x===f.x && s.y===f.y) && !this.foods.some(fd=>fd.x===f.x && fd.y===f.y); att++; } return f; },
+            spawnParts(x, y, color) { for(let i=0; i<15; i++) this.particles.push({ x, y, vx:(Math.random()-0.5)*8, vy:(Math.random()-0.5)*8, life:1, c:color }); },
             aiMove() {
-                const head = this.snake[0]; let moves = [{dx: 1, dy: 0}, {dx: -1, dy: 0}, {dx: 0, dy: 1}, {dx: 0, dy: -1}]; moves = moves.filter(m => !(m.dx === -this.engine.input.dx && m.dy === -this.engine.input.dy));
-                let safeMoves = moves.filter(m => { let nx = head.x + m.dx, ny = head.y + m.y; let hitWall = nx < 0 || nx >= this.cols || ny < 0 || ny >= this.rows; let hitSelf = this.snake.some((s, i) => i !== this.snake.length-1 && s.x === nx && s.y === ny); return !hitWall && !hitSelf; });
+                const head = this.snake[0]; let moves=[{dx:1,dy:0}, {dx:-1,dy:0}, {dx:0,dy:1}, {dx:0,dy:-1}].filter(m=>!(m.dx===-this.engine.input.dx && m.dy===-this.engine.input.dy));
+                let safeMoves = moves.filter(m => { let nx=head.x+m.dx, ny=head.y+m.y; return !(nx<0 || nx>=this.cols || ny<0 || ny>=this.rows || this.snake.some((s,i)=>i!==this.snake.length-1 && s.x===nx && s.y===ny)); });
                 if(safeMoves.length > 0) {
-                    let bestMove = safeMoves[0], maxSurvivalScore = -1;
+                    let bestMove=safeMoves[0], maxScore=-Infinity;
                     safeMoves.forEach(m => {
-                        let nx = head.x + m.dx, ny = head.y + m.y; let freeSpaces = 0;
-                        let queue = [{x: nx, y: ny}]; let visited = new Set([`${nx},${ny}`]); let bodySet = new Set(this.snake.slice(0, -1).map(s => `${s.x},${s.y}`));
-                        while(queue.length > 0 && freeSpaces < this.snake.length + 10) {
-                            let curr = queue.shift(); freeSpaces++;
-                            [{dx: 1, dy: 0}, {dx: -1, dy: 0}, {dx: 0, dy: 1}, {dx: 0, dy: -1}].forEach(d => { let sx = curr.x + d.dx, sy = curr.y + d.dy; if (sx >= 0 && sx < this.cols && sy >= 0 && sy < this.rows) { let key = `${sx},${sy}`; if (!visited.has(key) && !bodySet.has(key)) { visited.add(key); queue.push({x: sx, y: sy}); } } });
-                        }
-                        let minTargetDist = Infinity; this.foods.forEach(f => { let dist = Math.abs(nx - f.x) + Math.abs(ny - f.y); if (dist < minTargetDist) minTargetDist = dist; });
-                        let trapPenalty = (freeSpaces <= this.snake.length) ? -10000 : 0; let score = trapPenalty + (freeSpaces * 10) - minTargetDist;
-                        if (score > maxSurvivalScore) { maxSurvivalScore = score; bestMove = m; }
+                        let nx=head.x+m.dx, ny=head.y+m.y, freeSpaces=0, queue=[{x:nx,y:ny}], visited=new Set([`${nx},${ny}`]), bodySet=new Set(this.snake.slice(0,-1).map(s=>`${s.x},${s.y}`));
+                        while(queue.length>0 && freeSpaces<this.snake.length+20) { let curr=queue.shift(); freeSpaces++; [{dx:1,dy:0}, {dx:-1,dy:0}, {dx:0,dy:1}, {dx:0,dy:-1}].forEach(d=>{ let sx=curr.x+d.dx, sy=curr.y+d.dy; if(sx>=0 && sx<this.cols && sy>=0 && sy<this.rows) { let key=`${sx},${sy}`; if(!visited.has(key) && !bodySet.has(key)) { visited.add(key); queue.push({x:sx,y:sy}); } } }); }
+                        let minDist=Infinity; this.foods.forEach(f=>{ let dist=Math.abs(nx-f.x)+Math.abs(ny-f.y); if(dist<minDist) minDist=dist; });
+                        let score = (freeSpaces<=this.snake.length ? -10000 : 0) + (freeSpaces*10) - minDist;
+                        if(score > maxScore) { maxScore=score; bestMove=m; }
                     });
                     this.engine.input.dx = bestMove.dx; this.engine.input.dy = bestMove.dy;
                 }
             },
             loop(time) {
-                this.engine.reqId = requestAnimationFrame(this.loop); if(this.cols < 5) return;
-                if (time - this.lastTick >= 100) { 
-                    if (this.shake === 0) {
-                        if (this.engine.isAutoMode) this.aiMove();
-                        let head = { x: this.snake[0].x + this.engine.input.dx, y: this.snake[0].y + this.engine.input.dy };
-                        if (head.x < 0 || head.x >= this.cols || head.y < 0 || head.y >= this.rows || this.snake.some(s => s.x === head.x && s.y === head.y)) { this.shake = 12; this.spawnParts(this.snake[0].x*this.grid+this.grid/2, this.snake[0].y*this.grid+this.grid/2, '#ffcc00'); setTimeout(()=>this.reset(), 600); } 
+                this.engine.reqId = requestAnimationFrame(this.loop); if(this.engine.rectW===0) { if(this.engine.syncCanvasSize()){this.updateBounds(); this.reset();} else return; } if(this.cols<5) return;
+                if (time-this.lastTick >= 100) { 
+                    if (this.shake===0) {
+                        if(this.engine.isAutoMode) this.aiMove();
+                        let head = { x:this.snake[0].x+this.engine.input.dx, y:this.snake[0].y+this.engine.input.dy };
+                        if (head.x<0 || head.x>=this.cols || head.y<0 || head.y>=this.rows || this.snake.some(s=>s.x===head.x && s.y===head.y)) { this.shake=12; this.spawnParts(this.snake[0].x*this.grid+this.grid/2, this.snake[0].y*this.grid+this.grid/2, '#ff0055'); setTimeout(()=>this.reset(), 600); } 
                         else {
-                            this.snake.unshift(head); let ate = this.foods.findIndex(f => f.x === head.x && f.y === head.y);
-                            if (ate !== -1) { this.engine.addScore(10); let f = this.foods.splice(ate, 1)[0]; this.spawnParts(f.x*this.grid+this.grid/2, f.y*this.grid+this.grid/2, '#ff0055'); this.popups.push({x: f.x*this.grid+this.grid/2, y: f.y*this.grid, text: '+10', alpha: 1}); this.foods.push(this.spawnFood()); } 
+                            this.snake.unshift(head); let ate = this.foods.findIndex(f=>f.x===head.x && f.y===head.y);
+                            if(ate!==-1) { this.engine.addScore(10); let f=this.foods.splice(ate,1)[0]; this.spawnParts(f.x*this.grid+this.grid/2, f.y*this.grid+this.grid/2, '#00f0ff'); this.popups.push({x:f.x*this.grid+this.grid/2, y:f.y*this.grid, text:'+10', alpha:1}); this.foods.push(this.spawnFood()); } 
                             else { this.snake.pop(); }
                         }
-                    }
-                    this.lastTick = time;
+                    } this.lastTick = time;
                 }
-                const ctx = this.engine.gCtx; ctx.fillStyle = '#111'; ctx.fillRect(0, 0, this.engine.rectW, this.engine.rectH); ctx.save();
-                if(this.shake > 0) { ctx.translate((Math.random()-0.5)*12, (Math.random()-0.5)*12); this.shake--; } ctx.translate(this.offsetX, this.offsetY);
-                ctx.strokeStyle = 'rgba(57, 255, 20, 0.4)'; ctx.lineWidth = 4; ctx.strokeRect(0, 0, this.cols * this.grid, this.rows * this.grid);
-                ctx.fillStyle = '#ff0055'; this.foods.forEach(f => ctx.fillRect(f.x*this.grid+2, f.y*this.grid+2, this.grid-4, this.grid-4));
-                this.snake.forEach((s, i) => { ctx.fillStyle = i === 0 ? '#ffffff' : '#39ff14'; ctx.fillRect(s.x*this.grid+1, s.y*this.grid+1, this.grid-2, this.grid-2); });
-                for(let i = this.particles.length-1; i>=0; i--) { let p = this.particles[i]; p.x += p.vx; p.y += p.vy; p.life -= 0.03; if(p.life <= 0) { this.particles.splice(i, 1); continue; } ctx.fillStyle = p.c; ctx.globalAlpha = p.life; ctx.fillRect(p.x, p.y, 4, 4); ctx.globalAlpha = 1; }
-                ctx.font = "14px 'Press Start 2P'"; for(let i = this.popups.length-1; i>=0; i--) { let p = this.popups[i]; p.y -= 0.5; p.alpha -= 0.02; if(p.alpha <= 0) { this.popups.splice(i, 1); continue; } ctx.fillStyle = `rgba(57, 255, 20, ${p.alpha})`; ctx.fillText(p.text, p.x-10, p.y); }
+                const ctx = this.engine.gCtx; ctx.fillStyle='#000'; ctx.fillRect(0,0,this.engine.rectW,this.engine.rectH); ctx.save();
+                if(this.shake>0){ ctx.translate((Math.random()-0.5)*12, (Math.random()-0.5)*12); this.shake--; } ctx.translate(this.offsetX, this.offsetY);
+                ctx.strokeStyle='rgba(57, 255, 20, 0.2)'; ctx.lineWidth=2; ctx.strokeRect(0,0,this.cols*this.grid,this.rows*this.grid);
+                ctx.fillStyle='#00f0ff'; this.foods.forEach(f=>ctx.fillRect(f.x*this.grid+2, f.y*this.grid+2, this.grid-4, this.grid-4));
+                this.snake.forEach((s,i)=>{ ctx.fillStyle=i===0?'#fff':'#39ff14'; ctx.fillRect(s.x*this.grid+1, s.y*this.grid+1, this.grid-2, this.grid-2); });
+                for(let i=this.particles.length-1; i>=0; i--) { let p=this.particles[i]; p.x+=p.vx; p.y+=p.vy; p.life-=0.03; if(p.life<=0){this.particles.splice(i,1); continue;} ctx.fillStyle=p.c; ctx.globalAlpha=p.life; ctx.fillRect(p.x, p.y, 4, 4); ctx.globalAlpha=1; }
+                ctx.font="14px 'Press Start 2P'"; for(let i=this.popups.length-1; i>=0; i--) { let p=this.popups[i]; p.y-=0.5; p.alpha-=0.02; if(p.alpha<=0){this.popups.splice(i,1); continue;} ctx.fillStyle=`rgba(0, 240, 255, ${p.alpha})`; ctx.fillText(p.text, p.x-10, p.y); }
                 ctx.restore();
             }
         };
