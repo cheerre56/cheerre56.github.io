@@ -29,12 +29,7 @@
             --scrollbar-thumb-hover: #94a3b8;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
 
         body {
             font-family: 'Inter', 'Noto Sans TC', sans-serif;
@@ -70,16 +65,10 @@
         }
 
         .details-panel, .trade-panel {
-            width: 0; 
-            opacity: 0; 
-            overflow: hidden;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
+            width: 0; opacity: 0; overflow: hidden;
+            background: var(--card-bg); border: 1px solid var(--card-border);
             transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            display: flex; 
-            flex-direction: column; 
-            pointer-events: none; 
-            z-index: 1;
+            display: flex; flex-direction: column; pointer-events: none; z-index: 1;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
         }
 
@@ -88,44 +77,27 @@
 
         .app-layout.expanded .details-panel,
         .app-layout.expanded .trade-panel {
-            width: 380px; 
-            opacity: 1; 
-            transform: translateX(0) scaleX(1); 
-            padding: 28px 24px; 
-            pointer-events: auto;
+            width: 380px; opacity: 1; transform: translateX(0) scaleX(1); padding: 28px 24px; pointer-events: auto;
         }
 
         .main-panel {
-            width: 440px; 
-            background: var(--card-bg); 
-            border: 1px solid var(--card-border);
-            border-radius: 20px; 
-            padding: 28px 24px;
+            width: 440px; background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 20px; padding: 28px 24px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
-            flex-shrink: 0; 
-            z-index: 2;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); flex-shrink: 0; z-index: 2;
         }
         .app-layout.expanded .main-panel { border-radius: 0; }
 
-        .panel-header { 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            color: var(--primary-emerald); 
-            font-size: 0.95rem; 
-            font-weight: 700; 
-            margin-bottom: 18px; 
-            padding-bottom: 10px; 
-            border-bottom: 1px solid #f1f5f9; 
-            line-height: 1.4;
-        }
+        .panel-header { display: flex; align-items: center; gap: 10px; color: var(--primary-emerald); font-size: 0.95rem; font-weight: 700; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; line-height: 1.4; }
         .panel-header.amber { color: var(--accent-amber); }
 
         .info-list { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; max-height: 480px; padding-right: 4px; }
         .info-item { background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
         .info-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-        .info-value { font-family: 'Fira Code', monospace; font-size: 0.82rem; color: var(--text-main); word-break: break-all; user-select: text; }
+        
+        .info-value { font-family: 'Fira Code', monospace; font-size: 0.82rem; color: var(--text-main); word-break: break-all; user-select: text; transition: all 0.2s ease; }
+        .info-value.copyable { cursor: pointer; position: relative; padding: 2px 4px; margin: -2px -4px; border-radius: 4px; }
+        .info-value.copyable:hover { background: #e2e8f0; color: var(--primary-emerald); }
         .info-value.highlight { color: var(--primary-emerald); font-weight: 600; }
         .info-value.amber { color: var(--accent-amber); font-weight: 600; }
 
@@ -136,15 +108,14 @@
         .upload-sub { font-size: 0.75rem; color: var(--text-muted); }
         #fileInput { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 
-        .account-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .account-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; min-height: 58px; }
         .account-info { display: flex; align-items: center; gap: 10px; }
         .avatar-placeholder { width: 34px; height: 34px; border-radius: 50%; background: #e2e8f0; border: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: center; color: var(--primary-emerald); }
         .account-label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
         .account-name { font-size: 0.88rem; font-weight: 700; }
-        .status-badge { font-size: 0.7rem; padding: 3px 9px; border-radius: 12px; background: #e2e8f0; color: var(--text-muted); font-weight: 600; }
-        .status-badge.loaded { background: #d1fae5; color: var(--primary-emerald); border: 1px solid #a7f3d0; }
+        .status-badge { font-size: 0.7rem; padding: 3px 9px; border-radius: 12px; background: #e2e8f0; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; justify-content: center; }
 
-        .code-box { background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; padding: 20px 16px; text-align: center; margin-bottom: 18px; cursor: pointer; }
+        .code-box { background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; padding: 20px 16px; text-align: center; margin-bottom: 18px; cursor: pointer; transition: all 0.2s ease; }
         .code-box:hover { border-color: var(--primary-emerald); box-shadow: 0 4px 15px var(--emerald-glow); }
         .code-text { font-family: 'Fira Code', monospace; font-size: 2.8rem; font-weight: 700; letter-spacing: 6px; color: #10b981; }
         .copy-hint { margin-top: 4px; font-size: 0.72rem; color: #94a3b8; display: flex; align-items: center; justify-content: center; gap: 6px; }
@@ -153,21 +124,33 @@
         .timer-header { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; }
         .progress-bar-bg { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
         .progress-bar-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #3b82f6, #10b981); transition: width 1s linear; }
+        .progress-bar-fill.urgent { background: var(--danger-color); box-shadow: 0 0 8px rgba(239, 68, 68, 0.4); }
 
         .trade-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 10px; }
         .tag-select { background: #ffffff; border: 1px solid #cbd5e1; color: var(--accent-amber); padding: 4px 10px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; outline: none; cursor: pointer; }
-        .calc-btn { background: linear-gradient(135deg, #f59e0b, #d97706); border: none; color: #fff; padding: 10px; border-radius: 10px; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .calc-btn { background: linear-gradient(135deg, #f59e0b, #d97706); border: none; color: #fff; padding: 10px; border-radius: 10px; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease; flex: 1; }
+        .calc-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3); }
 
         .conf-result-box { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
-        .conf-val { font-family: 'Fira Code', monospace; font-size: 0.78rem; color: #fbbf24; background: #1e293b; padding: 6px 8px; border-radius: 6px; cursor: pointer; word-break: break-all; }
+        .conf-row { display: flex; flex-direction: column; gap: 3px; }
+        .conf-key { font-size: 0.68rem; color: #94a3b8; text-transform: uppercase; font-weight: 600; }
+        .conf-val { font-family: 'Fira Code', monospace; font-size: 0.75rem; color: #fbbf24; background: #1e293b; padding: 6px 8px; border-radius: 6px; cursor: pointer; word-break: break-all; transition: background 0.2s ease; }
+        .conf-val:hover { background: #334155; }
+        
+        .api-query-box { margin-top: 4px; padding-top: 10px; border-top: 1px dashed #334155; }
+        .api-query-val { font-family: 'Fira Code', monospace; font-size: 0.7rem; color: #38bdf8; background: #0f172a; border: 1px solid #1e293b; padding: 8px; border-radius: 6px; cursor: pointer; word-break: break-all; transition: all 0.2s ease; }
+        .api-query-val:hover { background: #1e293b; border-color: #38bdf8; }
 
         .outer-footer-notice {
             margin-top: 30px; margin-bottom: 40px; max-width: 800px; width: 90%;
             background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 20px;
             font-size: 0.78rem; line-height: 1.6; color: var(--text-muted); text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
-        .toast { position: fixed; bottom: -50px; left: 50%; transform: translateX(-50%); background: #0f172a; color: #ffffff; padding: 10px 22px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; opacity: 0; transition: all 0.3s ease; pointer-events: none; z-index: 100; }
+        .outer-footer-notice strong { color: var(--text-main); }
+
+        .toast { position: fixed; bottom: -50px; left: 50%; transform: translateX(-50%); background: #0f172a; color: #ffffff; padding: 10px 22px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; opacity: 0; transition: all 0.3s ease; pointer-events: none; z-index: 100; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); }
         .toast.show { bottom: 30px; opacity: 1; }
 
         @media (max-width: 1100px) {
@@ -209,24 +192,30 @@
         <div class="details-panel">
             <div class="panel-header"><i class="fa-solid fa-microchip shrink-0"></i><span data-i18n="panel1_title">1. .maFile Core Keys</span></div>
             <div class="info-list">
-                <div class="info-item"><div class="info-label"><i class="fa-solid fa-user-gear"></i><span data-i18n="lbl_account">Account Name</span></div><div class="info-value" id="valAccountName">-</div></div>
-                <div class="info-item"><div class="info-label"><i class="fa-solid fa-id-card"></i><span data-i18n="lbl_steamid">Steam ID (64-bit)</span></div><div class="info-value" id="valSteamId">-</div></div>
+                <div class="info-item">
+                    <div class="info-label"><i class="fa-solid fa-user-gear"></i><span data-i18n="lbl_account">Account Name</span></div>
+                    <div class="info-value copyable" id="valAccountName" onclick="copyCode(this.innerText)" title="Click to copy">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label"><i class="fa-solid fa-id-card"></i><span data-i18n="lbl_steamid">Steam ID (64-bit)</span></div>
+                    <div class="info-value copyable" id="valSteamId" onclick="copyCode(this.innerText)" title="Click to copy">-</div>
+                </div>
                 <div class="info-item">
                     <div class="info-label w-full flex justify-between items-center">
                         <div><i class="fa-solid fa-key"></i><span data-i18n="lbl_shared_secret">Shared Secret</span></div>
                         <i class="fa-solid fa-eye cursor-pointer text-slate-400 hover:text-emerald-500 transition" onclick="toggleSecret('valSharedSecret')"></i>
                     </div>
-                    <div class="info-value highlight" id="valSharedSecret" data-secret="">-</div>
+                    <div class="info-value highlight copyable" id="valSharedSecret" data-secret="" onclick="copyCode(this.getAttribute('data-secret'))" title="Click to copy raw secret">-</div>
                 </div>
                 <div class="info-item">
                     <div class="info-label w-full flex justify-between items-center">
                         <div><i class="fa-solid fa-shield-cat"></i><span data-i18n="lbl_identity_secret">Identity Secret</span></div>
                         <i class="fa-solid fa-eye cursor-pointer text-slate-400 hover:text-amber-500 transition" onclick="toggleSecret('valIdentitySecret')"></i>
                     </div>
-                    <div class="info-value amber" id="valIdentitySecret" data-secret="">-</div>
+                    <div class="info-value amber copyable" id="valIdentitySecret" data-secret="" onclick="copyCode(this.getAttribute('data-secret'))" title="Click to copy raw secret">-</div>
                 </div>
-                <div class="info-item"><div class="info-label"><i class="fa-solid fa-unlock-keyhole"></i><span data-i18n="lbl_revocation">Revocation Code</span></div><div class="info-value" id="valRevocationCode">-</div></div>
-                <div class="info-item"><div class="info-label"><i class="fa-solid fa-mobile-screen"></i><span data-i18n="lbl_device_id">Device ID</span></div><div class="info-value" id="valDeviceId">-</div></div>
+                <div class="info-item"><div class="info-label"><i class="fa-solid fa-unlock-keyhole"></i><span data-i18n="lbl_revocation">Revocation Code</span></div><div class="info-value copyable" id="valRevocationCode" onclick="copyCode(this.innerText)">-</div></div>
+                <div class="info-item"><div class="info-label"><i class="fa-solid fa-mobile-screen"></i><span data-i18n="lbl_device_id">Device ID</span></div><div class="info-value copyable" id="valDeviceId" onclick="copyCode(this.innerText)">-</div></div>
                 <div class="info-item"><div class="info-label"><i class="fa-solid fa-check-double"></i><span data-i18n="lbl_status">Enrolled Status</span></div><div class="info-value" id="valEnrolled">-</div></div>
             </div>
         </div>
@@ -237,14 +226,13 @@
                     <img src="https://naha.one/assets/media/images/nahagame.png" alt="Logo" class="h-6 w-auto">
                     <span>Guard Auth</span>
                 </div>
-                <button id="clearBtn" onclick="resetApp()" class="hidden bg-red-50 text-red-600 border border-red-200 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-100 transition shadow-sm"><i class="fa-solid fa-trash-can mr-1"></i><span data-i18n="btn_clear">Clear</span></button>
             </div>
 
             <div class="upload-area" id="dropArea">
                 <i class="fa-solid fa-file-code upload-icon"></i>
                 <div class="upload-title" data-i18n="upload_title">Click or Drag .maFile Here</div>
                 <div class="upload-sub" data-i18n="upload_sub">100% Offline parsing. Keys never leave your browser</div>
-                <input type="file" id="fileInput" accept=".maFile,.json">
+                <input type="file" id="fileInput" accept=".maFile,.json,text/plain,application/json,*/*">
             </div>
 
             <div class="account-card">
@@ -255,7 +243,13 @@
                         <span class="account-name" id="accountName" data-i18n="no_file">No file loaded</span>
                     </div>
                 </div>
-                <span class="status-badge" id="statusBadge" data-i18n="status_waiting">Waiting</span>
+                <div class="flex items-center gap-2">
+                    <span class="status-badge" id="statusBadge" data-i18n="status_waiting">Waiting</span>
+                    <button id="clearBtn" onclick="resetApp()" class="hidden bg-red-50 text-red-600 border border-red-200 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-100 transition shadow-sm flex items-center gap-1">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span data-i18n="btn_clear">Logout</span>
+                    </button>
+                </div>
             </div>
 
             <div class="code-box" onclick="copyCode(document.getElementById('tokenDisplay').innerText)">
@@ -268,7 +262,7 @@
                 <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBar"></div></div>
             </div>
             
-            <div class="text-center text-[0.65rem] text-slate-400 font-medium mt-3" data-i18n="msg_time_sync">* Ensure your PC time is accurate for valid codes.</div>
+            <div id="timeSyncStatus" class="text-center text-[0.65rem] text-slate-400 font-medium mt-3">-</div>
         </div>
 
         <div class="trade-panel">
@@ -290,6 +284,10 @@
                 <button class="calc-btn" onclick="generateConfirmationHashes()">
                     <i class="fa-solid fa-calculator"></i> <span data-i18n="btn_gen_conf">Calculate HMAC Signatures</span>
                 </button>
+                <div class="mt-2 text-[0.65rem] text-slate-500 leading-snug border-t border-slate-200 pt-2">
+                    <i class="fa-solid fa-circle-info text-amber-500 mr-1"></i>
+                    <span data-i18n="msg_cors_desc">Browsers prevent direct cross-origin requests to Steam API. You also need an active 'steamLoginSecure' cookie to fetch real trades. Please use a backend proxy or desktop application like SDA.</span>
+                </div>
             </div>
 
             <div class="conf-result-box">
@@ -301,9 +299,12 @@
                     <span class="text-[0.68rem] text-slate-400 font-semibold uppercase" data-i18n="lbl_conf_key">Confirmation Hash Signature</span>
                     <div class="conf-val" id="valConfHash" onclick="copyCode(this.innerText)">-</div>
                 </div>
-                <div class="flex flex-col gap-1">
-                    <span class="text-[0.68rem] text-slate-400 font-semibold uppercase" data-i18n="lbl_allow_key">Allow Hash Signature</span>
-                    <div class="conf-val" id="valAllowHash" onclick="copyCode(this.innerText)">-</div>
+                
+                <div class="api-query-box">
+                    <div class="flex flex-col gap-1">
+                        <span class="text-[0.65rem] text-slate-400 font-semibold uppercase" data-i18n="lbl_api_query">Full API Query String (Auto-Generated)</span>
+                        <div class="api-query-val" id="valApiQuery" onclick="copyCode(this.innerText)">-</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -352,8 +353,13 @@
                 err_file_type: "Invalid file type. Only .maFile or .json allowed.",
                 err_no_secret: "No shared_secret field found in file!",
                 err_json: "Failed to parse JSON / maFile!",
-                btn_clear: "Clear Data",
-                msg_time_sync: "* Ensure your PC time is accurate for valid codes."
+                btn_clear: "Logout",
+                msg_time_syncing: "Syncing network time...",
+                msg_time_synced: "Network time synced successfully.",
+                msg_time_failed: "Time sync failed. Using local time (Ensure PC time is accurate).",
+                warn_unload: "You have an active key loaded. Are you sure you want to leave?",
+                lbl_api_query: "Full API Query String (Auto-Generated)",
+                msg_cors_desc: "Browsers prevent direct cross-origin requests to Steam API. You also need an active 'steamLoginSecure' cookie to fetch real trades. Please use a backend proxy or desktop application like SDA."
             },
             ru: {
                 panel1_title: "1. Ключи .maFile",
@@ -383,8 +389,13 @@
                 err_file_type: "Неверный формат. Только .maFile или .json.",
                 err_no_secret: "В файле не найден shared_secret!",
                 err_json: "Не удалось распарсить JSON / maFile!",
-                btn_clear: "Очистить",
-                msg_time_sync: "* Убедитесь, что время на ПК точное."
+                btn_clear: "Выйти",
+                msg_time_syncing: "Синхронизация сетевого времени...",
+                msg_time_synced: "Сетевое время успешно синхронизировано.",
+                msg_time_failed: "Ошибка синхронизации времени. Используется локальное время.",
+                warn_unload: "У вас загружен активный ключ. Вы уверены, что хотите выйти?",
+                lbl_api_query: "Полная строка API-запроса (Автогенерация)",
+                msg_cors_desc: "Браузеры блокируют прямые запросы к Steam. Также требуется активный cookie 'steamLoginSecure'. Пожалуйста, используйте SDA."
             },
             zh: {
                 panel1_title: "1. .maFile 核心金鑰內容",
@@ -414,8 +425,13 @@
                 err_file_type: "格式錯誤：僅支援 .maFile 或 .json 檔案。",
                 err_no_secret: "檔案中找不到 shared_secret 欄位！",
                 err_json: "無法解析 JSON / maFile 檔案！",
-                btn_clear: "清除資料",
-                msg_time_sync: "* 注意：請確保您的電腦時間準確，以免驗證碼失效。"
+                btn_clear: "登出",
+                msg_time_syncing: "正在同步網路時間...",
+                msg_time_synced: "✓ 網路時間同步成功，驗證碼已校準",
+                msg_time_failed: "網路時間同步失敗，將使用本機時間 (請確保電腦時間精準)",
+                warn_unload: "您目前已載入驗證金鑰，確定要刷新或離開頁面嗎？資料將會遺失。",
+                lbl_api_query: "完整 API URL 參數 (自動生成)",
+                msg_cors_desc: "純網頁無法直接請求 Steam 伺服器，且交易需具備有效的 steamLoginSecure Cookie。請改用桌面版軟體 (如 SDA) 或本地代理中繼提取。"
             }
         };
 
@@ -423,6 +439,46 @@
         const STEAM_CHARS = "23456789BCDFGHJKMNPQRTVWXY";
         let currentSharedSecret = "";
         let currentIdentitySecret = "";
+        let currentSteamID = "";
+        let currentDeviceID = "";
+        let currentAccountName = "";
+        let timeOffset = 0;
+        let isTimeSynced = false;
+
+        async function syncNetworkTime() {
+            const statusEl = document.getElementById('timeSyncStatus');
+            statusEl.innerText = i18n[currentLang].msg_time_syncing;
+            statusEl.className = "text-center text-[0.65rem] text-slate-400 font-medium mt-3";
+            
+            try {
+                const resB = await fetch('https://api.binance.com/api/v3/time');
+                if(resB.ok) {
+                    const dataB = await resB.json();
+                    timeOffset = dataB.serverTime - Date.now();
+                    isTimeSynced = true;
+                } else { throw new Error(); }
+            } catch(e) {
+                try {
+                    const res = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC');
+                    if(res.ok) {
+                        const data = await res.json();
+                        timeOffset = (data.unixtime * 1000) - Date.now();
+                        isTimeSynced = true;
+                    } else { throw new Error(); }
+                } catch(err) {
+                    isTimeSynced = false;
+                }
+            }
+
+            if(isTimeSynced) {
+                statusEl.innerText = i18n[currentLang].msg_time_synced;
+                statusEl.className = "text-center text-[0.65rem] text-emerald-600 font-bold mt-3";
+            } else {
+                statusEl.innerText = i18n[currentLang].msg_time_failed;
+                statusEl.className = "text-center text-[0.65rem] text-amber-500 font-bold mt-3";
+            }
+            updateToken();
+        }
 
         function setLanguage(lang) {
             currentLang = lang;
@@ -441,10 +497,20 @@
 
             const statusBadge = document.getElementById('statusBadge');
             if (currentSharedSecret) {
-                statusBadge.innerText = i18n[lang].status_active;
+                statusBadge.classList.add('hidden');
+                document.getElementById('clearBtn').classList.remove('hidden');
+                document.getElementById('accountName').innerText = currentAccountName;
             } else {
+                statusBadge.classList.remove('hidden');
                 statusBadge.innerText = i18n[lang].status_waiting;
                 document.getElementById('accountName').innerText = i18n[lang].no_file;
+            }
+
+            const timeStatusEl = document.getElementById('timeSyncStatus');
+            if(isTimeSynced) {
+                timeStatusEl.innerText = i18n[lang].msg_time_synced;
+            } else if(timeStatusEl.innerText !== "-") {
+                timeStatusEl.innerText = i18n[lang].msg_time_failed;
             }
         }
 
@@ -457,7 +523,7 @@
 
         function processFile(file) {
             const fileName = file.name.toLowerCase();
-            if (!fileName.endsWith('.mafile') && !fileName.endsWith('.json')) {
+            if (!fileName.endsWith('.mafile') && !fileName.endsWith('.json') && !fileName.endsWith('.txt')) {
                 showToast(i18n[currentLang].err_file_type);
                 return;
             }
@@ -469,14 +535,17 @@
                     if (data.shared_secret) {
                         currentSharedSecret = data.shared_secret;
                         currentIdentitySecret = data.identity_secret || "";
+                        currentSteamID = data.Session ? data.Session.SteamID : (data.steamid || "");
+                        currentDeviceID = data.device_id || "";
+                        currentAccountName = data.account_name || "Unknown";
                         
-                        document.getElementById('accountName').innerText = data.account_name || "Unknown";
-                        const badge = document.getElementById('statusBadge');
-                        badge.innerText = i18n[currentLang].status_active;
-                        badge.classList.add('loaded');
+                        document.getElementById('accountName').innerText = currentAccountName;
+                        
+                        document.getElementById('statusBadge').classList.add('hidden');
+                        document.getElementById('clearBtn').classList.remove('hidden');
 
-                        document.getElementById('valAccountName').innerText = data.account_name || "N/A";
-                        document.getElementById('valSteamId').innerText = data.Session ? data.Session.SteamID : (data.steamid || "N/A");
+                        document.getElementById('valAccountName').innerText = currentAccountName;
+                        document.getElementById('valSteamId').innerText = currentSteamID || "N/A";
                         
                         const ssEl = document.getElementById('valSharedSecret');
                         ssEl.setAttribute('data-secret', data.shared_secret);
@@ -487,11 +556,10 @@
                         isEl.innerText = data.identity_secret ? "••••••••••••••" : "N/A";
 
                         document.getElementById('valRevocationCode').innerText = data.revocation_code || "N/A";
-                        document.getElementById('valDeviceId').innerText = data.device_id || "N/A";
+                        document.getElementById('valDeviceId').innerText = currentDeviceID || "N/A";
                         document.getElementById('valEnrolled').innerText = data.fully_enrolled ? "True" : "False";
 
                         document.getElementById('appLayout').classList.add('expanded');
-                        document.getElementById('clearBtn').classList.remove('hidden');
 
                         updateToken();
                         generateConfirmationHashes();
@@ -515,41 +583,52 @@
         function resetApp() {
             currentSharedSecret = "";
             currentIdentitySecret = "";
+            currentSteamID = "";
+            currentDeviceID = "";
+            currentAccountName = "";
+            
             document.getElementById('appLayout').classList.remove('expanded');
+            
             document.getElementById('clearBtn').classList.add('hidden');
+            const badge = document.getElementById('statusBadge');
+            badge.classList.remove('hidden');
+            badge.innerText = i18n[currentLang].status_waiting;
             
             document.getElementById('accountName').innerText = i18n[currentLang].no_file;
-            const badge = document.getElementById('statusBadge');
-            badge.innerText = i18n[currentLang].status_waiting;
-            badge.classList.remove('loaded');
-            
             document.getElementById('tokenDisplay').innerText = "-----";
             document.getElementById('fileInput').value = "";
             
-            ['valAccountName', 'valSteamId', 'valRevocationCode', 'valDeviceId', 'valEnrolled', 'valConfTime', 'valConfHash', 'valAllowHash'].forEach(id => document.getElementById(id).innerText = "-");
+            ['valAccountName', 'valSteamId', 'valRevocationCode', 'valDeviceId', 'valEnrolled', 'valConfTime', 'valConfHash', 'valApiQuery'].forEach(id => document.getElementById(id).innerText = "-");
             
             ['valSharedSecret', 'valIdentitySecret'].forEach(id => {
                 const el = document.getElementById(id);
                 el.innerText = "-";
                 el.setAttribute('data-secret', '');
             });
-            showToast(i18n[currentLang].btn_clear + " OK");
         }
 
-        function generateSteamGuardCode(secretBase64) {
+        function generateSteamGuardCode(secretBase64, timestampSeconds) {
             if (!secretBase64) return "-----";
-            const time = Math.floor(Date.now() / 1000 / 30);
-            const timeBytes = CryptoJS.lib.WordArray.create([0, time]);
+            const time = Math.floor(timestampSeconds / 30);
+            const timeBytes = CryptoJS.lib.WordArray.create([0, time], 8);
             const secret = CryptoJS.enc.Base64.parse(secretBase64);
             const hmac = CryptoJS.HmacSHA1(timeBytes, secret);
             const hmacWords = hmac.words;
+            
             const offset = (hmacWords[4] & 0xff) & 0xf;
-            const wordIndex = offset >> 2;
-            const byteIndex = offset % 4;
-
-            let full32BitValue = (hmacWords[wordIndex] << (byteIndex * 8)) | (hmacWords[wordIndex + 1] >> ((4 - byteIndex) * 8));
-            if (byteIndex === 0) full32BitValue = hmacWords[wordIndex];
-            let full31BitValue = full32BitValue & 0x7fffffff;
+            
+            function getByte(words, idx) {
+                const word = words[idx >> 2];
+                const byteOffset = 3 - (idx % 4);
+                return (word >>> (byteOffset * 8)) & 0xff;
+            }
+            
+            const b0 = getByte(hmacWords, offset);
+            const b1 = getByte(hmacWords, offset + 1);
+            const b2 = getByte(hmacWords, offset + 2);
+            const b3 = getByte(hmacWords, offset + 3);
+            
+            let full31BitValue = ((b0 & 0x7f) << 24) | (b1 << 16) | (b2 << 8) | b3;
 
             let code = "";
             for (let i = 0; i < 5; i++) {
@@ -559,9 +638,9 @@
             return code;
         }
 
-        function generateConfirmationKey(identitySecretBase64, time, tag) {
-            if (!identitySecretBase64 || identitySecretBase64 === "N/A") return "N/A (Missing Identity Secret)";
-            const timeWordArray = CryptoJS.lib.WordArray.create([0, time]);
+        function generateConfirmationKey(identitySecretBase64, timestampSeconds, tag) {
+            if (!identitySecretBase64 || identitySecretBase64 === "N/A") return "N/A";
+            const timeWordArray = CryptoJS.lib.WordArray.create([0, timestampSeconds], 8);
             if (tag) timeWordArray.concat(CryptoJS.enc.Utf8.parse(tag));
             const secret = CryptoJS.enc.Base64.parse(identitySecretBase64);
             return CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA1(timeWordArray, secret));
@@ -569,27 +648,36 @@
 
         function generateConfirmationHashes() {
             if (!currentIdentitySecret) return;
-            const now = Math.floor(Date.now() / 1000);
+            const now = Math.floor((Date.now() + timeOffset) / 1000);
             const tag = document.getElementById('confTagSelect').value;
+            
+            const confHash = generateConfirmationKey(currentIdentitySecret, now, tag);
+            
             document.getElementById('valConfTime').innerText = now;
-            document.getElementById('valConfHash').innerText = generateConfirmationKey(currentIdentitySecret, now, tag);
-            document.getElementById('valAllowHash').innerText = generateConfirmationKey(currentIdentitySecret, now, 'allow');
+            document.getElementById('valConfHash').innerText = confHash;
+            
+            if (currentSteamID && currentDeviceID && confHash !== "N/A") {
+                const queryStr = `?p=${currentDeviceID}&a=${currentSteamID}&k=${encodeURIComponent(confHash)}&t=${now}&m=android&tag=${tag}`;
+                document.getElementById('valApiQuery').innerText = queryStr;
+            } else {
+                document.getElementById('valApiQuery').innerText = "Missing DeviceID or SteamID";
+            }
         }
 
         function updateToken() {
-            const now = Math.floor(Date.now() / 1000);
+            const now = Math.floor((Date.now() + timeOffset) / 1000);
             const secondsRemaining = 30 - (now % 30);
             const progressBar = document.getElementById('progressBar');
             progressBar.style.width = ((secondsRemaining / 30) * 100) + "%";
             progressBar.classList.toggle('urgent', secondsRemaining <= 5);
             document.getElementById('timerSeconds').innerText = secondsRemaining + "s";
-            if (currentSharedSecret) document.getElementById('tokenDisplay').innerText = generateSteamGuardCode(currentSharedSecret);
+            if (currentSharedSecret) document.getElementById('tokenDisplay').innerText = generateSteamGuardCode(currentSharedSecret, now);
         }
 
         setInterval(updateToken, 1000);
 
         function copyCode(text) {
-            if (!text || text === "-----" || text.includes("N/A")) return;
+            if (!text || text === "-----" || text.includes("Missing") || text === "-") return;
             navigator.clipboard.writeText(text).then(() => showToast(i18n[currentLang].toast_copied)).catch(() => {
                 const area = document.createElement('textarea'); area.value = text;
                 document.body.appendChild(area); area.select(); document.execCommand('copy');
@@ -604,8 +692,17 @@
             setTimeout(() => toast.classList.remove('show'), 2000);
         }
 
+        window.addEventListener('beforeunload', function (e) {
+            if (currentSharedSecret) {
+                e.preventDefault();
+                e.returnValue = i18n[currentLang].warn_unload;
+                return i18n[currentLang].warn_unload;
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
             setLanguage('en');
+            syncNetworkTime();
         });
     </script>
 </body>
