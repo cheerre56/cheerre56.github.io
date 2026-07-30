@@ -6,13 +6,11 @@
     <title>Steam Authenticator & Confirmation Manager - NAHA GAME</title>
     <link rel="icon" href="https://naha.one/assets/media/images/nahagame.png" type="image/png">
     
-    <!-- Google Fonts & Font Awesome Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- CryptoJS & Tailwind -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -71,7 +69,6 @@
             margin-top: 30px;
         }
 
-        /* 面板展開動畫與響應式彈性設計 */
         .details-panel, .trade-panel {
             width: 0; 
             opacity: 0; 
@@ -111,7 +108,6 @@
         }
         .app-layout.expanded .main-panel { border-radius: 0; }
 
-        /* 標題與內文修復：防爆字變形 */
         .panel-header { 
             display: flex; 
             align-items: center; 
@@ -175,16 +171,20 @@
         .toast.show { bottom: 30px; opacity: 1; }
 
         @media (max-width: 1100px) {
-            .app-layout { flex-direction: column; align-items: center; gap: 15px; }
-            .details-panel, .trade-panel { width: 100% !important; max-width: 440px; border-radius: 20px !important; margin: 0 !important; transform: translateY(-20px) !important; }
-            .main-panel { width: 100% !important; max-width: 440px; border-radius: 20px !important; }
-            .app-layout.expanded .details-panel, .app-layout.expanded .trade-panel { opacity: 1; transform: translateY(0) !important; padding: 24px; }
+            .app-layout { flex-direction: column; align-items: center; gap: 20px; }
+            .main-panel { width: 100% !important; max-width: 440px; border-radius: 20px !important; order: 1; }
+            .details-panel, .trade-panel { 
+                width: 100% !important; max-width: 440px; border-radius: 20px !important; 
+                margin: 0 !important; transform: none !important; 
+                height: 0; padding: 0 !important; border: 0; opacity: 0; 
+            }
+            .app-layout.expanded .details-panel { order: 2; height: auto; opacity: 1; padding: 28px 24px !important; border: 1px solid var(--card-border); }
+            .app-layout.expanded .trade-panel { order: 3; height: auto; opacity: 1; padding: 28px 24px !important; border: 1px solid var(--card-border); }
         }
     </style>
 </head>
 <body>
 
-    <!-- 頂部導覽列 Navbar (唯一的語言切換選單) -->
     <nav class="w-full bg-white/80 blur-bg border-b border-slate-100 sticky top-0 z-50">
         <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
             <a href="#" class="flex items-center space-x-3 shrink-0">
@@ -204,10 +204,8 @@
         </div>
     </nav>
 
-    <!-- 核心應用 3 方框區域 -->
     <div class="app-layout" id="appLayout">
         
-        <!-- PANEL 1: maFile Metadata -->
         <div class="details-panel">
             <div class="panel-header"><i class="fa-solid fa-microchip shrink-0"></i><span data-i18n="panel1_title">1. .maFile Core Keys</span></div>
             <div class="info-list">
@@ -221,7 +219,6 @@
             </div>
         </div>
 
-        <!-- PANEL 2: Guard Auth Core (方框內已移除選單) -->
         <div class="main-panel">
             <div class="top-bar">
                 <div class="brand">
@@ -259,7 +256,6 @@
             </div>
         </div>
 
-        <!-- PANEL 3: HMAC Signer -->
         <div class="trade-panel">
             <div class="panel-header amber">
                 <i class="fa-solid fa-key shrink-0"></i>
@@ -300,7 +296,6 @@
         <div class="toast" id="toast">Copied to clipboard!</div>
     </div>
 
-    <!-- 方框外部聲明卡片 -->
     <div class="outer-footer-notice">
         <i class="fa-solid fa-shield-halved text-emerald-600 mr-1.5"></i>
         <span data-i18n="prof_notice">
@@ -308,7 +303,6 @@
         </span>
     </div>
 
-    <!-- 頁尾 -->
     <footer class="w-full bg-slate-900 text-slate-400 py-6 border-t border-slate-800 text-center text-xs mt-auto">
         <p>© 2026 NAHA Store. All Rights Reserved. All product names and logos are trademarks of their respective owners.</p>
     </footer>
