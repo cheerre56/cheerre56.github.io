@@ -211,8 +211,20 @@
             <div class="info-list">
                 <div class="info-item"><div class="info-label"><i class="fa-solid fa-user-gear"></i><span data-i18n="lbl_account">Account Name</span></div><div class="info-value" id="valAccountName">-</div></div>
                 <div class="info-item"><div class="info-label"><i class="fa-solid fa-id-card"></i><span data-i18n="lbl_steamid">Steam ID (64-bit)</span></div><div class="info-value" id="valSteamId">-</div></div>
-                <div class="info-item"><div class="info-label"><i class="fa-solid fa-key"></i><span data-i18n="lbl_shared_secret">Shared Secret</span></div><div class="info-value highlight" id="valSharedSecret">-</div></div>
-                <div class="info-item"><div class="info-label"><i class="fa-solid fa-shield-cat"></i><span data-i18n="lbl_identity_secret">Identity Secret</span></div><div class="info-value amber" id="valIdentitySecret">-</div></div>
+                <div class="info-item">
+                    <div class="info-label w-full flex justify-between items-center">
+                        <div><i class="fa-solid fa-key"></i><span data-i18n="lbl_shared_secret">Shared Secret</span></div>
+                        <i class="fa-solid fa-eye cursor-pointer text-slate-400 hover:text-emerald-500 transition" onclick="toggleSecret('valSharedSecret')"></i>
+                    </div>
+                    <div class="info-value highlight" id="valSharedSecret" data-secret="">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label w-full flex justify-between items-center">
+                        <div><i class="fa-solid fa-shield-cat"></i><span data-i18n="lbl_identity_secret">Identity Secret</span></div>
+                        <i class="fa-solid fa-eye cursor-pointer text-slate-400 hover:text-amber-500 transition" onclick="toggleSecret('valIdentitySecret')"></i>
+                    </div>
+                    <div class="info-value amber" id="valIdentitySecret" data-secret="">-</div>
+                </div>
                 <div class="info-item"><div class="info-label"><i class="fa-solid fa-unlock-keyhole"></i><span data-i18n="lbl_revocation">Revocation Code</span></div><div class="info-value" id="valRevocationCode">-</div></div>
                 <div class="info-item"><div class="info-label"><i class="fa-solid fa-mobile-screen"></i><span data-i18n="lbl_device_id">Device ID</span></div><div class="info-value" id="valDeviceId">-</div></div>
                 <div class="info-item"><div class="info-label"><i class="fa-solid fa-check-double"></i><span data-i18n="lbl_status">Enrolled Status</span></div><div class="info-value" id="valEnrolled">-</div></div>
@@ -225,6 +237,7 @@
                     <img src="https://naha.one/assets/media/images/nahagame.png" alt="Logo" class="h-6 w-auto">
                     <span>Guard Auth</span>
                 </div>
+                <button id="clearBtn" onclick="resetApp()" class="hidden bg-red-50 text-red-600 border border-red-200 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-100 transition shadow-sm"><i class="fa-solid fa-trash-can mr-1"></i><span data-i18n="btn_clear">Clear</span></button>
             </div>
 
             <div class="upload-area" id="dropArea">
@@ -254,6 +267,8 @@
                 <div class="timer-header"><span data-i18n="refresh_label">Next Refresh</span><span id="timerSeconds">30s</span></div>
                 <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBar"></div></div>
             </div>
+            
+            <div class="text-center text-[0.65rem] text-slate-400 font-medium mt-3" data-i18n="msg_time_sync">* Ensure your PC time is accurate for valid codes.</div>
         </div>
 
         <div class="trade-panel">
@@ -334,8 +349,11 @@
                 lbl_conf_key: "Confirmation Hash Signature",
                 lbl_allow_key: "Allow Hash Signature",
                 toast_copied: "Copied to clipboard!",
+                err_file_type: "Invalid file type. Only .maFile or .json allowed.",
                 err_no_secret: "No shared_secret field found in file!",
-                err_json: "Failed to parse JSON / maFile!"
+                err_json: "Failed to parse JSON / maFile!",
+                btn_clear: "Clear Data",
+                msg_time_sync: "* Ensure your PC time is accurate for valid codes."
             },
             ru: {
                 panel1_title: "1. Ключи .maFile",
@@ -347,7 +365,7 @@
                 lbl_revocation: "Код отмены",
                 lbl_device_id: "ID устройства",
                 lbl_status: "Статус привязки",
-                upload_title: "Нажмите или перетащите .maFile",
+                upload_title: "Перетащите .maFile сюда",
                 upload_sub: "100% оффлайн обработка. Ключи не покидают браузер",
                 account_label: "Аккаунт Steam",
                 no_file: "Файл не загружен",
@@ -362,8 +380,11 @@
                 lbl_conf_key: "Подпись подтверждения (Confirmation Hash)",
                 lbl_allow_key: "Подпись разрешения (Allow Hash)",
                 toast_copied: "Скопировано в буфер обмена!",
+                err_file_type: "Неверный формат. Только .maFile или .json.",
                 err_no_secret: "В файле не найден shared_secret!",
-                err_json: "Не удалось распарсить JSON / maFile!"
+                err_json: "Не удалось распарсить JSON / maFile!",
+                btn_clear: "Очистить",
+                msg_time_sync: "* Убедитесь, что время на ПК точное."
             },
             zh: {
                 panel1_title: "1. .maFile 核心金鑰內容",
@@ -390,8 +411,11 @@
                 lbl_conf_key: "交易驗證簽名 (Confirmation Hash)",
                 lbl_allow_key: "同意交易簽名 (Allow Hash)",
                 toast_copied: "已複製到剪貼簿！",
+                err_file_type: "格式錯誤：僅支援 .maFile 或 .json 檔案。",
                 err_no_secret: "檔案中找不到 shared_secret 欄位！",
-                err_json: "無法解析 JSON / maFile 檔案！"
+                err_json: "無法解析 JSON / maFile 檔案！",
+                btn_clear: "清除資料",
+                msg_time_sync: "* 注意：請確保您的電腦時間準確，以免驗證碼失效。"
             }
         };
 
@@ -432,6 +456,12 @@
         fileInput.addEventListener('change', e => { if (e.target.files.length > 0) processFile(e.target.files[0]); });
 
         function processFile(file) {
+            const fileName = file.name.toLowerCase();
+            if (!fileName.endsWith('.mafile') && !fileName.endsWith('.json')) {
+                showToast(i18n[currentLang].err_file_type);
+                return;
+            }
+
             const reader = new FileReader();
             reader.onload = function(evt) {
                 try {
@@ -447,13 +477,21 @@
 
                         document.getElementById('valAccountName').innerText = data.account_name || "N/A";
                         document.getElementById('valSteamId').innerText = data.Session ? data.Session.SteamID : (data.steamid || "N/A");
-                        document.getElementById('valSharedSecret').innerText = data.shared_secret || "N/A";
-                        document.getElementById('valIdentitySecret').innerText = data.identity_secret || "N/A";
+                        
+                        const ssEl = document.getElementById('valSharedSecret');
+                        ssEl.setAttribute('data-secret', data.shared_secret);
+                        ssEl.innerText = "••••••••••••••";
+
+                        const isEl = document.getElementById('valIdentitySecret');
+                        isEl.setAttribute('data-secret', data.identity_secret || "N/A");
+                        isEl.innerText = data.identity_secret ? "••••••••••••••" : "N/A";
+
                         document.getElementById('valRevocationCode').innerText = data.revocation_code || "N/A";
                         document.getElementById('valDeviceId').innerText = data.device_id || "N/A";
                         document.getElementById('valEnrolled').innerText = data.fully_enrolled ? "True" : "False";
 
                         document.getElementById('appLayout').classList.add('expanded');
+                        document.getElementById('clearBtn').classList.remove('hidden');
 
                         updateToken();
                         generateConfirmationHashes();
@@ -461,6 +499,41 @@
                 } catch (err) { alert(i18n[currentLang].err_json); }
             };
             reader.readAsText(file);
+        }
+
+        function toggleSecret(id) {
+            const el = document.getElementById(id);
+            const secret = el.getAttribute('data-secret');
+            if(!secret || secret === "N/A") return;
+            if(el.innerText === '••••••••••••••') {
+                el.innerText = secret;
+            } else {
+                el.innerText = '••••••••••••••';
+            }
+        }
+
+        function resetApp() {
+            currentSharedSecret = "";
+            currentIdentitySecret = "";
+            document.getElementById('appLayout').classList.remove('expanded');
+            document.getElementById('clearBtn').classList.add('hidden');
+            
+            document.getElementById('accountName').innerText = i18n[currentLang].no_file;
+            const badge = document.getElementById('statusBadge');
+            badge.innerText = i18n[currentLang].status_waiting;
+            badge.classList.remove('loaded');
+            
+            document.getElementById('tokenDisplay').innerText = "-----";
+            document.getElementById('fileInput').value = "";
+            
+            ['valAccountName', 'valSteamId', 'valRevocationCode', 'valDeviceId', 'valEnrolled', 'valConfTime', 'valConfHash', 'valAllowHash'].forEach(id => document.getElementById(id).innerText = "-");
+            
+            ['valSharedSecret', 'valIdentitySecret'].forEach(id => {
+                const el = document.getElementById(id);
+                el.innerText = "-";
+                el.setAttribute('data-secret', '');
+            });
+            showToast(i18n[currentLang].btn_clear + " OK");
         }
 
         function generateSteamGuardCode(secretBase64) {
@@ -487,7 +560,7 @@
         }
 
         function generateConfirmationKey(identitySecretBase64, time, tag) {
-            if (!identitySecretBase64) return "N/A (Missing Identity Secret)";
+            if (!identitySecretBase64 || identitySecretBase64 === "N/A") return "N/A (Missing Identity Secret)";
             const timeWordArray = CryptoJS.lib.WordArray.create([0, time]);
             if (tag) timeWordArray.concat(CryptoJS.enc.Utf8.parse(tag));
             const secret = CryptoJS.enc.Base64.parse(identitySecretBase64);
