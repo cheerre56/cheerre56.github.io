@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steam Authenticator & Confirmation Manager - NAHA GAME</title>
+    <link rel="icon" href="https://naha.one/assets/media/images/nahagame.png" type="image/png">
+    
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CryptoJS & Tailwind -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --primary-emerald: #059669;
+            --emerald-glow: rgba(16, 185, 129, 0.15);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --accent-amber: #d97706;
+            --danger-color: #ef4444;
+            --scrollbar-thumb: #cbd5e1;
+            --scrollbar-thumb-hover: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            color: var(--text-main);
+            padding: 0;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+
+        .blur-bg { backdrop-filter: blur(8px); }
+
+        .app-layout {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            max-width: 1280px;
+            width: 100%;
+            perspective: 1000px;
+            margin-top: 30px;
+        }
+
+        /* 面板展開動畫與響應式彈性設計 */
+        .details-panel, .trade-panel {
+            width: 0; 
+            opacity: 0; 
+            overflow: hidden;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex; 
+            flex-direction: column; 
+            pointer-events: none; 
+            z-index: 1;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        .details-panel { border-radius: 20px 0 0 20px; margin-right: -1px; transform: translateX(60px) scaleX(0.9); transform-origin: right center; }
+        .trade-panel { border-radius: 0 20px 20px 0; margin-left: -1px; transform: translateX(-60px) scaleX(0.9); transform-origin: left center; }
+
+        .app-layout.expanded .details-panel,
+        .app-layout.expanded .trade-panel {
+            width: 380px; 
+            opacity: 1; 
+            transform: translateX(0) scaleX(1); 
+            padding: 28px 24px; 
+            pointer-events: auto;
+        }
+
+        .main-panel {
+            width: 440px; 
+            background: var(--card-bg); 
+            border: 1px solid var(--card-border);
+            border-radius: 20px; 
+            padding: 28px 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
+            flex-shrink: 0; 
+            z-index: 2;
+        }
+        .app-layout.expanded .main-panel { border-radius: 0; }
+
+        /* 標題與內文修復：防爆字變形 */
+        .panel-header { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            color: var(--primary-emerald); 
+            font-size: 0.95rem; 
+            font-weight: 700; 
+            margin-bottom: 18px; 
+            padding-bottom: 10px; 
+            border-bottom: 1px solid #f1f5f9; 
+            line-height: 1.4;
+        }
+        .panel-header.amber { color: var(--accent-amber); }
+
+        .info-list { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; max-height: 480px; padding-right: 4px; }
+        .info-item { background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+        .info-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .info-value { font-family: 'Fira Code', monospace; font-size: 0.82rem; color: var(--text-main); word-break: break-all; user-select: text; }
+        .info-value.highlight { color: var(--primary-emerald); font-weight: 600; }
+        .info-value.amber { color: var(--accent-amber); font-weight: 600; }
+
+        .upload-area { border: 2px dashed #cbd5e1; background: #f8fafc; border-radius: 14px; padding: 22px 14px; text-align: center; cursor: pointer; position: relative; margin-bottom: 20px; transition: all 0.2s ease; }
+        .upload-area:hover, .upload-area.dragover { border-color: var(--primary-emerald); background: var(--emerald-glow); }
+        .upload-icon { font-size: 2rem; color: var(--primary-emerald); margin-bottom: 8px; }
+        .upload-title { font-size: 0.92rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .upload-sub { font-size: 0.75rem; color: var(--text-muted); }
+        #fileInput { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+
+        .account-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .account-info { display: flex; align-items: center; gap: 10px; }
+        .avatar-placeholder { width: 34px; height: 34px; border-radius: 50%; background: #e2e8f0; border: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: center; color: var(--primary-emerald); }
+        .account-label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+        .account-name { font-size: 0.88rem; font-weight: 700; }
+        .status-badge { font-size: 0.7rem; padding: 3px 9px; border-radius: 12px; background: #e2e8f0; color: var(--text-muted); font-weight: 600; }
+        .status-badge.loaded { background: #d1fae5; color: var(--primary-emerald); border: 1px solid #a7f3d0; }
+
+        .code-box { background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; padding: 20px 16px; text-align: center; margin-bottom: 18px; cursor: pointer; }
+        .code-box:hover { border-color: var(--primary-emerald); box-shadow: 0 4px 15px var(--emerald-glow); }
+        .code-text { font-family: 'Fira Code', monospace; font-size: 2.8rem; font-weight: 700; letter-spacing: 6px; color: #10b981; }
+        .copy-hint { margin-top: 4px; font-size: 0.72rem; color: #94a3b8; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+        .timer-container { margin-bottom: 20px; }
+        .timer-header { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; }
+        .progress-bar-bg { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #3b82f6, #10b981); transition: width 1s linear; }
+
+        .trade-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 10px; }
+        .tag-select { background: #ffffff; border: 1px solid #cbd5e1; color: var(--accent-amber); padding: 4px 10px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; outline: none; cursor: pointer; }
+        .calc-btn { background: linear-gradient(135deg, #f59e0b, #d97706); border: none; color: #fff; padding: 10px; border-radius: 10px; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+        .conf-result-box { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+        .conf-val { font-family: 'Fira Code', monospace; font-size: 0.78rem; color: #fbbf24; background: #1e293b; padding: 6px 8px; border-radius: 6px; cursor: pointer; word-break: break-all; }
+
+        .outer-footer-notice {
+            margin-top: 30px; margin-bottom: 40px; max-width: 800px; width: 90%;
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 20px;
+            font-size: 0.78rem; line-height: 1.6; color: var(--text-muted); text-align: center;
+        }
+
+        .toast { position: fixed; bottom: -50px; left: 50%; transform: translateX(-50%); background: #0f172a; color: #ffffff; padding: 10px 22px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; opacity: 0; transition: all 0.3s ease; pointer-events: none; z-index: 100; }
+        .toast.show { bottom: 30px; opacity: 1; }
+
+        @media (max-width: 1100px) {
+            .app-layout { flex-direction: column; align-items: center; gap: 15px; }
+            .details-panel, .trade-panel { width: 100% !important; max-width: 440px; border-radius: 20px !important; margin: 0 !important; transform: translateY(-20px) !important; }
+            .main-panel { width: 100% !important; max-width: 440px; border-radius: 20px !important; }
+            .app-layout.expanded .details-panel, .app-layout.expanded .trade-panel { opacity: 1; transform: translateY(0) !important; padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 頂部導覽列 Navbar (唯一的語言切換選單) -->
+    <nav class="w-full bg-white/80 blur-bg border-b border-slate-100 sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-3 shrink-0">
+                <img src="https://naha.one/assets/media/images/nahagame.png" alt="NAHA Logo" class="h-8 md:h-10 w-auto object-contain">
+                <span class="text-lg md:text-xl font-bold tracking-tight text-slate-900">NAHA <span class="text-emerald-600 font-medium">GAME</span></span>
+            </a>
+            <div class="flex items-center space-x-4 shrink-0">
+                <select id="lang-switcher-nav" onchange="setLanguage(this.value)" class="bg-slate-50 border border-slate-200 text-slate-700 text-xs md:text-sm font-medium rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block px-2 md:px-3 py-2 pr-6 md:pr-8 cursor-pointer outline-none transition">
+                    <option value="en" selected>English</option>
+                    <option value="ru">Русский</option>
+                    <option value="zh">繁體中文</option>
+                </select>
+                <a href="https://discord.gg/wM3gr6GFY4" target="_blank" class="hidden sm:inline-block bg-slate-900 hover:bg-slate-800 text-white px-5 py-2 rounded-xl text-sm font-medium transition duration-200 shadow-sm">
+                    Discord
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 核心應用 3 方框區域 -->
+    <div class="app-layout" id="appLayout">
+        
+        <!-- PANEL 1: maFile Metadata -->
+        <div class="details-panel">
+            <div class="panel-header"><i class="fa-solid fa-microchip shrink-0"></i><span data-i18n="panel1_title">1. .maFile Core Keys</span></div>
+            <div class="info-list">
+                <div class="info-item"><div class="info-label"><i class="fa-solid fa-user-gear"></i><span data-i18n="lbl_account">Account Name</span></div><div class="info-value" id="valAccountName">-</div></div>
+                <div class="info-item"><div class="info-label"><i class="fa-solid fa-id-card"></i><span data-i18n="lbl_steamid">Steam ID (64-bit)</span></div><div class="info-value" id="valSteamId">-</div></div>
+                <div class="info-item"><div class="info-label"><i class="fa-solid fa-key"></i><span data-i18n="lbl_shared_secret">Shared Secret</span></div><div class="info-value highlight" id="valSharedSecret">-</div></div>
+                <div class="info-item"><div class="info-label"><i class="fa-solid fa-shield-cat"></i><span data-i18n="lbl_identity_secret">Identity Secret</span></div><div class="info-value amber" id="valIdentitySecret">-</div></div>
+                <div class="info-item"><div class="info-label"><i class="fa-solid fa-unlock-keyhole"></i><span data-i18n="lbl_revocation">Revocation Code</span></div><div class="info-value" id="valRevocationCode">-</div></div>
+                <div class="info-item"><div class="info-label"><i class="fa-solid fa-mobile-screen"></i><span data-i18n="lbl_device_id">Device ID</span></div><div class="info-value" id="valDeviceId">-</div></div>
+                <div class="info-item"><div class="info-label"><i class="fa-solid fa-check-double"></i><span data-i18n="lbl_status">Enrolled Status</span></div><div class="info-value" id="valEnrolled">-</div></div>
+            </div>
+        </div>
+
+        <!-- PANEL 2: Guard Auth Core (方框內已移除選單) -->
+        <div class="main-panel">
+            <div class="top-bar">
+                <div class="brand">
+                    <img src="https://naha.one/assets/media/images/nahagame.png" alt="Logo" class="h-6 w-auto">
+                    <span>Guard Auth</span>
+                </div>
+            </div>
+
+            <div class="upload-area" id="dropArea">
+                <i class="fa-solid fa-file-code upload-icon"></i>
+                <div class="upload-title" data-i18n="upload_title">Click or Drag .maFile Here</div>
+                <div class="upload-sub" data-i18n="upload_sub">100% Offline parsing. Keys never leave your browser</div>
+                <input type="file" id="fileInput" accept=".maFile,.json">
+            </div>
+
+            <div class="account-card">
+                <div class="account-info">
+                    <div class="avatar-placeholder"><i class="fa-solid fa-user"></i></div>
+                    <div class="account-details">
+                        <span class="account-label" data-i18n="account_label">Steam Account</span>
+                        <span class="account-name" id="accountName" data-i18n="no_file">No file loaded</span>
+                    </div>
+                </div>
+                <span class="status-badge" id="statusBadge" data-i18n="status_waiting">Waiting</span>
+            </div>
+
+            <div class="code-box" onclick="copyCode(document.getElementById('tokenDisplay').innerText)">
+                <div class="code-text" id="tokenDisplay">-----</div>
+                <div class="copy-hint"><i class="fa-regular fa-copy"></i><span data-i18n="copy_hint">Click to copy code</span></div>
+            </div>
+
+            <div class="timer-container">
+                <div class="timer-header"><span data-i18n="refresh_label">Next Refresh</span><span id="timerSeconds">30s</span></div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBar"></div></div>
+            </div>
+        </div>
+
+        <!-- PANEL 3: HMAC Signer -->
+        <div class="trade-panel">
+            <div class="panel-header amber">
+                <i class="fa-solid fa-key shrink-0"></i>
+                <span data-i18n="panel3_title">3. Confirmation HMAC Signer</span>
+            </div>
+
+            <div class="trade-box">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-500 font-semibold" data-i18n="lbl_conf_type">Action Tag</span>
+                    <select class="tag-select" id="confTagSelect">
+                        <option value="conf">conf (Get List)</option>
+                        <option value="details">details (View Details)</option>
+                        <option value="allow">allow (Approve Trade)</option>
+                        <option value="cancel">cancel (Decline Trade)</option>
+                    </select>
+                </div>
+                <button class="calc-btn" onclick="generateConfirmationHashes()">
+                    <i class="fa-solid fa-calculator"></i> <span data-i18n="btn_gen_conf">Calculate HMAC Signatures</span>
+                </button>
+            </div>
+
+            <div class="conf-result-box">
+                <div class="flex flex-col gap-1">
+                    <span class="text-[0.68rem] text-slate-400 font-semibold uppercase" data-i18n="lbl_conf_time">Current UNIX Timestamp</span>
+                    <div class="conf-val" id="valConfTime" onclick="copyCode(this.innerText)">-</div>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="text-[0.68rem] text-slate-400 font-semibold uppercase" data-i18n="lbl_conf_key">Confirmation Hash Signature</span>
+                    <div class="conf-val" id="valConfHash" onclick="copyCode(this.innerText)">-</div>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="text-[0.68rem] text-slate-400 font-semibold uppercase" data-i18n="lbl_allow_key">Allow Hash Signature</span>
+                    <div class="conf-val" id="valAllowHash" onclick="copyCode(this.innerText)">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast" id="toast">Copied to clipboard!</div>
+    </div>
+
+    <!-- 方框外部聲明卡片 -->
+    <div class="outer-footer-notice">
+        <i class="fa-solid fa-shield-halved text-emerald-600 mr-1.5"></i>
+        <span data-i18n="prof_notice">
+            This is an offline web app. Uploaded files are only read locally and never transmitted. Created by <strong>NAHA GAME</strong> with open verifiable code. For questions contact Discord: <strong>nikgame</strong>. Thank you for your support!
+        </span>
+    </div>
+
+    <!-- 頁尾 -->
+    <footer class="w-full bg-slate-900 text-slate-400 py-6 border-t border-slate-800 text-center text-xs mt-auto">
+        <p>© 2026 NAHA Store. All Rights Reserved. All product names and logos are trademarks of their respective owners.</p>
+    </footer>
+
+    <script>
+        const i18n = {
+            en: {
+                panel1_title: "1. .maFile Core Keys",
+                panel3_title: "3. Confirmation HMAC Signer",
+                lbl_account: "Account Name",
+                lbl_steamid: "Steam ID (64-bit)",
+                lbl_shared_secret: "Shared Secret",
+                lbl_identity_secret: "Identity Secret",
+                lbl_revocation: "Revocation Code",
+                lbl_device_id: "Device ID",
+                lbl_status: "Enrolled Status",
+                upload_title: "Click or Drag .maFile Here",
+                upload_sub: "100% Offline parsing. Keys never leave your browser",
+                account_label: "Steam Account",
+                no_file: "No file loaded",
+                status_waiting: "Waiting",
+                status_active: "Active",
+                copy_hint: "Click to copy code",
+                refresh_label: "Next Refresh",
+                prof_notice: "This is an offline web app. Uploaded files are only read locally and never transmitted. Created by NAHA GAME with open verifiable code. For questions contact Discord: nikgame. Thank you for your support!",
+                lbl_conf_type: "Action Tag",
+                btn_gen_conf: "Calculate HMAC Signatures",
+                lbl_conf_time: "Current UNIX Timestamp",
+                lbl_conf_key: "Confirmation Hash Signature",
+                lbl_allow_key: "Allow Hash Signature",
+                toast_copied: "Copied to clipboard!",
+                err_no_secret: "No shared_secret field found in file!",
+                err_json: "Failed to parse JSON / maFile!"
+            },
+            ru: {
+                panel1_title: "1. Ключи .maFile",
+                panel3_title: "3. Подпись HMAC",
+                lbl_account: "Имя аккаунта",
+                lbl_steamid: "Steam ID (64-bit)",
+                lbl_shared_secret: "Shared Secret",
+                lbl_identity_secret: "Identity Secret",
+                lbl_revocation: "Код отмены",
+                lbl_device_id: "ID устройства",
+                lbl_status: "Статус привязки",
+                upload_title: "Нажмите или перетащите .maFile",
+                upload_sub: "100% оффлайн обработка. Ключи не покидают браузер",
+                account_label: "Аккаунт Steam",
+                no_file: "Файл не загружен",
+                status_waiting: "Ожидание",
+                status_active: "Активен",
+                copy_hint: "Нажмите, чтобы скопировать",
+                refresh_label: "Обновление через",
+                prof_notice: "Это автономная веб-страница. Все файлы обрабатываются локально. Создано NAHA GAME. Вопросы в Discord: nikgame. Спасибо за поддержку!",
+                lbl_conf_type: "Тег действия",
+                btn_gen_conf: "Рассчитать подпись HMAC",
+                lbl_conf_time: "Текущий метка времени UNIX",
+                lbl_conf_key: "Подпись подтверждения (Confirmation Hash)",
+                lbl_allow_key: "Подпись разрешения (Allow Hash)",
+                toast_copied: "Скопировано в буфер обмена!",
+                err_no_secret: "В файле не найден shared_secret!",
+                err_json: "Не удалось распарсить JSON / maFile!"
+            },
+            zh: {
+                panel1_title: "1. .maFile 核心金鑰內容",
+                panel3_title: "3. 交易確認金鑰簽名",
+                lbl_account: "帳號名稱 (Account)",
+                lbl_steamid: "Steam ID (64-bit)",
+                lbl_shared_secret: "動態驗證金鑰 (Shared Secret)",
+                lbl_identity_secret: "確認交易金鑰 (Identity Secret)",
+                lbl_revocation: "復原代碼 (Revocation Code)",
+                lbl_device_id: "裝置識別碼 (Device ID)",
+                lbl_status: "綁定狀態 (Enrolled)",
+                upload_title: "點擊或拖曳 .maFile 到此處",
+                upload_sub: "完全單機離線解析，金鑰絕不離開瀏覽器",
+                account_label: "Steam 帳號",
+                no_file: "尚未載入檔案",
+                status_waiting: "等待導入",
+                status_active: "已啟用",
+                copy_hint: "點擊即可複製驗證碼",
+                refresh_label: "更新倒數",
+                prof_notice: "本網頁為離線網頁，上傳文件均只讀取並不上傳，出自 NAHA GAME，源碼公開可驗證。如有任何疑問請聯絡 Discord: nikgame，謝謝你的支持！",
+                lbl_conf_type: "動作類型 (Tag)",
+                btn_gen_conf: "即時計算簽名 Key (HMAC)",
+                lbl_conf_time: "當前 UNIX 時間戳 (Timestamp)",
+                lbl_conf_key: "交易驗證簽名 (Confirmation Hash)",
+                lbl_allow_key: "同意交易簽名 (Allow Hash)",
+                toast_copied: "已複製到剪貼簿！",
+                err_no_secret: "檔案中找不到 shared_secret 欄位！",
+                err_json: "無法解析 JSON / maFile 檔案！"
+            }
+        };
+
+        let currentLang = "en";
+        const STEAM_CHARS = "23456789BCDFGHJKMNPQRTVWXY";
+        let currentSharedSecret = "";
+        let currentIdentitySecret = "";
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.getElementById('lang-switcher-nav').value = lang;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang] && i18n[lang][key]) {
+                    if (key === 'prof_notice') {
+                        el.innerHTML = i18n[lang][key];
+                    } else {
+                        el.innerText = i18n[lang][key];
+                    }
+                }
+            });
+
+            const statusBadge = document.getElementById('statusBadge');
+            if (currentSharedSecret) {
+                statusBadge.innerText = i18n[lang].status_active;
+            } else {
+                statusBadge.innerText = i18n[lang].status_waiting;
+                document.getElementById('accountName').innerText = i18n[lang].no_file;
+            }
+        }
+
+        const dropArea = document.getElementById('dropArea');
+        const fileInput = document.getElementById('fileInput');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(evt => dropArea.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); }));
+        dropArea.addEventListener('drop', e => { if (e.dataTransfer.files.length > 0) processFile(e.dataTransfer.files[0]); });
+        fileInput.addEventListener('change', e => { if (e.target.files.length > 0) processFile(e.target.files[0]); });
+
+        function processFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const data = JSON.parse(evt.target.result);
+                    if (data.shared_secret) {
+                        currentSharedSecret = data.shared_secret;
+                        currentIdentitySecret = data.identity_secret || "";
+                        
+                        document.getElementById('accountName').innerText = data.account_name || "Unknown";
+                        const badge = document.getElementById('statusBadge');
+                        badge.innerText = i18n[currentLang].status_active;
+                        badge.classList.add('loaded');
+
+                        document.getElementById('valAccountName').innerText = data.account_name || "N/A";
+                        document.getElementById('valSteamId').innerText = data.Session ? data.Session.SteamID : (data.steamid || "N/A");
+                        document.getElementById('valSharedSecret').innerText = data.shared_secret || "N/A";
+                        document.getElementById('valIdentitySecret').innerText = data.identity_secret || "N/A";
+                        document.getElementById('valRevocationCode').innerText = data.revocation_code || "N/A";
+                        document.getElementById('valDeviceId').innerText = data.device_id || "N/A";
+                        document.getElementById('valEnrolled').innerText = data.fully_enrolled ? "True" : "False";
+
+                        document.getElementById('appLayout').classList.add('expanded');
+
+                        updateToken();
+                        generateConfirmationHashes();
+                    } else { alert(i18n[currentLang].err_no_secret); }
+                } catch (err) { alert(i18n[currentLang].err_json); }
+            };
+            reader.readAsText(file);
+        }
+
+        function generateSteamGuardCode(secretBase64) {
+            if (!secretBase64) return "-----";
+            const time = Math.floor(Date.now() / 1000 / 30);
+            const timeBytes = CryptoJS.lib.WordArray.create([0, time]);
+            const secret = CryptoJS.enc.Base64.parse(secretBase64);
+            const hmac = CryptoJS.HmacSHA1(timeBytes, secret);
+            const hmacWords = hmac.words;
+            const offset = (hmacWords[4] & 0xff) & 0xf;
+            const wordIndex = offset >> 2;
+            const byteIndex = offset % 4;
+
+            let full32BitValue = (hmacWords[wordIndex] << (byteIndex * 8)) | (hmacWords[wordIndex + 1] >> ((4 - byteIndex) * 8));
+            if (byteIndex === 0) full32BitValue = hmacWords[wordIndex];
+            let full31BitValue = full32BitValue & 0x7fffffff;
+
+            let code = "";
+            for (let i = 0; i < 5; i++) {
+                code += STEAM_CHARS.charAt(full31BitValue % STEAM_CHARS.length);
+                full31BitValue = Math.floor(full31BitValue / STEAM_CHARS.length);
+            }
+            return code;
+        }
+
+        function generateConfirmationKey(identitySecretBase64, time, tag) {
+            if (!identitySecretBase64) return "N/A (Missing Identity Secret)";
+            const timeWordArray = CryptoJS.lib.WordArray.create([0, time]);
+            if (tag) timeWordArray.concat(CryptoJS.enc.Utf8.parse(tag));
+            const secret = CryptoJS.enc.Base64.parse(identitySecretBase64);
+            return CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA1(timeWordArray, secret));
+        }
+
+        function generateConfirmationHashes() {
+            if (!currentIdentitySecret) return;
+            const now = Math.floor(Date.now() / 1000);
+            const tag = document.getElementById('confTagSelect').value;
+            document.getElementById('valConfTime').innerText = now;
+            document.getElementById('valConfHash').innerText = generateConfirmationKey(currentIdentitySecret, now, tag);
+            document.getElementById('valAllowHash').innerText = generateConfirmationKey(currentIdentitySecret, now, 'allow');
+        }
+
+        function updateToken() {
+            const now = Math.floor(Date.now() / 1000);
+            const secondsRemaining = 30 - (now % 30);
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = ((secondsRemaining / 30) * 100) + "%";
+            progressBar.classList.toggle('urgent', secondsRemaining <= 5);
+            document.getElementById('timerSeconds').innerText = secondsRemaining + "s";
+            if (currentSharedSecret) document.getElementById('tokenDisplay').innerText = generateSteamGuardCode(currentSharedSecret);
+        }
+
+        setInterval(updateToken, 1000);
+
+        function copyCode(text) {
+            if (!text || text === "-----" || text.includes("N/A")) return;
+            navigator.clipboard.writeText(text).then(() => showToast(i18n[currentLang].toast_copied)).catch(() => {
+                const area = document.createElement('textarea'); area.value = text;
+                document.body.appendChild(area); area.select(); document.execCommand('copy');
+                document.body.removeChild(area); showToast(i18n[currentLang].toast_copied);
+            });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg || i18n[currentLang].toast_copied;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setLanguage('en');
+        });
+    </script>
+</body>
+</html>
