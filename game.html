@@ -14,7 +14,6 @@
         const STORE_PRICES = {
             prod1: 7.0,   // Non Prime Account
             prod2: 20.0,  // Prime 1LVL
-            prod3: 38.0,  // Prime 10LVL (Farmed)
             prod4: 42.5   // Non-farm 10LVL
         };
 
@@ -49,13 +48,6 @@
                 prod2_f2: "Permanent Green Trust Factor (1000$+ - 2800$)",
                 prod2_f3: "First Email Access",
                 prod2_f4: "Non-farm account, 100% safe No VAC",
-                
-                // 商品 3 (Prime 10LVL Farmed)
-                prod3_tag: "Advanced Option",
-                prod3_title: "Prime Account <span class='text-slate-600'>10LVL</span>",
-                prod3_f1: "Permanent Green Trust Factor (500$+)",
-                prod3_f2: "First Email Access",
-                prod3_f3: "All farm accounts are NOT 100% safe",
 
                 // 商品 4 (Non-farm Prime 10LVL)
                 prod4_badge: "100% Safe",
@@ -104,12 +96,6 @@
                 prod2_f2: "Перманентный зеленый траст (500$+)",
                 prod2_f3: "Первая почта (First Email)",
                 prod2_f4: "Не фарм, 100% безопасно, без VAC",
-                
-                prod3_tag: "Продвинутый",
-                prod3_title: "Prime Аккаунт <span class='text-slate-600'>10LVL</span>",
-                prod3_f1: "Перманентный зеленый траст (500$+)",
-                prod3_f2: "Первая почта (First Email)",
-                prod3_f3: "Фарм аккаунты НЕ безопасны на 100%",
 
                 prod4_badge: "100% Безопасно",
                 prod4_tag: "Ультимативный",
@@ -156,12 +142,6 @@
                 prod2_f2: "Permanent Green Trust (500$+ 外部資金)",
                 prod2_f3: "First Email Access (附原始信箱)",
                 prod2_f4: "非掛機帳號，100% 安全無 VAC",
-                
-                prod3_tag: "進階選擇",
-                prod3_title: "Prime 帳號 <span class='text-slate-600'>10LVL</span>",
-                prod3_f1: "Permanent Green Trust (500$+ 外部資金)",
-                prod3_f2: "First Email Access (附原始信箱)",
-                prod3_f3: "掛機農號不保證 100% 安全",
 
                 prod4_badge: "100% 安全",
                 prod4_tag: "終極選擇",
@@ -241,7 +221,6 @@
             <span data-i18n="hero_badge">100% Secure • First Email Included</span>
         </div>
         
-        <!-- 取消固定高度，確保手機版換行不重疊 -->
         <h1 class="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight text-slate-950 mb-4 leading-tight min-h-[80px] md:min-h-[60px] flex items-center justify-center flex-wrap">
             <span><span id="typing-title" data-i18n="hero_title"></span><span class="typing-cursor"></span></span>
         </h1>
@@ -274,7 +253,6 @@
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
         </button>
 
-        <!-- 修改了 w-[85vw] 確保手機版不會超寬 -->
         <div id="productCarousel" class="flex gap-4 md:gap-6 overflow-x-auto no-scrollbar scroll-smooth py-4 px-2 snap-x snap-mandatory">
             
             <!-- 商品 1: Non Prime -->
@@ -325,32 +303,6 @@
                             <li class="flex items-start"><svg class="w-4 h-4 text-emerald-500 mr-3 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span data-i18n="prod2_f2">Permanent Green Trust Factor (1200$+)</span></li>
                             <li class="flex items-start"><svg class="w-4 h-4 text-emerald-500 mr-3 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span data-i18n="prod2_f3">First Email Access</span></li>
                             <li class="flex items-start text-emerald-600 font-medium"><svg class="w-4 h-4 mr-3 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg><span data-i18n="prod2_f4">Non-farm account, 100% safe No VAC</span></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="mt-8 pt-4 border-t border-slate-50">
-                    <span data-i18n="prod_discount" class="text-xs text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md font-medium">✨ Discount in bulk available</span>
-                </div>
-            </div>
-
-            <!-- 商品 3: Prime Account 10LVL -->
-            <div class="snap-start w-[85vw] sm:w-[320px] md:w-[400px] shrink-0 bg-white rounded-2xl border border-slate-200/80 p-6 md:p-8 shadow-sm flex flex-col justify-between hover:border-slate-300 transition duration-300 hover:-translate-y-1 hover:shadow-lg">
-                <div>
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <span data-i18n="prod3_tag" class="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-1">Advanced Option</span>
-                            <h2 class="text-xl md:text-2xl font-bold text-slate-900" data-i18n="prod3_title">Prime Account 10LVL</h2>
-                        </div>
-                    </div>
-                    <div class="flex items-baseline my-6">
-                        <span class="text-4xl font-extrabold text-slate-950" data-price-id="prod3"></span>
-                        <span class="text-slate-400 ml-2 text-sm font-light">USD</span>
-                    </div>
-                    <div class="border-t border-slate-100 pt-6">
-                        <ul class="space-y-3 text-[13px] md:text-sm text-slate-600">
-                            <li class="flex items-start"><svg class="w-4 h-4 text-emerald-500 mr-3 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span data-i18n="prod3_f1">Permanent Green Trust Factor (500$+)</span></li>
-                            <li class="flex items-start"><svg class="w-4 h-4 text-emerald-500 mr-3 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span data-i18n="prod3_f2">First Email Access</span></li>
-                            <li class="flex items-start text-amber-600 font-medium"><svg class="w-4 h-4 mr-3 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg><span data-i18n="prod3_f3">All farm accounts are NOT 100% safe</span></li>
                         </ul>
                     </div>
                 </div>
