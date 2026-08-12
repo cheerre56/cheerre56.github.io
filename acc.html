@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steam 資料與 CDK 解析工具 V6 - Pro Edition</title>
+    <!-- 引入高質感字體 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --primary-hover: #5849c4;
+            --secondary: #00cec9;
+            --success: #10ac84;
+            --success-hover: #0e9572;
+            --bg-color: #f0f2f5;
+            --surface: rgba(255, 255, 255, 0.92);
+            --text-main: #2d3436;
+            --text-muted: #636e72;
+            --border-light: #dfe6e9;
+        }
+
+        body { 
+            font-family: 'Inter', 'Noto Sans TC', sans-serif; 
+            /* 柔和動態背景 */
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            color: var(--text-main);
+            box-sizing: border-box;
+        }
+
+        /* 琉璃質感主容器 */
+        .container { 
+            max-width: 1050px; 
+            margin: 0 auto; 
+            background: var(--surface); 
+            padding: 35px; 
+            border-radius: 24px; 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.6);
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        h2 { 
+            text-align: center; 
+            color: var(--text-main); 
+            margin-top: 0;
+            margin-bottom: 25px; 
+            font-weight: 700;
+            font-size: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        /* APP風格的頁籤切換 */
+        .mode-tabs {
+            display: flex;
+            background-color: #e4e9f2;
+            padding: 6px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            z-index: 1;
+        }
+        .tab-btn.active {
+            background-color: white;
+            color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        /* 設定列 */
+        .settings-bar {
+            background: linear-gradient(120deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 18px 20px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--primary);
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+        .settings-bar label {
+            font-weight: 600;
+            margin-right: 15px;
+            color: var(--primary);
+        }
+        select {
+            padding: 12px 15px;
+            font-size: 15px;
+            font-weight: 500;
+            border: 2px solid var(--border-light);
+            border-radius: 10px;
+            background-color: white;
+            color: var(--text-main);
+            cursor: pointer;
+            flex-grow: 1;
+            max-width: 450px;
+            transition: all 0.2s;
+            outline: none;
+            font-family: inherit;
+        }
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.15);
+        }
+
+        .instructions { 
+            margin-bottom: 20px; 
+            font-size: 15px; 
+            color: #57606f; 
+            background-color: #f1f2f6; 
+            padding: 16px 20px; 
+            border-radius: 12px; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 雙欄佈局 */
+        .flex-container { display: flex; gap: 25px; flex-wrap: wrap; }
+        .box { flex: 1; min-width: 320px; display: flex; flex-direction: column; }
+        
+        .box h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        textarea { 
+            width: 100%; 
+            height: 380px; 
+            padding: 20px; 
+            border: 2px solid var(--border-light); 
+            border-radius: 14px; 
+            resize: vertical; 
+            box-sizing: border-box; 
+            font-family: 'JetBrains Mono', 'Courier New', monospace; /* 代碼感字體 */
+            font-size: 14px; 
+            background-color: #fcfcfd; 
+            white-space: pre; 
+            line-height: 1.6; 
+            color: #2f3542;
+            transition: all 0.3s;
+        }
+        textarea:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            background-color: #fff;
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.08), 0 0 0 4px rgba(108, 92, 231, 0.1); 
+        }
+
+        /* 漸層高質感按鈕 */
+        .btn-parse { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            width: 100%; 
+            padding: 16px; 
+            margin: 25px 0 10px 0; 
+            background: linear-gradient(135deg, var(--primary) 0%, #a29bfe 100%);
+            color: white; 
+            border: none; 
+            border-radius: 14px; 
+            font-size: 18px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
+        }
+        .btn-parse:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(108, 92, 231, 0.4);
+        }
+        .btn-parse:active {
+            transform: translateY(1px);
+        }
+
+        .btn-copy { 
+            background: linear-gradient(135deg, var(--success) 0%, #20bf6b 100%);
+            margin-top: 15px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            width: 100%; 
+            padding: 14px; 
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            font-size: 16px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            box-shadow: 0 6px 15px rgba(16, 172, 132, 0.25);
+        }
+        .btn-copy:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 172, 132, 0.35);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>✨ Steam 智慧解析工具 <span style="font-size:14px; background:#6c5ce7; color:white; padding:4px 10px; border-radius:20px; font-weight:bold;">Pro</span></h2>
+        
+        <!-- 模式切換 -->
+        <div class="mode-tabs">
+            <div id="tabAccount" class="tab-btn active" onclick="switchMode('account')">🔑 完整帳號解析模式</div>
+            <div id="tabCdk" class="tab-btn" onclick="switchMode('cdk')">🏷️ 極速 CDK 提取模式</div>
+        </div>
+
+        <!-- 帳號標題選單 (僅在帳號模式顯示) -->
+        <div class="settings-bar" id="titleBar">
+            <label for="titleSelect">📝 帳號標題設定：</label>
+            <select id="titleSelect">
+                <option value="Prime LVL10 Accs">Prime LVL10 Accs</option>
+                <option value="Perma Green Prime Accs" selected>Perma Green Prime Accs</option>
+                <option value="Perma Green Non Prime Accs">Perma Green Non Prime Accs</option>
+                <option value="Perma Green Premier Ready LVL10 Accs">Perma Green Premier Ready LVL10 Accs</option>
+            </select>
+        </div>
+
+        <div class="instructions" id="instructionText">
+            <span>💡</span> 貼上您的原始 Steam 帳號資料。系統將自動為您比對帳號、備援郵件與 CDK 序號。
+        </div>
+        
+        <div class="flex-container">
+            <div class="box">
+                <h3 style="color: var(--primary);">📥 原始資料</h3>
+                <textarea id="inputData" placeholder="在此貼上需要處理的文字..."></textarea>
+            </div>
+            <div class="box">
+                <h3 style="color: var(--success);">📤 解析結果</h3>
+                <textarea id="outputData" readonly placeholder="魔法即將發生..."></textarea>
+                <button class="btn-copy" onclick="copyResult()">
+                    <svg style="width:20px;height:20px;margin-right:8px" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
+                    </svg>
+                    一鍵複製結果
+                </button>
+            </div>
+        </div>
+        
+        <button class="btn-parse" onclick="formatData()">
+            <svg style="width:24px;height:24px;margin-right:8px" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,22M11,19.93C7.05,19.43 4,16.05 4,12C4,7.95 7.05,4.57 11,4.07V19.93M13,4.07C16.95,4.57 20,7.95 20,12C20,16.05 16.95,19.43 13,19.93V4.07Z" />
+            </svg>
+            開始解析轉換
+        </button>
+    </div>
+
+    <script>
+        let currentMode = 'account'; 
+
+        function switchMode(mode) {
+            currentMode = mode;
+            const tabAccount = document.getElementById('tabAccount');
+            const tabCdk = document.getElementById('tabCdk');
+            const titleBar = document.getElementById('titleBar');
+            const instructionText = document.getElementById('instructionText');
+            const inputData = document.getElementById('inputData');
+
+            if (mode === 'account') {
+                tabAccount.classList.add('active');
+                tabCdk.classList.remove('active');
+                titleBar.style.display = 'flex';
+                instructionText.innerHTML = '<span>💡</span> 貼上您的原始 Steam 帳號資料。系統將自動為您比對帳號、備援郵件與 CDK 序號。';
+                inputData.placeholder = "在此貼上需要處理的完整帳號文字...";
+            } else {
+                tabCdk.classList.add('active');
+                tabAccount.classList.remove('active');
+                titleBar.style.display = 'none';
+                instructionText.innerHTML = '<span>⚡</span> 貼上包含激活碼的文字。系統將自動濾出 <strong>XXXXX-XXXXX-XXXXX</strong> 格式。';
+                inputData.placeholder = "在此貼上雜亂的序號文字，我來幫你提取 CDK...";
+            }
+        }
+
+        function formatData() {
+            const inputText = document.getElementById('inputData').value;
+            if (!inputText.trim()) {
+                alert("請先貼上需要解析的資料！");
+                return;
+            }
+
+            const rawKeys = inputText.match(/[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/g) || [];
+            const allCdkeys = rawKeys.map(key => key.toUpperCase());
+
+            if (currentMode === 'cdk') {
+                if (allCdkeys.length === 0) {
+                    alert("未能在輸入資料中找到任何符合格式的 CDK 序號！");
+                    return;
+                }
+                let cdkOutputs = allCdkeys.map(key => `CS2 Prime CDKey: \`${key}\``);
+                document.getElementById('outputData').value = cdkOutputs.join('\n\n');
+                return;
+            }
+
+            const selectedTitle = document.getElementById('titleSelect').value;
+            const lines = inputText.split('\n').map(l => l.trim()).filter(l => l !== '');
+            
+            let accounts = [];
+            let currentAccount = null;
+
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i];
+                if (line.includes('http') && line.includes('----')) {
+                    if (currentAccount) currentAccount.recLine = line;
+                } 
+                else if (line.includes('SteamID:')) {
+                    continue;
+                }
+                else if (line.includes('----')) {
+                    if (currentAccount) accounts.push(currentAccount);
+                    currentAccount = { mainLine: line, recLine: null };
+                }
+            }
+            
+            if (currentAccount) accounts.push(currentAccount);
+
+            if (accounts.length === 0 && allCdkeys.length > 0) {
+                let cdkOutputs = allCdkeys.map(key => `CS2 Prime CDKey: \`${key}\``);
+                document.getElementById('outputData').value = cdkOutputs.join('\n\n');
+                return;
+            }
+
+            let finalOutput = [];
+            for (let i = 0; i < accounts.length; i++) {
+                let acc = accounts[i];
+                let steamStr = "未提供", ogeStr = "未提供";
+                const mainParts = acc.mainLine.split('----');
+                if (mainParts.length >= 4) {
+                    steamStr = `${mainParts[0]}----${mainParts[1]}`;
+                    ogeStr = `${mainParts[2]}----${mainParts[3]}`;
+                } else {
+                    steamStr = acc.mainLine;
+                }
+
+                let recEmailStr = "未提供", recLinkStr = "#";
+                if (acc.recLine) {
+                    let cleanRecLine = acc.recLine.replace(/^\+帳號：|^\+账号：/g, '');
+                    const recParts = cleanRecLine.split('----');
+                    if (recParts.length >= 3) {
+                        recEmailStr = `${recParts[0]}----${recParts[1]}`;
+                        recLinkStr = recParts.slice(2).join('----'); 
+                    }
+                }
+
+                let cdkeyStr = allCdkeys[i] ? allCdkeys[i] : "請手動補上 CDKey";
+
+                let output = `**${selectedTitle}**\n`;
+                output += `**Steam**: ${steamStr}\n`;
+                output += `**OGE**: ${ogeStr}\n`;
+                output += `**OGE Login**: [ outlook.com](https://outlook.live.com/)\n`;
+                output += `**Recovery email**: ${recEmailStr}\n`;
+                
+                if (recLinkStr !== "#") {
+                    output += `**Recovery Email Code**: [Click me](${recLinkStr})\n`;
+                } else {
+                    output += `**Recovery Email Code**: 未提供\n`;
+                }
+                
+                output += `**CS2 PrimeCDKey**: \`${cdkeyStr}\``;
+
+                finalOutput.push(output);
+            }
+
+            document.getElementById('outputData').value = finalOutput.join('\n\n--------------------------------\n\n');
+        }
+
+        function copyResult() {
+            const outputText = document.getElementById('outputData');
+            if (!outputText.value.trim()) {
+                alert("目前沒有結果可以複製！請先執行解析。");
+                return;
+            }
+            outputText.select();
+            document.execCommand('copy');
+            
+            // 複製成功特效
+            const btn = document.querySelector('.btn-copy');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '✅ 複製成功！';
+            btn.style.background = 'linear-gradient(135deg, #05c46b 0%, #0be881 100%)';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
