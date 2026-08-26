@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Steam 資料與 CDK 解析工具 V6 - Pro Edition</title>
+    <title>Steam 資料與 CDK 解析工具 V7 - Pro Edition</title>
     <!-- 引入高質感字體 -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- 引入 SheetJS 用於匯出 Excel -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         :root {
             --primary: #6c5ce7;
@@ -13,8 +15,10 @@
             --secondary: #00cec9;
             --success: #10ac84;
             --success-hover: #0e9572;
+            --excel: #217346;
+            --excel-hover: #1e623d;
             --bg-color: #f0f2f5;
-            --surface: rgba(255, 255, 255, 0.92);
+            --surface: rgba(255, 255, 255, 0.94);
             --text-main: #2d3436;
             --text-muted: #636e72;
             --border-light: #dfe6e9;
@@ -22,7 +26,6 @@
 
         body { 
             font-family: 'Inter', 'Noto Sans TC', sans-serif; 
-            /* 柔和動態背景 */
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             margin: 0;
@@ -33,7 +36,7 @@
 
         /* 琉璃質感主容器 */
         .container { 
-            max-width: 1050px; 
+            max-width: 1100px; 
             margin: 0 auto; 
             background: var(--surface); 
             padding: 35px; 
@@ -64,24 +67,24 @@
             padding: 6px;
             border-radius: 16px;
             margin-bottom: 25px;
-            position: relative;
+            gap: 6px;
         }
         .tab-btn {
             flex: 1;
             padding: 14px;
             border-radius: 12px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             color: var(--text-muted);
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-align: center;
-            z-index: 1;
+            user-select: none;
         }
         .tab-btn.active {
             background-color: white;
             color: var(--primary);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
         /* 設定列 */
@@ -131,6 +134,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            line-height: 1.5;
         }
 
         /* 雙欄佈局 */
@@ -153,7 +157,7 @@
             border-radius: 14px; 
             resize: vertical; 
             box-sizing: border-box; 
-            font-family: 'JetBrains Mono', 'Courier New', monospace; /* 代碼感字體 */
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
             font-size: 14px; 
             background-color: #fcfcfd; 
             white-space: pre; 
@@ -194,18 +198,23 @@
             transform: translateY(1px);
         }
 
+        .btn-action-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
         .btn-copy { 
+            flex: 1;
             background: linear-gradient(135deg, var(--success) 0%, #20bf6b 100%);
-            margin-top: 15px; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            width: 100%; 
             padding: 14px; 
             color: white; 
             border: none; 
             border-radius: 12px; 
-            font-size: 16px; 
+            font-size: 15px; 
             font-weight: 700; 
             cursor: pointer; 
             transition: all 0.3s;
@@ -215,15 +224,37 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(16, 172, 132, 0.35);
         }
+
+        .btn-excel { 
+            flex: 1;
+            background: linear-gradient(135deg, var(--excel) 0%, #27ae60 100%);
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 14px; 
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            font-size: 15px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            box-shadow: 0 6px 15px rgba(33, 115, 70, 0.25);
+        }
+        .btn-excel:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(33, 115, 70, 0.35);
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>✨ Steam 智慧解析工具 <span style="font-size:14px; background:#6c5ce7; color:white; padding:4px 10px; border-radius:20px; font-weight:bold;">Pro</span></h2>
+        <h2>✨ Steam 智慧解析工具 <span style="font-size:14px; background:#6c5ce7; color:white; padding:4px 10px; border-radius:20px; font-weight:bold;">Pro V7</span></h2>
         
         <!-- 模式切換 -->
         <div class="mode-tabs">
-            <div id="tabAccount" class="tab-btn active" onclick="switchMode('account')">🔑 完整帳號解析模式</div>
+            <div id="tabAccount" class="tab-btn active" onclick="switchMode('account')">🔑 完整帳號解析 (模式一)</div>
+            <div id="tabMode2" class="tab-btn" onclick="switchMode('mode2')">📊 Excel 分隔模式 (模式二)</div>
             <div id="tabCdk" class="tab-btn" onclick="switchMode('cdk')">🏷️ 極速 CDK 提取模式</div>
         </div>
 
@@ -239,7 +270,7 @@
         </div>
 
         <div class="instructions" id="instructionText">
-            <span>💡</span> 貼上您的原始 Steam 帳號資料。系統將自動為您比對帳號、備援郵件與 CDK 序號。
+            <span>💡</span> 貼上您的原始 Steam 帳號資料。系統將自動比對帳號、備援郵件與 CDK（缺少的項目將自動隱藏不顯示）。
         </div>
         
         <div class="flex-container">
@@ -250,12 +281,20 @@
             <div class="box">
                 <h3 style="color: var(--success);">📤 解析結果</h3>
                 <textarea id="outputData" readonly placeholder="魔法即將發生..."></textarea>
-                <button class="btn-copy" onclick="copyResult()">
-                    <svg style="width:20px;height:20px;margin-right:8px" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
-                    </svg>
-                    一鍵複製結果
-                </button>
+                <div class="btn-action-group">
+                    <button class="btn-copy" onclick="copyResult()">
+                        <svg style="width:18px;height:18px;margin-right:6px" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
+                        </svg>
+                        一鍵複製結果
+                    </button>
+                    <button id="btnExcel" class="btn-excel" onclick="exportToExcel()" style="display: none;">
+                        <svg style="width:18px;height:18px;margin-right:6px" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M15.8,20H14L12,14.6L10,20H8.2L11.1,13.5L8.4,7.8H10.2L12,13.2L13.8,7.8H15.6L12.9,13.5L15.8,20M13,9V3.5L18.5,9H13Z" />
+                        </svg>
+                        匯出成 Excel
+                    </button>
+                </div>
             </div>
         </div>
         
@@ -269,28 +308,113 @@
 
     <script>
         let currentMode = 'account'; 
+        let parsedRowsForExcel = []; // 儲存解析後的 Excel 數據
 
         function switchMode(mode) {
             currentMode = mode;
             const tabAccount = document.getElementById('tabAccount');
+            const tabMode2 = document.getElementById('tabMode2');
             const tabCdk = document.getElementById('tabCdk');
             const titleBar = document.getElementById('titleBar');
             const instructionText = document.getElementById('instructionText');
             const inputData = document.getElementById('inputData');
+            const btnExcel = document.getElementById('btnExcel');
+
+            tabAccount.classList.remove('active');
+            tabMode2.classList.remove('active');
+            tabCdk.classList.remove('active');
 
             if (mode === 'account') {
                 tabAccount.classList.add('active');
-                tabCdk.classList.remove('active');
                 titleBar.style.display = 'flex';
-                instructionText.innerHTML = '<span>💡</span> 貼上您的原始 Steam 帳號資料。系統將自動為您比對帳號、備援郵件與 CDK 序號。';
+                btnExcel.style.display = 'none';
+                instructionText.innerHTML = '<span>💡</span> 貼上您的原始 Steam 帳號資料。系統將自動比對帳號、備援郵件與 CDK（缺少的項目將自動隱藏不顯示）。';
                 inputData.placeholder = "在此貼上需要處理的完整帳號文字...";
+            } else if (mode === 'mode2') {
+                tabMode2.classList.add('active');
+                titleBar.style.display = 'none';
+                btnExcel.style.display = 'flex';
+                instructionText.innerHTML = '<span>📊</span> 模式二：自動轉為 <code>steam帳號----Steam密碼----初始郵件----初始密碼----備用郵箱----備用郵箱地址----第一筆充值卡密</code> 格式，並支援一鍵匯出 Excel！';
+                inputData.placeholder = "在此貼上原始帳號文字...";
             } else {
                 tabCdk.classList.add('active');
-                tabAccount.classList.remove('active');
                 titleBar.style.display = 'none';
+                btnExcel.style.display = 'none';
                 instructionText.innerHTML = '<span>⚡</span> 貼上包含激活碼的文字。系統將自動濾出 <strong>XXXXX-XXXXX-XXXXX</strong> 格式。';
                 inputData.placeholder = "在此貼上雜亂的序號文字，我來幫你提取 CDK...";
             }
+        }
+
+        // 解析原始資料為結構化物件列表
+        function parseAccountsFromInput(inputText) {
+            const rawKeys = inputText.match(/[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/g) || [];
+            const allCdkeys = rawKeys.map(key => key.toUpperCase());
+
+            const lines = inputText.split('\n').map(l => l.trim()).filter(l => l !== '');
+            let rawGroups = [];
+            let currentGroup = null;
+
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i];
+                if (line.includes('http') && line.includes('----')) {
+                    if (currentGroup) currentGroup.recLine = line;
+                } 
+                else if (line.includes('SteamID:')) {
+                    continue;
+                }
+                else if (line.includes('----')) {
+                    if (currentGroup) rawGroups.push(currentGroup);
+                    currentGroup = { mainLine: line, recLine: null };
+                }
+            }
+            if (currentGroup) rawGroups.push(currentGroup);
+
+            let parsedList = [];
+            for (let i = 0; i < rawGroups.length; i++) {
+                let g = rawGroups[i];
+                
+                // 解析主行 (Steam帳號、密碼、初始信箱、初始信箱密碼)
+                let mainParts = g.mainLine.split('----').map(s => s.trim());
+                let steamUser = mainParts[0] || "";
+                let steamPass = mainParts[1] || "";
+                let ogeEmail = mainParts[2] || "";
+                let ogePass = mainParts[3] || "";
+
+                // 解析備份行
+                let recEmail = "";
+                let recPass = "";
+                let recLink = "";
+                if (g.recLine) {
+                    let cleanRec = g.recLine.replace(/^\+帳號：|^\+账号：/g, '').trim();
+                    let recParts = cleanRec.split('----').map(s => s.trim());
+                    if (recParts.length >= 3) {
+                        recEmail = recParts[0] || "";
+                        recPass = recParts[1] || "";
+                        recLink = recParts.slice(2).join('----');
+                    } else if (recParts.length === 2) {
+                        recEmail = recParts[0] || "";
+                        recPass = recParts[1] || "";
+                    } else if (recParts.length === 1) {
+                        recEmail = recParts[0] || "";
+                    }
+                }
+
+                // CDK 序號
+                let cdk = allCdkeys[i] || "";
+
+                parsedList.push({
+                    steamUser,
+                    steamPass,
+                    ogeEmail,
+                    ogePass,
+                    recEmail,
+                    recPass,
+                    recLink,
+                    cdk
+                });
+            }
+
+            return { parsedList, allCdkeys };
         }
 
         function formatData() {
@@ -300,9 +424,9 @@
                 return;
             }
 
-            const rawKeys = inputText.match(/[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/g) || [];
-            const allCdkeys = rawKeys.map(key => key.toUpperCase());
+            const { parsedList, allCdkeys } = parseAccountsFromInput(inputText);
 
+            // CDK 極速模式
             if (currentMode === 'cdk') {
                 if (allCdkeys.length === 0) {
                     alert("未能在輸入資料中找到任何符合格式的 CDK 序號！");
@@ -313,76 +437,121 @@
                 return;
             }
 
-            const selectedTitle = document.getElementById('titleSelect').value;
-            const lines = inputText.split('\n').map(l => l.trim()).filter(l => l !== '');
-            
-            let accounts = [];
-            let currentAccount = null;
-
-            for (let i = 0; i < lines.length; i++) {
-                let line = lines[i];
-                if (line.includes('http') && line.includes('----')) {
-                    if (currentAccount) currentAccount.recLine = line;
-                } 
-                else if (line.includes('SteamID:')) {
-                    continue;
-                }
-                else if (line.includes('----')) {
-                    if (currentAccount) accounts.push(currentAccount);
-                    currentAccount = { mainLine: line, recLine: null };
-                }
-            }
-            
-            if (currentAccount) accounts.push(currentAccount);
-
-            if (accounts.length === 0 && allCdkeys.length > 0) {
+            if (parsedList.length === 0 && allCdkeys.length > 0) {
                 let cdkOutputs = allCdkeys.map(key => `CS2 Prime CDKey: \`${key}\``);
                 document.getElementById('outputData').value = cdkOutputs.join('\n\n');
                 return;
             }
 
-            let finalOutput = [];
-            for (let i = 0; i < accounts.length; i++) {
-                let acc = accounts[i];
-                let steamStr = "未提供", ogeStr = "未提供";
-                const mainParts = acc.mainLine.split('----');
-                if (mainParts.length >= 4) {
-                    steamStr = `${mainParts[0]}----${mainParts[1]}`;
-                    ogeStr = `${mainParts[2]}----${mainParts[3]}`;
-                } else {
-                    steamStr = acc.mainLine;
-                }
+            // 模式一：完整帳號解析 (自動隱藏沒有的內容)
+            if (currentMode === 'account') {
+                const selectedTitle = document.getElementById('titleSelect').value;
+                let finalOutput = [];
 
-                let recEmailStr = "未提供", recLinkStr = "#";
-                if (acc.recLine) {
-                    let cleanRecLine = acc.recLine.replace(/^\+帳號：|^\+账号：/g, '');
-                    const recParts = cleanRecLine.split('----');
-                    if (recParts.length >= 3) {
-                        recEmailStr = `${recParts[0]}----${recParts[1]}`;
-                        recLinkStr = recParts.slice(2).join('----'); 
+                for (let item of parsedList) {
+                    let lines = [];
+                    lines.push(`**${selectedTitle}**`);
+
+                    // Steam
+                    if (item.steamUser || item.steamPass) {
+                        let steamVal = [item.steamUser, item.steamPass].filter(Boolean).join('----');
+                        lines.push(`**Steam**: ${steamVal}`);
                     }
+
+                    // OGE
+                    if (item.ogeEmail || item.ogePass) {
+                        let ogeVal = [item.ogeEmail, item.ogePass].filter(Boolean).join('----');
+                        lines.push(`**OGE**: ${ogeVal}`);
+                        lines.push(`**OGE Login**: [ outlook.com](https://outlook.live.com/)`);
+                    }
+
+                    // Recovery Email
+                    if (item.recEmail || item.recPass) {
+                        let recVal = [item.recEmail, item.recPass].filter(Boolean).join('----');
+                        lines.push(`**Recovery email**: ${recVal}`);
+                    }
+
+                    // Recovery Email Code (連結)
+                    if (item.recLink && item.recLink !== "#") {
+                        lines.push(`**Recovery Email Code**: [Click me](${item.recLink})`);
+                    }
+
+                    // CDK
+                    if (item.cdk) {
+                        lines.push(`**CS2 PrimeCDKey**: \`${item.cdk}\``);
+                    }
+
+                    finalOutput.push(lines.join('\n'));
                 }
 
-                let cdkeyStr = allCdkeys[i] ? allCdkeys[i] : "請手動補上 CDKey";
-
-                let output = `**${selectedTitle}**\n`;
-                output += `**Steam**: ${steamStr}\n`;
-                output += `**OGE**: ${ogeStr}\n`;
-                output += `**OGE Login**: [ outlook.com](https://outlook.live.com/)\n`;
-                output += `**Recovery email**: ${recEmailStr}\n`;
-                
-                if (recLinkStr !== "#") {
-                    output += `**Recovery Email Code**: [Click me](${recLinkStr})\n`;
-                } else {
-                    output += `**Recovery Email Code**: 未提供\n`;
-                }
-                
-                output += `**CS2 PrimeCDKey**: \`${cdkeyStr}\``;
-
-                finalOutput.push(output);
+                document.getElementById('outputData').value = finalOutput.join('\n\n--------------------------------\n\n');
+                return;
             }
 
-            document.getElementById('outputData').value = finalOutput.join('\n\n--------------------------------\n\n');
+            // 模式二：指定分隔格式 (steam帳號----Steam密碼----初始郵件----初始密碼----備用郵箱----備用郵箱地址----第一筆充值卡密)
+            if (currentMode === 'mode2') {
+                parsedRowsForExcel = [];
+                let textLines = [];
+
+                for (let item of parsedList) {
+                    const row = {
+                        "steam帳號": item.steamUser,
+                        "Steam密碼": item.steamPass,
+                        "初始郵件": item.ogeEmail,
+                        "初始密碼": item.ogePass,
+                        "備用郵箱": item.recEmail ? `${item.recEmail}----${item.recPass}`.replace(/----$/, '') : "",
+                        "備用郵箱地址": item.recLink,
+                        "第一筆充值卡密": item.cdk
+                    };
+                    parsedRowsForExcel.push(row);
+
+                    // 輸出為一行 ---- 分隔的文字
+                    let lineStr = `${row["steam帳號"]}----${row["Steam密碼"]}----${row["初始郵件"]}----${row["初始密碼"]}----${row["備用郵箱"]}----${row["備用郵箱地址"]}----${row["第一筆充值卡密"]}`;
+                    textLines.push(lineStr);
+                }
+
+                document.getElementById('outputData').value = textLines.join('\n');
+            }
+        }
+
+        // 匯出 Excel 功能
+        function exportToExcel() {
+            if (!parsedRowsForExcel || parsedRowsForExcel.length === 0) {
+                // 如果還沒點擊解析，先自動解析一次
+                formatData();
+            }
+
+            if (!parsedRowsForExcel || parsedRowsForExcel.length === 0) {
+                alert("目前沒有可匯出的資料！請先在左側貼上資料並點擊解析。");
+                return;
+            }
+
+            try {
+                const worksheet = XLSX.utils.json_to_sheet(parsedRowsForExcel, {
+                    header: ["steam帳號", "Steam密碼", "初始郵件", "初始密碼", "備用郵箱", "備用郵箱地址", "第一筆充值卡密"]
+                });
+
+                // 設定欄寬自適應美化
+                const colWidths = [
+                    { wch: 20 }, // steam帳號
+                    { wch: 18 }, // Steam密碼
+                    { wch: 28 }, // 初始郵件
+                    { wch: 18 }, // 初始密碼
+                    { wch: 30 }, // 備用郵箱
+                    { wch: 40 }, // 備用郵箱地址
+                    { wch: 24 }  // 第一筆充值卡密
+                ];
+                worksheet['!cols'] = colWidths;
+
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Steam Accounts");
+
+                const dateStr = new Date().toISOString().slice(0, 10);
+                XLSX.writeFile(workbook, `Steam_Accounts_${dateStr}.xlsx`);
+            } catch (err) {
+                console.error(err);
+                alert("匯出 Excel 失敗：" + err.message);
+            }
         }
 
         function copyResult() {
