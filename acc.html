@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Steam 資料與 CDK 解析工具 V7 - Pro Edition</title>
+    <title>Steam 資料與 CDK 解析工具 V9 - Pro Edition</title>
     <!-- 引入高質感字體 -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- 引入 SheetJS 用於匯出 Excel -->
@@ -34,7 +34,6 @@
             box-sizing: border-box;
         }
 
-        /* 琉璃質感主容器 */
         .container { 
             max-width: 1100px; 
             margin: 0 auto; 
@@ -60,7 +59,6 @@
             gap: 10px;
         }
         
-        /* APP風格的頁籤切換 */
         .mode-tabs {
             display: flex;
             background-color: #e4e9f2;
@@ -87,7 +85,6 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
-        /* 設定列 */
         .settings-bar {
             background: linear-gradient(120deg, #f8f9fa 0%, #e9ecef 100%);
             padding: 18px 20px;
@@ -137,7 +134,6 @@
             line-height: 1.5;
         }
 
-        /* 雙欄佈局 */
         .flex-container { display: flex; gap: 25px; flex-wrap: wrap; }
         .box { flex: 1; min-width: 320px; display: flex; flex-direction: column; }
         
@@ -172,7 +168,6 @@
             box-shadow: 0 8px 20px rgba(108, 92, 231, 0.08), 0 0 0 4px rgba(108, 92, 231, 0.1); 
         }
 
-        /* 漸層高質感按鈕 */
         .btn-parse { 
             display: flex; 
             justify-content: center; 
@@ -193,9 +188,6 @@
         .btn-parse:hover { 
             transform: translateY(-2px);
             box-shadow: 0 15px 25px rgba(108, 92, 231, 0.4);
-        }
-        .btn-parse:active {
-            transform: translateY(1px);
         }
 
         .btn-action-group {
@@ -249,7 +241,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>✨ Steam 智慧解析工具 <span style="font-size:14px; background:#6c5ce7; color:white; padding:4px 10px; border-radius:20px; font-weight:bold;">Pro V7</span></h2>
+        <h2>✨ Steam 智慧解析工具 <span style="font-size:14px; background:#6c5ce7; color:white; padding:4px 10px; border-radius:20px; font-weight:bold;">Pro V9</span></h2>
         
         <!-- 模式切換 -->
         <div class="mode-tabs">
@@ -262,15 +254,15 @@
         <div class="settings-bar" id="titleBar">
             <label for="titleSelect">📝 帳號標題設定：</label>
             <select id="titleSelect">
-                <option value="Prime LVL10 Accs">Prime LVL10 Accs</option>
-                <option value="Perma Green Prime Accs" selected>Perma Green Prime Accs</option>
+                <option value="Prime LVL10 Accs" selected>Prime LVL10 Accs</option>
+                <option value="Perma Green Prime Accs">Perma Green Prime Accs</option>
                 <option value="Perma Green Non Prime Accs">Perma Green Non Prime Accs</option>
                 <option value="Perma Green Premier Ready LVL10 Accs">Perma Green Premier Ready LVL10 Accs</option>
             </select>
         </div>
 
         <div class="instructions" id="instructionText">
-            <span>💡</span> 貼上您的原始 Steam 帳號資料。系統將自動比對帳號、備援郵件與 CDK（缺少的項目將自動隱藏不顯示）。
+            <span>💡</span> 支援連續多欄 Tab/空格格式或 <code>----</code> 分隔資料，自動格式化卡密並隱藏空缺項目。
         </div>
         
         <div class="flex-container">
@@ -308,7 +300,7 @@
 
     <script>
         let currentMode = 'account'; 
-        let parsedRowsForExcel = []; // 儲存解析後的 Excel 數據
+        let parsedRowsForExcel = [];
 
         function switchMode(mode) {
             currentMode = mode;
@@ -328,7 +320,7 @@
                 tabAccount.classList.add('active');
                 titleBar.style.display = 'flex';
                 btnExcel.style.display = 'none';
-                instructionText.innerHTML = '<span>💡</span> 貼上您的原始 Steam 帳號資料。系統將自動比對帳號、備援郵件與 CDK（缺少的項目將自動隱藏不顯示）。';
+                instructionText.innerHTML = '<span>💡</span> 支援連續多欄 Tab/空格格式或 <code>----</code> 分隔資料，自動格式化卡密並隱藏空缺項目。';
                 inputData.placeholder = "在此貼上需要處理的完整帳號文字...";
             } else if (mode === 'mode2') {
                 tabMode2.classList.add('active');
@@ -345,76 +337,144 @@
             }
         }
 
-        // 解析原始資料為結構化物件列表
-        function parseAccountsFromInput(inputText) {
-            const rawKeys = inputText.match(/[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/g) || [];
-            const allCdkeys = rawKeys.map(key => key.toUpperCase());
+        // 提取並格式化字串中的所有 CDK 序號 (包含 5-5-5、帶空格或分段的 15 碼)
+        function extractAllCdks(text) {
+            let cdks = [];
+            
+            let standardMatches = text.match(/[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/g) || [];
+            standardMatches.forEach(k => cdks.push(k.toUpperCase()));
 
-            const lines = inputText.split('\n').map(l => l.trim()).filter(l => l !== '');
-            let rawGroups = [];
-            let currentGroup = null;
-
-            for (let i = 0; i < lines.length; i++) {
-                let line = lines[i];
-                if (line.includes('http') && line.includes('----')) {
-                    if (currentGroup) currentGroup.recLine = line;
-                } 
-                else if (line.includes('SteamID:')) {
-                    continue;
-                }
-                else if (line.includes('----')) {
-                    if (currentGroup) rawGroups.push(currentGroup);
-                    currentGroup = { mainLine: line, recLine: null };
-                }
-            }
-            if (currentGroup) rawGroups.push(currentGroup);
-
-            let parsedList = [];
-            for (let i = 0; i < rawGroups.length; i++) {
-                let g = rawGroups[i];
-                
-                // 解析主行 (Steam帳號、密碼、初始信箱、初始信箱密碼)
-                let mainParts = g.mainLine.split('----').map(s => s.trim());
-                let steamUser = mainParts[0] || "";
-                let steamPass = mainParts[1] || "";
-                let ogeEmail = mainParts[2] || "";
-                let ogePass = mainParts[3] || "";
-
-                // 解析備份行
-                let recEmail = "";
-                let recPass = "";
-                let recLink = "";
-                if (g.recLine) {
-                    let cleanRec = g.recLine.replace(/^\+帳號：|^\+账号：/g, '').trim();
-                    let recParts = cleanRec.split('----').map(s => s.trim());
-                    if (recParts.length >= 3) {
-                        recEmail = recParts[0] || "";
-                        recPass = recParts[1] || "";
-                        recLink = recParts.slice(2).join('----');
-                    } else if (recParts.length === 2) {
-                        recEmail = recParts[0] || "";
-                        recPass = recParts[1] || "";
-                    } else if (recParts.length === 1) {
-                        recEmail = recParts[0] || "";
+            let rawTokens = text.split(/[\t\r\n]+/);
+            for (let token of rawTokens) {
+                token = token.trim();
+                let cleanToken = token.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+                if (cleanToken.length === 15) {
+                    let formatted = `${cleanToken.slice(0,5)}-${cleanToken.slice(5,10)}-${cleanToken.slice(10,15)}`;
+                    if (!cdks.includes(formatted)) {
+                        cdks.push(formatted);
                     }
                 }
-
-                // CDK 序號
-                let cdk = allCdkeys[i] || "";
-
-                parsedList.push({
-                    steamUser,
-                    steamPass,
-                    ogeEmail,
-                    ogePass,
-                    recEmail,
-                    recPass,
-                    recLink,
-                    cdk
-                });
             }
 
-            return { parsedList, allCdkeys };
+            return Array.from(new Set(cdks));
+        }
+
+        // 解析單行或區塊資料
+        function parseAccountsFromInput(inputText) {
+            const lines = inputText.split('\n').map(l => l.trim()).filter(l => l !== '');
+            let parsedList = [];
+
+            let isTabSeparated = lines.some(l => l.includes('\t') || (l.split(/\s{2,}/).length >= 4 && !l.includes('----')));
+
+            if (isTabSeparated) {
+                for (let line of lines) {
+                    let parts = line.split(/[\t]+|\s{2,}/).map(s => s.trim()).filter(Boolean);
+                    if (parts.length < 2) continue;
+
+                    let steamUser = parts[0] || "";
+                    let steamPass = parts[1] || "";
+                    let ogeEmail = parts[2] || "";
+                    let ogePass = parts[3] || "";
+                    let recEmail = parts[4] || "";
+                    let recPass = parts[5] || "";
+                    
+                    let recLink = "";
+                    let cdkList = [];
+
+                    for (let j = 6; j < parts.length; j++) {
+                        let token = parts[j];
+                        if (token.startsWith('http')) {
+                            recLink = token;
+                        } else {
+                            let clean = token.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+                            if (clean.length === 15) {
+                                cdkList.push(`${clean.slice(0,5)}-${clean.slice(5,10)}-${clean.slice(10,15)}`);
+                            }
+                        }
+                    }
+
+                    let allLineCdks = extractAllCdks(line);
+                    allLineCdks.forEach(k => {
+                        if (!cdkList.includes(k)) cdkList.push(k);
+                    });
+
+                    parsedList.push({
+                        steamUser,
+                        steamPass,
+                        ogeEmail,
+                        ogePass,
+                        recEmail,
+                        recPass,
+                        recLink: recLink || "https://mail5.lanu.cn//",
+                        cdkList,
+                        firstCdk: cdkList[0] || ""
+                    });
+                }
+            } else {
+                let rawGroups = [];
+                let currentGroup = null;
+
+                for (let i = 0; i < lines.length; i++) {
+                    let line = lines[i];
+                    if (line.includes('http') && line.includes('----')) {
+                        if (currentGroup) currentGroup.recLine = line;
+                    } 
+                    else if (line.includes('SteamID:')) {
+                        continue;
+                    }
+                    else if (line.includes('----')) {
+                        if (currentGroup) rawGroups.push(currentGroup);
+                        currentGroup = { mainLine: line, recLine: null };
+                    }
+                }
+                if (currentGroup) rawGroups.push(currentGroup);
+
+                const allGlobalCdkeys = extractAllCdks(inputText);
+
+                for (let i = 0; i < rawGroups.length; i++) {
+                    let g = rawGroups[i];
+                    let mainParts = g.mainLine.split('----').map(s => s.trim());
+                    let steamUser = mainParts[0] || "";
+                    let steamPass = mainParts[1] || "";
+                    let ogeEmail = mainParts[2] || "";
+                    let ogePass = mainParts[3] || "";
+
+                    let recEmail = "", recPass = "", recLink = "";
+                    if (g.recLine) {
+                        let cleanRec = g.recLine.replace(/^\+帳號：|^\+账号：/g, '').trim();
+                        let recParts = cleanRec.split('----').map(s => s.trim());
+                        if (recParts.length >= 3) {
+                            recEmail = recParts[0] || "";
+                            recPass = recParts[1] || "";
+                            recLink = recParts.slice(2).join('----');
+                        } else if (recParts.length === 2) {
+                            recEmail = recParts[0] || "";
+                            recPass = recParts[1] || "";
+                        } else if (recParts.length === 1) {
+                            recEmail = recParts[0] || "";
+                        }
+                    }
+
+                    let cdkList = [];
+                    if (allGlobalCdkeys[i]) {
+                        cdkList.push(allGlobalCdkeys[i]);
+                    }
+
+                    parsedList.push({
+                        steamUser,
+                        steamPass,
+                        ogeEmail,
+                        ogePass,
+                        recEmail,
+                        recPass,
+                        recLink: recLink || "https://mail5.lanu.cn//",
+                        cdkList,
+                        firstCdk: cdkList[0] || ""
+                    });
+                }
+            }
+
+            return parsedList;
         }
 
         function formatData() {
@@ -424,7 +484,7 @@
                 return;
             }
 
-            const { parsedList, allCdkeys } = parseAccountsFromInput(inputText);
+            const allCdkeys = extractAllCdks(inputText);
 
             // CDK 極速模式
             if (currentMode === 'cdk') {
@@ -437,13 +497,15 @@
                 return;
             }
 
+            const parsedList = parseAccountsFromInput(inputText);
+
             if (parsedList.length === 0 && allCdkeys.length > 0) {
                 let cdkOutputs = allCdkeys.map(key => `CS2 Prime CDKey: \`${key}\``);
                 document.getElementById('outputData').value = cdkOutputs.join('\n\n');
                 return;
             }
 
-            // 模式一：完整帳號解析 (自動隱藏沒有的內容)
+            // 模式一：完整帳號解析
             if (currentMode === 'account') {
                 const selectedTitle = document.getElementById('titleSelect').value;
                 let finalOutput = [];
@@ -465,30 +527,37 @@
                         lines.push(`**OGE Login**: [ outlook.com](https://outlook.live.com/)`);
                     }
 
-                    // Recovery Email
+                    // 區隔分隔線
+                    if (item.recEmail || item.recPass || item.cdkList.length > 0) {
+                        lines.push(`----------------------------------`);
+                    }
+
+                    // Backup Mail
                     if (item.recEmail || item.recPass) {
                         let recVal = [item.recEmail, item.recPass].filter(Boolean).join('----');
-                        lines.push(`**Recovery email**: ${recVal}`);
+                        lines.push(`**Backup Mail**: ${recVal}`);
+                        let backupUrl = (item.recLink && item.recLink !== "#") ? item.recLink : "https://mail5.lanu.cn//";
+                        lines.push(`**Backup email Login:** [ Backup LINK ](${backupUrl})`);
                     }
 
-                    // Recovery Email Code (連結)
-                    if (item.recLink && item.recLink !== "#") {
-                        lines.push(`**Recovery Email Code**: [Click me](${item.recLink})`);
-                    }
-
-                    // CDK
-                    if (item.cdk) {
-                        lines.push(`**CS2 PrimeCDKey**: \`${item.cdk}\``);
+                    // 多筆卡密 (ALL Payment) 或單筆卡密
+                    if (item.cdkList && item.cdkList.length > 1) {
+                        lines.push(`**ALL Payment**: `);
+                        item.cdkList.forEach(k => {
+                            lines.push(`\`${k}\``);
+                        });
+                    } else if (item.cdkList && item.cdkList.length === 1) {
+                        lines.push(`**CS2 PrimeCDKey**: \`${item.cdkList[0]}\``);
                     }
 
                     finalOutput.push(lines.join('\n'));
                 }
 
-                document.getElementById('outputData').value = finalOutput.join('\n\n--------------------------------\n\n');
+                document.getElementById('outputData').value = finalOutput.join('\n\n================================\n\n');
                 return;
             }
 
-            // 模式二：指定分隔格式 (steam帳號----Steam密碼----初始郵件----初始密碼----備用郵箱----備用郵箱地址----第一筆充值卡密)
+            // 模式二：Excel 分隔格式
             if (currentMode === 'mode2') {
                 parsedRowsForExcel = [];
                 let textLines = [];
@@ -501,11 +570,10 @@
                         "初始密碼": item.ogePass,
                         "備用郵箱": item.recEmail ? `${item.recEmail}----${item.recPass}`.replace(/----$/, '') : "",
                         "備用郵箱地址": item.recLink,
-                        "第一筆充值卡密": item.cdk
+                        "第一筆充值卡密": item.firstCdk
                     };
                     parsedRowsForExcel.push(row);
 
-                    // 輸出為一行 ---- 分隔的文字
                     let lineStr = `${row["steam帳號"]}----${row["Steam密碼"]}----${row["初始郵件"]}----${row["初始密碼"]}----${row["備用郵箱"]}----${row["備用郵箱地址"]}----${row["第一筆充值卡密"]}`;
                     textLines.push(lineStr);
                 }
@@ -514,10 +582,9 @@
             }
         }
 
-        // 匯出 Excel 功能
+        // 匯出 Excel
         function exportToExcel() {
             if (!parsedRowsForExcel || parsedRowsForExcel.length === 0) {
-                // 如果還沒點擊解析，先自動解析一次
                 formatData();
             }
 
@@ -531,15 +598,14 @@
                     header: ["steam帳號", "Steam密碼", "初始郵件", "初始密碼", "備用郵箱", "備用郵箱地址", "第一筆充值卡密"]
                 });
 
-                // 設定欄寬自適應美化
                 const colWidths = [
-                    { wch: 20 }, // steam帳號
-                    { wch: 18 }, // Steam密碼
-                    { wch: 28 }, // 初始郵件
-                    { wch: 18 }, // 初始密碼
-                    { wch: 30 }, // 備用郵箱
-                    { wch: 40 }, // 備用郵箱地址
-                    { wch: 24 }  // 第一筆充值卡密
+                    { wch: 20 },
+                    { wch: 18 },
+                    { wch: 28 },
+                    { wch: 18 },
+                    { wch: 30 },
+                    { wch: 40 },
+                    { wch: 24 }
                 ];
                 worksheet['!cols'] = colWidths;
 
@@ -563,7 +629,6 @@
             outputText.select();
             document.execCommand('copy');
             
-            // 複製成功特效
             const btn = document.querySelector('.btn-copy');
             const originalText = btn.innerHTML;
             btn.innerHTML = '✅ 複製成功！';
