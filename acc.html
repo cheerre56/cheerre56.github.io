@@ -337,7 +337,6 @@
             }
         }
 
-        // 提取並格式化字串中的所有 CDK 序號 (包含 5-5-5、帶空格或分段的 15 碼)
         function extractAllCdks(text) {
             let cdks = [];
             
@@ -359,16 +358,17 @@
             return Array.from(new Set(cdks));
         }
 
-        // 解析單行或區塊資料
         function parseAccountsFromInput(inputText) {
             const lines = inputText.split('\n').map(l => l.trim()).filter(l => l !== '');
             let parsedList = [];
 
-            let isTabSeparated = lines.some(l => l.includes('\t') || (l.split(/\s{2,}/).length >= 4 && !l.includes('----')));
+            // 判斷是否為 Tab 或多空格分隔格式
+            let isTabSeparated = lines.some(l => l.includes('\t') || (l.split(/\s{2,}/).length >= 4));
 
             if (isTabSeparated) {
                 for (let line of lines) {
-                    let parts = line.split(/[\t]+|\s{2,}/).map(s => s.trim()).filter(Boolean);
+                    // 同時拆分 \t、多個空格以及 ----，這樣 idmjc9427----lokmh00090 就能完美分成兩段
+                    let parts = line.split(/[\t]+|\s{2,}|----/).map(s => s.trim()).filter(Boolean);
                     if (parts.length < 2) continue;
 
                     let steamUser = parts[0] || "";
@@ -486,7 +486,6 @@
 
             const allCdkeys = extractAllCdks(inputText);
 
-            // CDK 極速模式
             if (currentMode === 'cdk') {
                 if (allCdkeys.length === 0) {
                     alert("未能在輸入資料中找到任何符合格式的 CDK 序號！");
@@ -505,7 +504,6 @@
                 return;
             }
 
-            // 模式一：完整帳號解析
             if (currentMode === 'account') {
                 const selectedTitle = document.getElementById('titleSelect').value;
                 let finalOutput = [];
@@ -514,33 +512,29 @@
                     let lines = [];
                     lines.push(`**${selectedTitle}**`);
 
-                    // Steam
                     if (item.steamUser || item.steamPass) {
                         let steamVal = [item.steamUser, item.steamPass].filter(Boolean).join('----');
                         lines.push(`**Steam**: ${steamVal}`);
                     }
 
-                    // OGE
                     if (item.ogeEmail || item.ogePass) {
                         let ogeVal = [item.ogeEmail, item.ogePass].filter(Boolean).join('----');
                         lines.push(`**OGE**: ${ogeVal}`);
                         lines.push(`**OGE Login**: [ outlook.com](https://outlook.live.com/)`);
                     }
 
-                    // 區隔分隔線
                     if (item.recEmail || item.recPass || item.cdkList.length > 0) {
                         lines.push(`----------------------------------`);
                     }
 
-                    // Backup Mail
                     if (item.recEmail || item.recPass) {
-                        let recVal = [item.recEmail, item.recPass].filter(Boolean).join('----');
+                        // 依照範例要求，將 Backup Mail 輸出格式修改為 ——
+                        let recVal = [item.recEmail, item.recPass].filter(Boolean).join('——');
                         lines.push(`**Backup Mail**: ${recVal}`);
                         let backupUrl = (item.recLink && item.recLink !== "#") ? item.recLink : "https://mail5.lanu.cn//";
                         lines.push(`**Backup email Login:** [ Backup LINK ](${backupUrl})`);
                     }
 
-                    // 多筆卡密 (ALL Payment) 或單筆卡密
                     if (item.cdkList && item.cdkList.length > 1) {
                         lines.push(`**ALL Payment**: `);
                         item.cdkList.forEach(k => {
@@ -557,7 +551,6 @@
                 return;
             }
 
-            // 模式二：Excel 分隔格式
             if (currentMode === 'mode2') {
                 parsedRowsForExcel = [];
                 let textLines = [];
@@ -582,7 +575,6 @@
             }
         }
 
-        // 匯出 Excel
         function exportToExcel() {
             if (!parsedRowsForExcel || parsedRowsForExcel.length === 0) {
                 formatData();
