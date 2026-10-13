@@ -13,7 +13,8 @@
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
-<body><main class="app">
+<body>
+<main class="app">
 <section id="view-home" class="view">
 <header class="hero"><div class="eyebrow">Fitness Plan</div><h1>體態重組計畫</h1><p class="muted">選擇今日訓練課表 · 手機友善版</p></header>
 <div id="home-buttons"></div>
@@ -36,33 +37,35 @@
 </section>
 <section id="view-summary" class="view hidden"><header class="topbar"><button class="icon-btn" id="summary-home" aria-label="返回首頁">‹</button><h2>本次訓練摘要</h2></header><div class="panel"><div class="muted">今日訓練</div><h2 id="summary-title"></h2><div id="summary-score" class="summary-score">0 / 0 組</div><p id="summary-message" class="muted"></p></div><div id="summary-list" class="summary-list"></div><button class="primary" id="summary-done">回到首頁</button></section>
 </main><div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
 <script>
 const workoutPlan=[
 {id:1,title:'Day 1：上半身 A',subtitle:'胸肌厚度 ＋ 三頭肌',icon:'🔥',exercises:[
-{name:'靠牆收下巴（熱身）',sets:'2 組 × 12 次（停 5 秒）',count:2,reps:'12 次（停 5 秒）',weight:'徒手',video:'cbHSvdIR0Kk'},
-{name:'平板啞鈴臥推',sets:'4 組 × 8–12 次',count:4,reps:'8–12 次',weight:'單手 8–18 kg',video:'sR5hHbRA4-A'},
-{name:'上斜啞鈴臥推',sets:'3 組 × 8–12 次',count:3,reps:'8–12 次',weight:'單手 8–14 kg',video:'UVtsazkPfC0'},
-{name:'蝴蝶機夾胸',sets:'3 組 × 12 次',count:3,reps:'12 次',weight:'25–45 kg',video:'C5yhW8Kivl4'},
-{name:'滑輪三頭肌下壓',sets:'4 組 × 12–15 次',count:4,reps:'12–15 次',weight:'10–25 kg',video:'9kDT2RJSnyE'}]},
+{name:'靠牆收下巴（熱身）',sets:'2 組 × 12 次（停 5 秒）',count:2,reps:'12 次（停 5 秒）',weight:'徒手',video:'20Q4uB-5P2E'},
+{name:'平板啞鈴臥推',sets:'4 組 × 8–12 次',count:4,reps:'8–12 次',weight:'單手 8–18 kg',video:'UVtsazkPfC0'},
+{name:'上斜啞鈴臥推',sets:'3 組 × 8–12 次',count:3,reps:'8–12 次',weight:'單手 8–14 kg',video:'C5yhW8Kivl4'},
+{name:'蝴蝶機夾胸',sets:'3 組 × 12 次',count:3,reps:'12 次',weight:'25–45 kg',video:'eGjt4jcWAjY'},
+{name:'滑輪三頭肌下壓',sets:'4 組 × 12–15 次',count:4,reps:'12–15 次',weight:'10–25 kg',video:'2-LAMcpzODU'}]},
 {id:2,title:'Day 2：下半身 ＋ 核心',subtitle:'下肢訓練 ＋ 核心 ＋ 有氧',icon:'🦵',exercises:[
-{name:'單膝跪姿弓箭步伸展',sets:'2 組 × 45 秒',count:2,reps:'45 秒',weight:'徒手',video:'Lv3o4K12rvo'},
-{name:'機械式腿推機',sets:'4 組 × 10–12 次',count:4,reps:'10–12 次',weight:'60–120 kg',video:'Jb3pTR5O8Yg'},
-{name:'啞鈴高腳杯深蹲',sets:'3 組 × 10–12 次',count:3,reps:'10–12 次',weight:'10–24 kg',video:'_BQVGDmnyQI'},
-{name:'坐姿腿彎舉',sets:'3 組 × 12 次',count:3,reps:'12 次',weight:'25–45 kg',video:'WlfvoQ0tfbk'},
-{name:'死蟲式',sets:'3 組 × 共 16 次',count:3,reps:'共 16 次',weight:'徒手',video:'C3TZzUHJClg'},
-{name:'跑步機坡度快走',sets:'20 分鐘',count:1,reps:'20 分鐘',weight:'坡度 8–10 / 速度 5.0',video:'PtSXl7rldZU'}]},
+{name:'單膝跪姿弓箭步伸展',sets:'2 組 × 45 秒',count:2,reps:'45 秒',weight:'徒手',video:'YQldWOGKsXY'},
+{name:'機械式腿推機',sets:'4 組 × 10–12 次',count:4,reps:'10–12 次',weight:'60–120 kg',video:'IZxyjW7OSvc'},
+{name:'啞鈴高腳杯深蹲',sets:'3 組 × 10–12 次',count:3,reps:'10–12 次',weight:'10–24 kg',video:'Lv3o4K12rvo'},
+{name:'坐姿腿彎舉',sets:'3 組 × 12 次',count:3,reps:'12 次',weight:'25–45 kg',video:'F488k67BTNo'},
+{name:'死蟲式',sets:'3 組 × 共 16 次',count:3,reps:'共 16 次',weight:'徒手',video:'4XLEnwUr1d8'},
+{name:'跑步機坡度快走',sets:'20 分鐘',count:1,reps:'20 分鐘',weight:'坡度 8–10 / 速度 5.0',video:'7R59PjU9bXQ'}]},
 {id:3,title:'Day 3：上半身 B',subtitle:'背部訓練 ＋ 二頭肌',icon:'🏋️',exercises:[
-{name:'繩索面拉',sets:'3 組 × 15 次',count:3,reps:'15 次',weight:'7.5–20 kg',video:'FoCBWMB11dM'},
-{name:'寬握滑輪下拉',sets:'4 組 × 10–12 次',count:4,reps:'10–12 次',weight:'30–55 kg',video:'PtSXl7rldZU'},
-{name:'坐姿划船機',sets:'4 組 × 10–12 次',count:4,reps:'10–12 次',weight:'30–55 kg',video:'9kDT2RJSnyE'},
-{name:'啞鈴二頭肌彎舉',sets:'4 組 × 10–12 次',count:4,reps:'10–12 次',weight:'單手 6–12 kg',video:'sR5hHbRA4-A'},
-{name:'槌式彎舉',sets:'3 組 × 10–12 次',count:3,reps:'10–12 次',weight:'單手 6–12 kg',video:'UVtsazkPfC0'}]},
+{name:'繩索面拉',sets:'3 組 × 15 次',count:3,reps:'15 次',weight:'7.5–20 kg',video:'V8d6XjgIGPE'},
+{name:'寬握滑輪下拉',sets:'4 組 × 10–12 次',count:4,reps:'10–12 次',weight:'30–55 kg',video:'9kDT2RJSnyE'},
+{name:'坐姿划船機',sets:'4 組 × 10–12 次',count:4,reps:'10–12 次',weight:'30–55 kg',video:'GZbfZ033f74'},
+{name:'啞鈴二頭肌彎舉',sets:'4 組 × 10–12 次',count:4,reps:'10–12 次',weight:'單手 6–12 kg',video:'ykJmrZ5v0Oo'},
+{name:'槌式彎舉',sets:'3 組 × 10–12 次',count:3,reps:'10–12 次',weight:'單手 6–12 kg',video:'zC3nLlEvin4'}]},
 {id:4,title:'Day 4：寬肩 ＋ 有氧',subtitle:'肩部訓練 ＋ 核心 ＋ 有氧',icon:'🎯',exercises:[
-{name:'啞鈴側平舉',sets:'5 組 × 12–15 次',count:5,reps:'12–15 次',weight:'單手 4–8 kg',video:'cbHSvdIR0Kk'},
-{name:'反向飛鳥機',sets:'3 組 × 12 次',count:3,reps:'12 次',weight:'15–30 kg',video:'C5yhW8Kivl4'},
-{name:'平板支撐（Plank）',sets:'3 組 × 45 秒',count:3,reps:'45 秒',weight:'徒手',video:'_BQVGDmnyQI'},
-{name:'跑步機坡度快走',sets:'25 分鐘',count:1,reps:'25 分鐘',weight:'坡度 9–11 / 速度 5.2',video:'Lv3o4K12rvo'}]}
+{name:'啞鈴側平舉',sets:'5 組 × 12–15 次',count:5,reps:'12–15 次',weight:'單手 4–8 kg',video:'WJm94H5JvB0'},
+{name:'反向飛鳥機',sets:'3 組 × 12 次',count:3,reps:'12 次',weight:'15–30 kg',video:'bB5e6bFf1jA'},
+{name:'平板支撐（Plank）',sets:'3 組 × 45 秒',count:3,reps:'45 秒',weight:'徒手',video:'pSHjTRCQxIw'},
+{name:'跑步機坡度快走',sets:'25 分鐘',count:1,reps:'25 分鐘',weight:'坡度 9–11 / 速度 5.2',video:'7R59PjU9bXQ'}]}
 ];
+
 let currentDayIndex=0,currentExerciseIndex=0,timerSeconds=90,timerInterval=null,timerEnd=0;
 const $=id=>document.getElementById(id);const storeKey='fitness-plan-records-v2';
 function loadRecords(){try{return JSON.parse(localStorage.getItem(storeKey)||'{}')}catch(e){return {}}}let records=loadRecords();
@@ -72,16 +75,23 @@ function getRecord(){return records[recordKey()]||{done:[],weight:'',reps:''}}
 function setRecord(next){records[recordKey()]=next;saveRecords()}
 function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.remove('hidden');clearTimeout(showToast.timeout);showToast.timeout=setTimeout(()=>t.classList.add('hidden'),2400)}
 function navigate(name){document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));$('view-'+name).classList.remove('hidden');window.scrollTo({top:0,behavior:'instant'});if(name!=='workout')stopTimer();}
+
 function renderHome(){const host=$('home-buttons');host.innerHTML='';workoutPlan.forEach((day,i)=>{const b=document.createElement('button');b.className='day-card';b.innerHTML=`<div class="day-icon">${day.icon}</div><div class="day-copy"><strong>${day.title}</strong><span>${day.subtitle} · ${day.exercises.length} 個動作</span></div><span class="arrow" aria-hidden="true">›</span>`;b.addEventListener('click',()=>selectDay(i));host.appendChild(b)})}
 function selectDay(i){currentDayIndex=i;const day=workoutPlan[i];$('overview-title').textContent=day.title;const list=$('overview-list');list.innerHTML='';day.exercises.forEach((ex,j)=>{const item=document.createElement('div');item.className='exercise-row';item.innerHTML=`<div class="num">${j+1}</div><div><strong>${ex.name}</strong><p>${ex.sets} · ${ex.weight}</p></div>`;list.appendChild(item)});$('start-workout').textContent=`開始訓練 · ${day.exercises.length} 個動作`;navigate('overview')}
 function searchUrl(ex){return 'https://www.youtube.com/results?search_query='+encodeURIComponent(ex.name+' 正確姿勢 教學')}
 function setVideo(ex){const box=$('video-box');box.innerHTML='';const id=(ex.video||'').trim();if(id){const iframe=document.createElement('iframe');iframe.title=ex.name+' YouTube 教學影片';iframe.loading='lazy';iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';iframe.allowFullscreen=true;iframe.referrerPolicy='strict-origin-when-cross-origin';iframe.src='https://www.youtube-nocookie.com/embed/'+encodeURIComponent(id)+'?playsinline=1&rel=0';box.appendChild(iframe)}else{box.innerHTML='<div class="video-placeholder"><div class="play">▶</div><strong>目前沒有指定影片</strong><span class="small">請使用下方搜尋按鈕尋找教學</span></div>'} $('youtube-search').href=searchUrl(ex);$('youtube-search').textContent='搜尋「'+ex.name+'」↗';$('youtube-direct').href=id?'https://www.youtube.com/watch?v='+encodeURIComponent(id):searchUrl(ex);$('youtube-direct').textContent=id?'直接開啟影片 ↗':'開啟搜尋結果 ↗';}
+
 function renderExercise(){const day=workoutPlan[currentDayIndex],ex=day.exercises[currentExerciseIndex];$('workout-progress').textContent=`${currentExerciseIndex+1} / ${day.exercises.length}`;$('progress-fill').style.width=((currentExerciseIndex+1)/day.exercises.length*100)+'%';$('workout-ex-name').textContent=ex.name;$('workout-sets').textContent=ex.sets;$('workout-weight').textContent=ex.weight;setVideo(ex);const rec=getRecord();const setList=$('set-list');setList.innerHTML='';for(let i=0;i<ex.count;i++){const label=document.createElement('label');label.className='set-check';const cb=document.createElement('input');cb.type='checkbox';cb.checked=rec.done.includes(i);cb.setAttribute('aria-label',`第 ${i+1} 組完成`);cb.addEventListener('change',()=>{const r=getRecord();r.done=cb.checked?[...new Set([...r.done,i])]:r.done.filter(n=>n!==i);setRecord(r);});label.append(cb,document.createTextNode(`第 ${i+1} 組`));setList.appendChild(label)}$('actual-weight').value=rec.weight||'';$('actual-reps').value=rec.reps||'';$('btn-prev').disabled=currentExerciseIndex===0;$('btn-next').textContent=currentExerciseIndex===day.exercises.length-1?'完成訓練 ✓':'下一個動作 →';stopTimer();resetTimer();}
 function saveFields(){const r=getRecord();r.weight=$('actual-weight').value;r.reps=$('actual-reps').value;setRecord(r)}function startWorkout(){currentExerciseIndex=0;renderExercise();navigate('workout')}
 function changeExercise(step){saveFields();const day=workoutPlan[currentDayIndex],next=currentExerciseIndex+step;if(next<0)return;if(next>=day.exercises.length){showSummary();return}currentExerciseIndex=next;renderExercise();window.scrollTo({top:0,behavior:'smooth'})}
+
 function showSummary(){saveFields();const day=workoutPlan[currentDayIndex];let total=0,done=0;$('summary-title').textContent=day.title;const list=$('summary-list');list.innerHTML='';day.exercises.forEach((ex,i)=>{const r=records[`${day.id}-${i}`]||{done:[]};total+=ex.count;done+=(r.done||[]).length;const item=document.createElement('div');item.className='summary-item';item.innerHTML=`<span>${ex.name}</span><strong>${(r.done||[]).length} / ${ex.count} 組</strong>`;list.appendChild(item)});$('summary-score').textContent=`${done} / ${total} 組`; $('summary-message').textContent=done===total?'太好了，所有組數都已勾選完成！':`已完成 ${Math.round(done/total*100)}% 的組數；未勾選的組數可留待下次補完。`;navigate('summary')}
 function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerEnd=0;$('timer-start').textContent='開始計時'}function resetTimer(){stopTimer();timerSeconds=90;updateTimer()}function updateTimer(){const s=Math.max(0,timerSeconds);$('timer-display').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
 function startTimer(){if(timerInterval){stopTimer();return}if(timerSeconds<=0)timerSeconds=90;timerEnd=Date.now()+timerSeconds*1000;$('timer-start').textContent='暫停計時';timerInterval=setInterval(()=>{timerSeconds=Math.max(0,Math.ceil((timerEnd-Date.now())/1000));updateTimer();if(timerSeconds<=0){stopTimer();showToast('休息結束，可以開始下一組！');if('vibrate'in navigator)navigator.vibrate([150,80,150])}},250)}
+
 $('back-home').onclick=()=>navigate('home');$('start-workout').onclick=startWorkout;$('exit-workout').onclick=()=>{if(confirm('要離開這次訓練嗎？已勾選的組數與重量會保留。')){saveFields();navigate('overview')}};$('btn-prev').onclick=()=>changeExercise(-1);$('btn-next').onclick=()=>changeExercise(1);$('summary-home').onclick=()=>navigate('home');$('summary-done').onclick=()=>navigate('home');$('timer-start').onclick=startTimer;$('timer-reset').onclick=resetTimer;$('actual-weight').addEventListener('change',saveFields);$('actual-reps').addEventListener('change',saveFields);
+
 renderHome();
-</script></body></html>
+</script>
+</body>
+</html>
