@@ -1,97 +1,320 @@
-<!doctype html>
-<html lang="zh-Hant">
+<!DOCTYPE html>
+<html lang="zh-TW">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0b1220">
-<title>體態重組訓練計畫</title>
-<style>
-:root{color-scheme:dark;--bg:#0b1220;--panel:#151f31;--panel2:#1c2940;--text:#f3f6fc;--muted:#9ba9bf;--line:#2a3850;--accent:#818cf8;--cyan:#67e8f9;--green:#34d399;--danger:#fb7185}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-tap-highlight-color:transparent}button,input{font:inherit}button{cursor:pointer;touch-action:manipulation}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}.app{width:100%;max-width:560px;min-height:100dvh;margin:auto;padding:0 16px calc(24px + env(safe-area-inset-bottom));display:flex;flex-direction:column}.view{display:flex;flex-direction:column;flex:1;animation:fade .18s ease-out}.hidden{display:none!important}@keyframes fade{from{opacity:.65;transform:translateY(4px)}to{opacity:1;transform:none}}header{padding-top:calc(16px + env(safe-area-inset-top))}.hero{text-align:center;padding:22px 0 24px}.eyebrow{font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:800}.hero h1{font-size:clamp(1.7rem,7vw,2.2rem);margin:8px 0;background:linear-gradient(90deg,#a5b4fc,#67e8f9);color:transparent;background-clip:text}.muted{color:var(--muted)}.small{font-size:.85rem}.day-card,.panel,.exercise-row{background:var(--panel);border:1px solid var(--line);border-radius:18px}.day-card{width:100%;padding:17px;display:flex;align-items:center;gap:13px;text-align:left;color:inherit;margin-bottom:12px;min-height:88px}.day-card:active,.primary:active,.secondary:active{transform:scale(.985)}.day-icon{width:48px;height:48px;display:grid;place-items:center;border-radius:14px;background:var(--panel2);font-size:1.5rem;flex-shrink:0}.day-copy{flex:1;min-width:0}.day-copy strong{display:block;font-size:1.02rem;margin-bottom:5px}.day-copy span{display:block;color:var(--muted);font-size:.84rem;line-height:1.4}.arrow{color:var(--muted);font-size:1.4rem}.topbar{display:flex;align-items:center;gap:10px;margin:8px 0 18px}.icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:12px;width:44px;height:44px;display:grid;place-items:center;font-size:1.3rem;flex-shrink:0}.topbar h2{font-size:1.2rem;margin:0}.exercise-list{display:grid;gap:10px}.exercise-row{display:flex;gap:12px;align-items:center;padding:13px}.num{width:32px;height:32px;border-radius:50%;background:#3730a3;color:#e0e7ff;display:grid;place-items:center;font-weight:800;flex-shrink:0}.exercise-row strong{display:block;font-size:.94rem;line-height:1.35}.exercise-row p{margin:5px 0 0;font-size:.8rem;color:var(--muted);line-height:1.45}.sticky-action{position:sticky;bottom:0;padding:14px 0 calc(10px + env(safe-area-inset-bottom));margin-top:16px;background:linear-gradient(0deg,var(--bg) 75%,transparent)}.primary,.secondary{border:0;border-radius:14px;padding:15px 16px;font-weight:800;min-height:52px;transition:transform .12s,background .15s}.primary{background:linear-gradient(100deg,#6366f1,#0891b2);color:white;width:100%}.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}.workout-head{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:10px;margin-bottom:14px}.progress-wrap{min-width:0}.progress-text{text-align:center;font-size:.82rem;color:var(--muted);margin-bottom:8px}.progress-track{height:5px;background:var(--line);border-radius:9px;overflow:hidden}.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--cyan));width:0;transition:width .2s}.workout-title{font-size:1.45rem;line-height:1.25;text-align:center;margin:6px 0 16px}.video-box{position:relative;width:100%;aspect-ratio:16/9;background:#030712;border-radius:16px;overflow:hidden;border:1px solid var(--line)}.video-box iframe{width:100%;height:100%;border:0;display:block}.video-placeholder{height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:20px;gap:9px;color:var(--muted)}.video-placeholder .play{font-size:2.2rem}.video-actions{display:flex;gap:8px;margin-top:10px}.video-actions a{flex:1;text-decoration:none;text-align:center;padding:11px 8px;border-radius:12px;border:1px solid var(--line);color:#dbeafe;background:var(--panel);font-size:.85rem;font-weight:700}.panel{padding:15px;margin-top:16px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:var(--panel2);border-radius:13px;padding:13px 9px;text-align:center;min-width:0}.stat-label{font-size:.72rem;color:var(--muted);margin-bottom:6px}.stat-value{font-weight:800;line-height:1.35;overflow-wrap:anywhere}.sets-value{color:#c7d2fe}.weight-value{color:var(--cyan)}.log{margin-top:14px}.log-title{font-weight:800;font-size:.95rem;margin-bottom:10px}.set-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.set-check{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 4px;border:1px solid var(--line);border-radius:11px;background:#111a2a;font-size:.8rem}.set-check input{width:18px;height:18px;accent-color:#818cf8}.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.field label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:6px}.field input{width:100%;min-width:0;border:1px solid var(--line);border-radius:10px;background:#0b1220;color:var(--text);padding:11px}.note{font-size:.78rem;color:var(--muted);line-height:1.5;margin:12px 0 0}.workout-actions{display:grid;grid-template-columns:1fr 1.45fr;gap:10px;margin-top:14px;padding-bottom:10px}.workout-actions button{min-width:0}.timer-row{display:flex;align-items:center;gap:10px;margin-top:12px}.timer-row .secondary{padding:10px 12px;min-height:42px}.timer-display{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.1rem;min-width:64px}.summary-score{font-size:2rem;font-weight:900;color:var(--green);margin:10px 0}.summary-list{display:grid;gap:8px;margin:16px 0}.summary-item{display:flex;justify-content:space-between;gap:10px;background:var(--panel);padding:12px;border-radius:12px;font-size:.88rem}.toast{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:#e2e8f0;color:#0f172a;padding:10px 14px;border-radius:12px;font-size:.85rem;font-weight:700;z-index:10;box-shadow:0 6px 24px #0006;max-width:90vw;text-align:center}.section-label{margin:18px 0 10px;color:var(--muted);font-size:.78rem;font-weight:800;letter-spacing:.05em}
-@media(min-width:520px){.app{padding-left:22px;padding-right:22px}.hero{padding-top:32px}.day-card{padding:20px}}
-@media(max-height:700px){.workout-title{font-size:1.2rem;margin:4px 0 10px}.panel{padding:12px;margin-top:12px}.stat{padding:10px 7px}.hero{padding-top:12px;padding-bottom:16px}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>行動營養追蹤</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            bg: '#121212',
+                            surface: '#1e1e1e',
+                            surfaceLight: '#2a2a2a'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* 隱藏滾動條但保持可滾動 */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+
+        /* 按鈕點擊動畫 */
+        .tap-effect:active {
+            transform: scale(0.96);
+        }
+
+        /* 吐司通知動畫 */
+        .toast-enter {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        .toast-show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
 </head>
-<body>
-<main class="app">
-<section id="view-home" class="view">
-<header class="hero"><div class="eyebrow">Fitness Plan</div><h1>體態重組計畫</h1><p class="muted">Hello NIK 選擇今日訓練課表</p></header>
-<div id="home-buttons"></div>
-<p class="note">小提醒：建議重量僅供起始參考，請依自身狀態調整；動作有疼痛或不適時請停止。</p>
-</section>
-<section id="view-overview" class="view hidden">
-<header class="topbar"><button class="icon-btn" id="back-home" aria-label="返回首頁">‹</button><h2 id="overview-title">訓練日</h2></header>
-<div id="overview-list" class="exercise-list"></div>
-<div class="sticky-action"><button class="primary" id="start-workout">開始訓練</button></div>
-</section>
-<section id="view-workout" class="view hidden">
-<div class="workout-head"><button class="icon-btn" id="exit-workout" aria-label="離開訓練">×</button><div class="progress-wrap"><div class="progress-text" id="workout-progress">1 / 5</div><div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div></div><div></div></div>
-<h2 id="workout-ex-name" class="workout-title">動作名稱</h2>
-<div class="video-box" id="video-box"><div class="video-placeholder"><div class="play">▶</div><strong>準備載入教學影片…</strong><span class="small">若內嵌播放器無法使用，可改用 YouTube 搜尋</span></div></div>
-<div class="video-actions"><a id="youtube-search" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">在 YouTube 搜尋此動作 ↗</a><a id="youtube-direct" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">開啟 YouTube ↗</a></div>
-<div class="panel"><div class="stats"><div class="stat"><div class="stat-label">組數與次數</div><div id="workout-sets" class="stat-value sets-value">3 組 x 12 次</div></div><div class="stat"><div class="stat-label">建議重量 / 設定</div><div id="workout-weight" class="stat-value weight-value">10 kg</div></div></div>
-<div class="log"><div class="log-title">本動作完成紀錄</div><div id="set-list" class="set-list"></div><div class="field-row"><div class="field"><label for="actual-weight">實際重量（kg）</label><input id="actual-weight" inputmode="decimal" type="number" min="0" step="0.5" placeholder="例如 12"></div><div class="field"><label for="actual-reps">每組目標次數</label><input id="actual-reps" inputmode="numeric" type="number" min="1" step="1" placeholder="例如 12"></div></div>
-<div class="timer-row"><div><div class="stat-label">組間休息</div><div class="timer-display" id="timer-display">01:30</div></div><button class="secondary" id="timer-start">開始計時</button><button class="secondary" id="timer-reset">重設</button></div><p class="note">完成一組就勾選一次。紀錄會自動保存在這台裝置的瀏覽器中。</p></div></div>
-<div class="workout-actions"><button class="secondary" id="btn-prev">上一個</button><button class="primary" id="btn-next">下一個動作</button></div>
-</section>
-<section id="view-summary" class="view hidden"><header class="topbar"><button class="icon-btn" id="summary-home" aria-label="返回首頁">‹</button><h2>本次訓練摘要</h2></header><div class="panel"><div class="muted">今日訓練</div><h2 id="summary-title"></h2><div id="summary-score" class="summary-score">0 / 0 組</div><p id="summary-message" class="muted"></p></div><div id="summary-list" class="summary-list"></div><button class="primary" id="summary-done">回到首頁</button></section>
-</main><div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+<body class="min-h-screen pb-24 font-sans selection:bg-blue-500/30">
 
-<script>
-const workoutPlan=[
-{id:1,title:'Day 1：上半身 A',subtitle:'胸肌厚度 ＋ 三頭肌',icon:'🔥',exercises:[
-{name:'靠牆收下巴（熱身）',sets:'2 組 × 12 次（停 5 秒）',count:2,reps:'12 次（停 5 秒）',weight:'徒手',video:'20Q4uB-5P2E'},
-{name:'平板啞鈴臥推',sets:'4 組 × 8–12 次',count:4,reps:'8–12 次',weight:'單手 8–18 kg',video:'UVtsazkPfC0'},
-{name:'上斜啞鈴臥推',sets:'3 組 × 8–12 次',count:3,reps:'8–12 次',weight:'單手 8–14 kg',video:'C5yhW8Kivl4'},
-{name:'蝴蝶機夾胸',sets:'3 組 × 12 次',count:3,reps:'12 次',weight:'25–45 kg',video:'eGjt4jcWAjY'},
-{name:'滑輪三頭肌下壓',sets:'4 組 × 12–15 次',count:4,reps:'12–15 次',weight:'10–25 kg',video:'2-LAMcpzODU'}]},
-{id:2,title:'Day 2：下半身 ＋ 核心',subtitle:'下肢訓練 ＋ 核心 ＋ 有氧',icon:'🦵',exercises:[
-{name:'單膝跪姿弓箭步伸展',sets:'2 組 × 45 秒',count:2,reps:'45 秒',weight:'徒手',video:'YQldWOGKsXY'},
-{name:'機械式腿推機',sets:'4 組 × 10–12 次',count:4,reps:'10–12 次',weight:'60–120 kg',video:'IZxyjW7OSvc'},
-{name:'啞鈴高腳杯深蹲',sets:'3 組 × 10–12 次',count:3,reps:'10–12 次',weight:'10–24 kg',video:'Lv3o4K12rvo'},
-{name:'坐姿腿彎舉',sets:'3 組 × 12 次',count:3,reps:'12 次',weight:'25–45 kg',video:'F488k67BTNo'},
-{name:'死蟲式',sets:'3 組 × 共 16 次',count:3,reps:'共 16 次',weight:'徒手',video:'4XLEnwUr1d8'},
-{name:'跑步機坡度快走',sets:'20 分鐘',count:1,reps:'20 分鐘',weight:'坡度 8–10 / 速度 5.0',video:'7R59PjU9bXQ'}]},
-{id:3,title:'Day 3：上半身 B',subtitle:'背部訓練 ＋ 二頭肌',icon:'🏋️',exercises:[
-{name:'繩索面拉',sets:'3 組 × 15 次',count:3,reps:'15 次',weight:'7.5–20 kg',video:'V8d6XjgIGPE'},
-{name:'寬握滑輪下拉',sets:'4 組 × 10–12 次',count:4,reps:'10–12 次',weight:'30–55 kg',video:'9kDT2RJSnyE'},
-{name:'坐姿划船機',sets:'4 組 × 10–12 次',count:4,reps:'10–12 次',weight:'30–55 kg',video:'GZbfZ033f74'},
-{name:'啞鈴二頭肌彎舉',sets:'4 組 × 10–12 次',count:4,reps:'10–12 次',weight:'單手 6–12 kg',video:'ykJmrZ5v0Oo'},
-{name:'槌式彎舉',sets:'3 組 × 10–12 次',count:3,reps:'10–12 次',weight:'單手 6–12 kg',video:'zC3nLlEvin4'}]},
-{id:4,title:'Day 4：寬肩 ＋ 有氧',subtitle:'肩部訓練 ＋ 核心 ＋ 有氧',icon:'🎯',exercises:[
-{name:'啞鈴側平舉',sets:'5 組 × 12–15 次',count:5,reps:'12–15 次',weight:'單手 4–8 kg',video:'WJm94H5JvB0'},
-{name:'反向飛鳥機',sets:'3 組 × 12 次',count:3,reps:'12 次',weight:'15–30 kg',video:'bB5e6bFf1jA'},
-{name:'平板支撐（Plank）',sets:'3 組 × 45 秒',count:3,reps:'45 秒',weight:'徒手',video:'pSHjTRCQxIw'},
-{name:'跑步機坡度快走',sets:'25 分鐘',count:1,reps:'25 分鐘',weight:'坡度 9–11 / 速度 5.2',video:'7R59PjU9bXQ'}]}
-];
+    <div class="max-w-md mx-auto p-4 space-y-6">
+        
+        <!-- Header -->
+        <header class="pt-4 pb-2 flex justify-between items-end">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">今日進度</h1>
+                <p id="date-display" class="text-gray-400 text-sm mt-1"></p>
+            </div>
+            <div class="text-right">
+                <button onclick="undo()" id="undo-btn" class="tap-effect text-gray-400 hover:text-white px-3 py-2 bg-dark-surface rounded-lg opacity-50 transition-opacity flex items-center gap-2">
+                    <i class="fa-solid fa-rotate-left"></i> <span class="text-sm font-medium">復原</span>
+                </button>
+            </div>
+        </header>
 
-let currentDayIndex=0,currentExerciseIndex=0,timerSeconds=90,timerInterval=null,timerEnd=0;
-const $=id=>document.getElementById(id);const storeKey='fitness-plan-records-v2';
-function loadRecords(){try{return JSON.parse(localStorage.getItem(storeKey)||'{}')}catch(e){return {}}}let records=loadRecords();
-function saveRecords(){try{localStorage.setItem(storeKey,JSON.stringify(records))}catch(e){showToast('瀏覽器未允許儲存，這次紀錄可能不會保留')}}
-function recordKey(){return `${workoutPlan[currentDayIndex].id}-${currentExerciseIndex}`}
-function getRecord(){return records[recordKey()]||{done:[],weight:'',reps:''}}
-function setRecord(next){records[recordKey()]=next;saveRecords()}
-function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.remove('hidden');clearTimeout(showToast.timeout);showToast.timeout=setTimeout(()=>t.classList.add('hidden'),2400)}
-function navigate(name){document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));$('view-'+name).classList.remove('hidden');window.scrollTo({top:0,behavior:'instant'});if(name!=='workout')stopTimer();}
+        <!-- Progress Cards Section -->
+        <section class="grid grid-cols-2 gap-3" id="progress-container">
+            <!-- 透過 JS 動態產生 -->
+        </section>
 
-function renderHome(){const host=$('home-buttons');host.innerHTML='';workoutPlan.forEach((day,i)=>{const b=document.createElement('button');b.className='day-card';b.innerHTML=`<div class="day-icon">${day.icon}</div><div class="day-copy"><strong>${day.title}</strong><span>${day.subtitle} · ${day.exercises.length} 個動作</span></div><span class="arrow" aria-hidden="true">›</span>`;b.addEventListener('click',()=>selectDay(i));host.appendChild(b)})}
-function selectDay(i){currentDayIndex=i;const day=workoutPlan[i];$('overview-title').textContent=day.title;const list=$('overview-list');list.innerHTML='';day.exercises.forEach((ex,j)=>{const item=document.createElement('div');item.className='exercise-row';item.innerHTML=`<div class="num">${j+1}</div><div><strong>${ex.name}</strong><p>${ex.sets} · ${ex.weight}</p></div>`;list.appendChild(item)});$('start-workout').textContent=`開始訓練 · ${day.exercises.length} 個動作`;navigate('overview')}
-function searchUrl(ex){return 'https://www.youtube.com/results?search_query='+encodeURIComponent(ex.name+' 正確姿勢 教學')}
-function setVideo(ex){const box=$('video-box');box.innerHTML='';const id=(ex.video||'').trim();if(id){const iframe=document.createElement('iframe');iframe.title=ex.name+' YouTube 教學影片';iframe.loading='lazy';iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';iframe.allowFullscreen=true;iframe.referrerPolicy='strict-origin-when-cross-origin';iframe.src='https://www.youtube-nocookie.com/embed/'+encodeURIComponent(id)+'?playsinline=1&rel=0';box.appendChild(iframe)}else{box.innerHTML='<div class="video-placeholder"><div class="play">▶</div><strong>目前沒有指定影片</strong><span class="small">請使用下方搜尋按鈕尋找教學</span></div>'} $('youtube-search').href=searchUrl(ex);$('youtube-search').textContent='搜尋「'+ex.name+'」↗';$('youtube-direct').href=id?'https://www.youtube.com/watch?v='+encodeURIComponent(id):searchUrl(ex);$('youtube-direct').textContent=id?'直接開啟影片 ↗':'開啟搜尋結果 ↗';}
+        <!-- Quick Add Section -->
+        <section class="pt-2">
+            <h2 class="text-lg font-bold mb-3 text-gray-200">快速紀錄</h2>
+            <div class="grid grid-cols-2 gap-3">
+                <!-- 增肌餐 -->
+                <button onclick="addFood('muscleMeal', '增肌餐')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-blue-500/50 transition-colors h-28">
+                    <i class="fa-solid fa-utensils text-2xl text-blue-400 mb-2"></i>
+                    <span class="font-bold text-sm">增肌餐</span>
+                    <span class="text-[10px] text-gray-400 mt-1">+595大卡 (蛋白質31.1g)</span>
+                </button>
 
-function renderExercise(){const day=workoutPlan[currentDayIndex],ex=day.exercises[currentExerciseIndex];$('workout-progress').textContent=`${currentExerciseIndex+1} / ${day.exercises.length}`;$('progress-fill').style.width=((currentExerciseIndex+1)/day.exercises.length*100)+'%';$('workout-ex-name').textContent=ex.name;$('workout-sets').textContent=ex.sets;$('workout-weight').textContent=ex.weight;setVideo(ex);const rec=getRecord();const setList=$('set-list');setList.innerHTML='';for(let i=0;i<ex.count;i++){const label=document.createElement('label');label.className='set-check';const cb=document.createElement('input');cb.type='checkbox';cb.checked=rec.done.includes(i);cb.setAttribute('aria-label',`第 ${i+1} 組完成`);cb.addEventListener('change',()=>{const r=getRecord();r.done=cb.checked?[...new Set([...r.done,i])]:r.done.filter(n=>n!==i);setRecord(r);});label.append(cb,document.createTextNode(`第 ${i+1} 組`));setList.appendChild(label)}$('actual-weight').value=rec.weight||'';$('actual-reps').value=rec.reps||'';$('btn-prev').disabled=currentExerciseIndex===0;$('btn-next').textContent=currentExerciseIndex===day.exercises.length-1?'完成訓練 ✓':'下一個動作 →';stopTimer();resetTimer();}
-function saveFields(){const r=getRecord();r.weight=$('actual-weight').value;r.reps=$('actual-reps').value;setRecord(r)}function startWorkout(){currentExerciseIndex=0;renderExercise();navigate('workout')}
-function changeExercise(step){saveFields();const day=workoutPlan[currentDayIndex],next=currentExerciseIndex+step;if(next<0)return;if(next>=day.exercises.length){showSummary();return}currentExerciseIndex=next;renderExercise();window.scrollTo({top:0,behavior:'smooth'})}
+                <!-- 雞胸肉 -->
+                <button onclick="addFood('chicken', '雞胸肉 100g')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-red-500/50 transition-colors h-28">
+                    <i class="fa-solid fa-drumstick-bite text-2xl text-red-400 mb-2"></i>
+                    <span class="font-bold text-sm">雞胸肉 100g</span>
+                    <span class="text-[10px] text-gray-400 mt-1">+24g 蛋白質</span>
+                </button>
 
-function showSummary(){saveFields();const day=workoutPlan[currentDayIndex];let total=0,done=0;$('summary-title').textContent=day.title;const list=$('summary-list');list.innerHTML='';day.exercises.forEach((ex,i)=>{const r=records[`${day.id}-${i}`]||{done:[]};total+=ex.count;done+=(r.done||[]).length;const item=document.createElement('div');item.className='summary-item';item.innerHTML=`<span>${ex.name}</span><strong>${(r.done||[]).length} / ${ex.count} 組</strong>`;list.appendChild(item)});$('summary-score').textContent=`${done} / ${total} 組`; $('summary-message').textContent=done===total?'太好了，所有組數都已勾選完成！':`已完成 ${Math.round(done/total*100)}% 的組數；未勾選的組數可留待下次補完。`;navigate('summary')}
-function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}timerEnd=0;$('timer-start').textContent='開始計時'}function resetTimer(){stopTimer();timerSeconds=90;updateTimer()}function updateTimer(){const s=Math.max(0,timerSeconds);$('timer-display').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
-function startTimer(){if(timerInterval){stopTimer();return}if(timerSeconds<=0)timerSeconds=90;timerEnd=Date.now()+timerSeconds*1000;$('timer-start').textContent='暫停計時';timerInterval=setInterval(()=>{timerSeconds=Math.max(0,Math.ceil((timerEnd-Date.now())/1000));updateTimer();if(timerSeconds<=0){stopTimer();showToast('休息結束，可以開始下一組！');if('vibrate'in navigator)navigator.vibrate([150,80,150])}},250)}
+                <!-- 茶葉蛋 -->
+                <button onclick="addFood('egg', '茶葉蛋 1顆')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-yellow-500/50 transition-colors h-28">
+                    <i class="fa-solid fa-egg text-2xl text-yellow-500 mb-2"></i>
+                    <span class="font-bold text-sm">茶葉蛋 1顆</span>
+                    <span class="text-[10px] text-gray-400 mt-1">+7g 蛋白質</span>
+                </button>
 
-$('back-home').onclick=()=>navigate('home');$('start-workout').onclick=startWorkout;$('exit-workout').onclick=()=>{if(confirm('要離開這次訓練嗎？已勾選的組數與重量會保留。')){saveFields();navigate('overview')}};$('btn-prev').onclick=()=>changeExercise(-1);$('btn-next').onclick=()=>changeExercise(1);$('summary-home').onclick=()=>navigate('home');$('summary-done').onclick=()=>navigate('home');$('timer-start').onclick=startTimer;$('timer-reset').onclick=resetTimer;$('actual-weight').addEventListener('change',saveFields);$('actual-reps').addEventListener('change',saveFields);
+                <!-- 香蕉 -->
+                <button onclick="addFood('banana', '香蕉 1根')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-yellow-300/50 transition-colors h-28">
+                    <i class="fa-solid fa-lemon text-2xl text-yellow-300 mb-2"></i> <!-- 用檸檬暫代沒有香蕉icon -->
+                    <span class="font-bold text-sm">香蕉 1根</span>
+                    <span class="text-[10px] text-gray-400 mt-1">+27g 碳水</span>
+                </button>
 
-renderHome();
-</script>
+                <!-- 補充肌酸 -->
+                <button onclick="addFood('creatine', '補充肌酸 5g')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-purple-500/50 transition-colors h-28">
+                    <i class="fa-solid fa-bolt text-2xl text-purple-400 mb-2"></i>
+                    <span class="font-bold text-sm">肌酸 5g</span>
+                    <span class="text-[10px] text-gray-400 mt-1">力量補充</span>
+                </button>
+
+                <!-- 喝水 -->
+                <button onclick="addFood('water', '喝水 300ml')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-cyan-500/50 transition-colors h-28">
+                    <i class="fa-solid fa-glass-water text-2xl text-cyan-400 mb-2"></i>
+                    <span class="font-bold text-sm">喝水 300ml</span>
+                    <span class="text-[10px] text-gray-400 mt-1">保持水分</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Reset Button -->
+        <section class="pt-6">
+            <button onclick="showResetModal()" class="w-full tap-effect py-4 bg-red-900/30 text-red-400 font-bold rounded-xl border border-red-900/50 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-trash-can"></i> 重置今日紀錄
+            </button>
+        </section>
+
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-white text-gray-900 px-6 py-3 rounded-full font-bold shadow-xl transition-all duration-300 toast-enter z-50 pointer-events-none flex items-center gap-2">
+        <i class="fa-solid fa-circle-check text-green-500"></i>
+        <span id="toast-msg">已加入</span>
+    </div>
+
+    <!-- Reset Confirmation Modal -->
+    <div id="reset-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-dark-surface p-6 rounded-2xl max-w-sm w-[90%] border border-gray-700 transform scale-95 transition-transform duration-200" id="reset-modal-content">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-triangle-exclamation text-3xl text-red-500"></i>
+                </div>
+                <h3 class="text-xl font-bold">確定要重置嗎？</h3>
+                <p class="text-gray-400 text-sm mt-2">這將會把今天的進度全部歸零，此動作無法復原。</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="closeResetModal()" class="flex-1 py-3 bg-gray-800 text-white rounded-xl font-bold">取消</button>
+                <button onclick="confirmReset()" class="flex-1 py-3 bg-red-600 text-white rounded-xl font-bold">確定重置</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 設定目標與初始狀態
+        const targets = {
+            kcal: { target: 2100, unit: 'kcal', name: '熱量', color: 'bg-orange-500', textCol: 'text-orange-400' },
+            protein: { target: 150, unit: 'g', name: '蛋白質', color: 'bg-blue-500', textCol: 'text-blue-400' },
+            carbs: { target: 215, unit: 'g', name: '碳水', color: 'bg-yellow-500', textCol: 'text-yellow-400' },
+            fat: { target: 70, unit: 'g', name: '脂肪', color: 'bg-green-500', textCol: 'text-green-400' },
+            creatine: { target: 5, unit: 'g', name: '肌酸', color: 'bg-purple-500', textCol: 'text-purple-400' },
+            water: { target: 3000, unit: 'ml', name: '水分', color: 'bg-cyan-500', textCol: 'text-cyan-400' }
+        };
+
+        const defaultState = { kcal: 0, protein: 0, carbs: 0, fat: 0, creatine: 0, water: 0 };
+        
+        // 快捷食物資料
+        const foodData = {
+            muscleMeal: { kcal: 595, protein: 31.1, carbs: 72.4, fat: 20.1, creatine: 0, water: 0 },
+            chicken: { kcal: 120, protein: 24, carbs: 2, fat: 2, creatine: 0, water: 0 },
+            egg: { kcal: 75, protein: 7, carbs: 1, fat: 5, creatine: 0, water: 0 },
+            banana: { kcal: 105, protein: 1, carbs: 27, fat: 0, creatine: 0, water: 0 },
+            creatine: { kcal: 0, protein: 0, carbs: 0, fat: 0, creatine: 5, water: 0 },
+            water: { kcal: 0, protein: 0, carbs: 0, fat: 0, creatine: 0, water: 300 }
+        };
+
+        let currentState = JSON.parse(localStorage.getItem('mobileNutritionState')) || { ...defaultState };
+        let historyStack = []; // 用於復原
+
+        // 顯示日期
+        const dateOptions = { month: 'long', day: 'numeric', weekday: 'short' };
+        document.getElementById('date-display').innerText = new Date().toLocaleDateString('zh-TW', dateOptions);
+
+        // 初始化與渲染
+        function renderProgress() {
+            const container = document.getElementById('progress-container');
+            container.innerHTML = '';
+
+            Object.keys(targets).forEach(key => {
+                const info = targets[key];
+                let current = Number(currentState[key].toFixed(1));
+                // 若小數點為0則轉整數顯示
+                if (current % 1 === 0) current = Math.round(current);
+                
+                const percentage = Math.min((current / info.target) * 100, 100);
+                const isCompleted = current >= info.target;
+                
+                // 達標時的樣式改變
+                const barColor = isCompleted ? 'bg-green-400 shadow-[0_0_10px_rgba(74,222,128,0.5)]' : info.color;
+                const textColor = isCompleted ? 'text-green-400 font-bold' : info.textCol;
+
+                const card = `
+                    <div class="bg-dark-surface rounded-2xl p-4 flex flex-col justify-between border border-gray-800 ${isCompleted ? 'border-green-500/30 bg-green-900/10' : ''}">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-gray-300 font-medium text-sm">${info.name}</span>
+                        </div>
+                        <div class="mb-2 flex items-baseline gap-1">
+                            <span class="text-xl md:text-2xl font-black ${textColor}">${current}</span>
+                            <span class="text-[10px] text-gray-500 font-medium">/ ${info.target} ${info.unit}</span>
+                        </div>
+                        <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
+                            <div class="${barColor} h-full rounded-full transition-all duration-700 ease-out" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+
+            // 更新 Undo 按鈕狀態
+            const undoBtn = document.getElementById('undo-btn');
+            if (historyStack.length > 0) {
+                undoBtn.classList.remove('opacity-50', 'pointer-events-none');
+            } else {
+                undoBtn.classList.add('opacity-50', 'pointer-events-none');
+            }
+        }
+
+        // 新增食物
+        function addFood(foodKey, foodName) {
+            // 儲存當前狀態到歷史紀錄
+            historyStack.push(JSON.stringify(currentState));
+            // 限制歷史紀錄長度避免記憶體過大
+            if(historyStack.length > 20) historyStack.shift();
+
+            // 更新數值
+            const addition = foodData[foodKey];
+            Object.keys(addition).forEach(key => {
+                currentState[key] += addition[key];
+            });
+
+            saveAndRender();
+            showToast(`已紀錄：${foodName}`);
+        }
+
+        // 復原上一動
+        function undo() {
+            if (historyStack.length === 0) return;
+            
+            const prevStateStr = historyStack.pop();
+            currentState = JSON.parse(prevStateStr);
+            
+            saveAndRender();
+            showToast('已復原上一筆紀錄');
+        }
+
+        // 儲存與重新渲染
+        function saveAndRender() {
+            localStorage.setItem('mobileNutritionState', JSON.stringify(currentState));
+            renderProgress();
+        }
+
+        // 吐司通知
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = message;
+            
+            toast.classList.remove('toast-enter');
+            toast.classList.add('toast-show');
+            
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('toast-show');
+                toast.classList.add('toast-enter');
+            }, 2500);
+        }
+
+        // 自訂重置彈窗邏輯
+        const modal = document.getElementById('reset-modal');
+        const modalContent = document.getElementById('reset-modal-content');
+
+        function showResetModal() {
+            modal.classList.remove('hidden');
+            // 延遲一點點讓 display block 先作用，再執行動畫
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeResetModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        function confirmReset() {
+            currentState = { ...defaultState };
+            historyStack = []; // 重置也清空復原紀錄
+            saveAndRender();
+            closeResetModal();
+            showToast('今日紀錄已歸零');
+        }
+
+        // 畫面載入時首次渲染
+        renderProgress();
+    </script>
 </body>
 </html>
