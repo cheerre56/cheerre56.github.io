@@ -49,18 +49,15 @@
             touch-action: manipulation;
         }
         
-        /* 隱藏滾動條但保持可滾動 */
         ::-webkit-scrollbar {
             width: 0px;
             background: transparent;
         }
 
-        /* 按鈕點擊動畫 */
         .tap-effect:active {
             transform: scale(0.96);
         }
 
-        /* 吐司通知動畫 */
         .toast-enter {
             transform: translateY(100%);
             opacity: 0;
@@ -90,63 +87,68 @@
 
         <!-- Progress Cards Section -->
         <section class="grid grid-cols-2 gap-3" id="progress-container">
-            <!-- 透過 JS 動態產生，包含獨立顏色與漸層 -->
+            <!-- 透過 JS 動態產生進度卡片 -->
         </section>
 
         <!-- Quick Add Section -->
         <section class="pt-2">
             <h2 class="text-lg font-bold mb-3 text-gray-200">快速紀錄</h2>
             <div class="grid grid-cols-2 gap-3">
-                <!-- 增肌餐 -->
-                <button onclick="addFood('muscleMeal', '增肌餐')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-blue-500/50 transition-colors h-28">
-                    <span class="text-3xl mb-2">🍱</span>
+                
+                <button onclick="addFood('muscleMeal', '增肌餐')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-orange-500/50 transition-colors h-28 relative overflow-hidden">
+                    <span class="text-3xl mb-1">🍱</span>
                     <span class="font-bold text-sm">增肌餐</span>
-                    <span class="text-[10px] text-gray-400 mt-1">+595大卡 (蛋白質31g)</span>
+                    <span class="text-[10px] text-gray-400 mt-1">31g Pro / 595 kcal</span>
                 </button>
 
-                <!-- 雞胸肉 -->
-                <button onclick="addFood('chicken', '雞胸肉')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-red-500/50 transition-colors h-28">
-                    <span class="text-3xl mb-2">🥩</span>
+                <button onclick="addFood('chicken', '雞胸肉')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-red-500/50 transition-colors h-28 relative overflow-hidden">
+                    <span class="text-3xl mb-1">🥩</span>
                     <span class="font-bold text-sm">雞胸肉 100g</span>
-                    <span class="text-[10px] text-gray-400 mt-1">+23g 蛋白質</span>
+                    <span class="text-[10px] text-gray-400 mt-1">23.6g Pro / 117 kcal</span>
                 </button>
 
-                <!-- 茶葉蛋 -->
-                <button onclick="addFood('egg', '茶葉蛋')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-yellow-500/50 transition-colors h-28">
-                    <span class="text-3xl mb-2">🥚</span>
+                <button onclick="addFood('egg', '茶葉蛋')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-yellow-500/50 transition-colors h-28 relative overflow-hidden">
+                    <span class="text-3xl mb-1">🥚</span>
                     <span class="font-bold text-sm">茶葉蛋</span>
-                    <span class="text-[10px] text-gray-400 mt-1">+7g 蛋白質</span>
+                    <span class="text-[10px] text-gray-400 mt-1">7g Pro / 75 kcal</span>
                 </button>
 
-                <!-- 香蕉 -->
-                <button onclick="addFood('banana', '香蕉')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-yellow-300/50 transition-colors h-28">
-                    <span class="text-3xl mb-2">🍌</span>
+                <button onclick="addFood('banana', '香蕉')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-yellow-300/50 transition-colors h-28 relative overflow-hidden">
+                    <span class="text-3xl mb-1">🍌</span>
                     <span class="font-bold text-sm">香蕉</span>
-                    <span class="text-[10px] text-gray-400 mt-1">+23g 碳水</span>
+                    <span class="text-[10px] text-gray-400 mt-1">23g Carb / 90 kcal</span>
                 </button>
                 
-                <!-- 蛋白粉 -->
-                <button onclick="addFood('whey', '蛋白粉')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-indigo-500/50 transition-colors h-28">
-                    <span class="text-3xl mb-2">🥤</span>
+                <button onclick="addFood('whey', '蛋白粉')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-indigo-500/50 transition-colors h-28 relative overflow-hidden">
+                    <span class="text-3xl mb-1">🥤</span>
                     <span class="font-bold text-sm">蛋白粉</span>
-                    <span class="text-[10px] text-gray-400 mt-1">+21.3g 蛋白質</span>
+                    <span class="text-[10px] text-gray-400 mt-1">21.3g Pro / 113 kcal</span>
+                </button>
+                
+                <button onclick="addFood('superProtein', '超能蛋白飲')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-pink-500/50 transition-colors h-28 relative overflow-hidden">
+                    <span class="text-3xl mb-1">🧃</span>
+                    <span class="font-bold text-sm">超能蛋白飲</span>
+                    <span class="text-[10px] text-gray-400 mt-1">20.3g Pro / 206 kcal</span>
                 </button>
 
-                <!-- 補充肌酸 -->
-                <button onclick="addFood('creatine', '補充肌酸')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-purple-500/50 transition-colors h-28">
-                    <span class="text-3xl mb-2">⚡</span>
+                <button onclick="addFood('sevenElevenProtein', '7-11蛋白飲')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-blue-400/50 transition-colors h-28 relative overflow-hidden">
+                    <span class="text-3xl mb-1">🥛</span>
+                    <span class="font-bold text-sm">7-11蛋白飲</span>
+                    <span class="text-[10px] text-gray-400 mt-1">22.2g Pro / 224 kcal</span>
+                </button>
+
+                <button onclick="addFood('creatine', '補充肌酸')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-purple-500/50 transition-colors h-28 relative overflow-hidden">
+                    <span class="text-3xl mb-1">⚡</span>
                     <span class="font-bold text-sm">肌酸 5g</span>
                     <span class="text-[10px] text-gray-400 mt-1">力量補充</span>
                 </button>
 
-                <!-- 喝水 -->
-                <button onclick="addFood('water', '喝水 500ml')" class="tap-effect col-span-2 flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-cyan-500/50 transition-colors h-24">
+                <button onclick="addFood('water', '喝水 300ml')" class="tap-effect col-span-2 flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-cyan-500/50 transition-colors h-24 relative overflow-hidden">
                     <span class="text-3xl mb-1">💧</span>
-                    <span class="font-bold text-sm">喝水 500ml</span>
+                    <span class="font-bold text-sm">喝水 300ml</span>
                 </button>
             </div>
             
-            <!-- 手動輸入按鈕 -->
             <button onclick="showManualModal()" class="w-full mt-3 tap-effect py-4 bg-dark-surface hover:bg-gray-800 text-white font-bold rounded-2xl border border-gray-800 flex items-center justify-center gap-2 transition-colors shadow-sm">
                 <span class="text-xl">✍️</span> 手動輸入
             </button>
@@ -206,12 +208,20 @@
                     <input type="number" id="manual-fat" class="w-full bg-gray-800 text-white rounded-lg p-3 outline-none focus:ring-2 focus:ring-rose-500 border border-gray-700 placeholder-gray-600" placeholder="0">
                 </div>
                 <div>
-                    <label class="text-sm text-gray-400 block mb-1">肌酸 (g)</label>
-                    <input type="number" id="manual-creatine" class="w-full bg-gray-800 text-white rounded-lg p-3 outline-none focus:ring-2 focus:ring-purple-500 border border-gray-700 placeholder-gray-600" placeholder="0">
+                    <label class="text-sm text-gray-400 block mb-1">鈉 (mg)</label>
+                    <input type="number" id="manual-sodium" class="w-full bg-gray-800 text-white rounded-lg p-3 outline-none focus:ring-2 focus:ring-teal-500 border border-gray-700 placeholder-gray-600" placeholder="0">
+                </div>
+                <div>
+                    <label class="text-sm text-gray-400 block mb-1">糖 (g)</label>
+                    <input type="number" id="manual-sugar" class="w-full bg-gray-800 text-white rounded-lg p-3 outline-none focus:ring-2 focus:ring-pink-500 border border-gray-700 placeholder-gray-600" placeholder="0">
                 </div>
                 <div>
                     <label class="text-sm text-gray-400 block mb-1">水分 (ml)</label>
                     <input type="number" id="manual-water" class="w-full bg-gray-800 text-white rounded-lg p-3 outline-none focus:ring-2 focus:ring-cyan-500 border border-gray-700 placeholder-gray-600" placeholder="0">
+                </div>
+                <div>
+                    <label class="text-sm text-gray-400 block mb-1">肌酸 (g)</label>
+                    <input type="number" id="manual-creatine" class="w-full bg-gray-800 text-white rounded-lg p-3 outline-none focus:ring-2 focus:ring-purple-500 border border-gray-700 placeholder-gray-600" placeholder="0">
                 </div>
             </div>
             <div class="flex gap-3">
@@ -222,62 +232,43 @@
     </div>
 
     <script>
-        // 設定「區間目標」與卡片的專屬視覺設計
+        // 營養素目標區間與色彩設定
         const targets = {
-            kcal: { 
-                min: 2000, max: 2200, unit: 'kcal', name: '熱量', 
-                defaultBar: 'bg-orange-500', 
-                baseStyle: 'border-orange-500/30 bg-gradient-to-br from-orange-900/20 to-transparent' 
-            },
-            protein: { 
-                min: 150, max: 170, unit: 'g', name: '蛋白質', 
-                defaultBar: 'bg-blue-500', 
-                baseStyle: 'border-blue-500/30 bg-gradient-to-br from-blue-900/20 to-transparent' 
-            },
-            carbs: { 
-                min: 200, max: 230, unit: 'g', name: '碳水', 
-                defaultBar: 'bg-yellow-500', 
-                baseStyle: 'border-yellow-500/30 bg-gradient-to-br from-yellow-900/20 to-transparent' 
-            },
-            fat: { 
-                min: 65, max: 75, unit: 'g', name: '脂肪', 
-                defaultBar: 'bg-rose-500', 
-                baseStyle: 'border-rose-500/30 bg-gradient-to-br from-rose-900/20 to-transparent' 
-            },
-            creatine: { 
-                min: 3, max: 5, unit: 'g', name: '肌酸', 
-                defaultBar: 'bg-purple-500', 
-                baseStyle: 'border-purple-500/30 bg-gradient-to-br from-purple-900/20 to-transparent' 
-            },
-            water: { 
-                min: 3000, max: 4000, unit: 'ml', name: '水分', 
-                defaultBar: 'bg-cyan-500', 
-                baseStyle: 'border-cyan-500/30 bg-gradient-to-br from-cyan-900/20 to-transparent' 
-            }
+            kcal: { min: 2000, max: 2200, unit: 'kcal', name: '熱量', defaultBar: 'bg-orange-500', baseStyle: 'border-orange-500/30 bg-gradient-to-br from-orange-900/20 to-transparent' },
+            protein: { min: 150, max: 170, unit: 'g', name: '蛋白質', defaultBar: 'bg-blue-500', baseStyle: 'border-blue-500/30 bg-gradient-to-br from-blue-900/20 to-transparent' },
+            carbs: { min: 200, max: 230, unit: 'g', name: '碳水', defaultBar: 'bg-yellow-500', baseStyle: 'border-yellow-500/30 bg-gradient-to-br from-yellow-900/20 to-transparent' },
+            fat: { min: 65, max: 75, unit: 'g', name: '脂肪', defaultBar: 'bg-rose-500', baseStyle: 'border-rose-500/30 bg-gradient-to-br from-rose-900/20 to-transparent' },
+            sodium: { min: 0, max: 2300, unit: 'mg', name: '鈉', defaultBar: 'bg-teal-500', baseStyle: 'border-teal-500/30 bg-gradient-to-br from-teal-900/20 to-transparent' },
+            sugar: { min: 0, max: 50, unit: 'g', name: '糖', defaultBar: 'bg-pink-500', baseStyle: 'border-pink-500/30 bg-gradient-to-br from-pink-900/20 to-transparent' },
+            water: { min: 3000, max: 4000, unit: 'ml', name: '水分', defaultBar: 'bg-cyan-500', baseStyle: 'border-cyan-500/30 bg-gradient-to-br from-cyan-900/20 to-transparent' },
+            creatine: { min: 3, max: 5, unit: 'g', name: '肌酸', defaultBar: 'bg-purple-500', baseStyle: 'border-purple-500/30 bg-gradient-to-br from-purple-900/20 to-transparent' }
         };
 
-        const defaultState = { kcal: 0, protein: 0, carbs: 0, fat: 0, creatine: 0, water: 0 };
+        const defaultState = { kcal: 0, protein: 0, carbs: 0, fat: 0, sodium: 0, sugar: 0, water: 0, creatine: 0 };
         
-        // 更新為你提供的準確食物數值
+        // 快捷按鈕對應的精準數值
         const foodData = {
-            muscleMeal: { kcal: 595, protein: 31.1, carbs: 72.4, fat: 20.1, creatine: 0, water: 0 },
-            egg: { kcal: 75, protein: 7, carbs: 0, fat: 5, creatine: 0, water: 0 },
-            banana: { kcal: 90, protein: 1, carbs: 23, fat: 0, creatine: 0, water: 0 },
-            chicken: { kcal: 104, protein: 23, carbs: 0, fat: 1, creatine: 0, water: 0 },
-            whey: { kcal: 113, protein: 21.3, carbs: 4.2, fat: 1.1, creatine: 0, water: 0 },
-            creatine: { kcal: 0, protein: 0, carbs: 0, fat: 0, creatine: 5, water: 0 },
-            water: { kcal: 0, protein: 0, carbs: 0, fat: 0, creatine: 0, water: 500 }
+            muscleMeal: { kcal: 595, protein: 31.1, carbs: 72.4, fat: 20.1, sodium: 1123, sugar: 2.5, water: 0, creatine: 0 },
+            egg: { kcal: 75, protein: 7, carbs: 0, fat: 5, sodium: 150, sugar: 0, water: 0, creatine: 0 },
+            banana: { kcal: 90, protein: 1, carbs: 23, fat: 0, sodium: 1, sugar: 12, water: 0, creatine: 0 },
+            chicken: { kcal: 117, protein: 23.6, carbs: 1.6, fat: 1.8, sodium: 620, sugar: 1.5, water: 0, creatine: 0 },
+            whey: { kcal: 113, protein: 21.3, carbs: 4.2, fat: 1.1, sodium: 20, sugar: 0, water: 0, creatine: 0 },
+            superProtein: { kcal: 206, protein: 20.3, carbs: 25.9, fat: 2.3, sodium: 274, sugar: 25.9, water: 0, creatine: 0 },
+            sevenElevenProtein: { kcal: 224.7, protein: 22.2, carbs: 27.9, fat: 2.7, sodium: 126, sugar: 15.3, water: 0, creatine: 0 },
+            creatine: { kcal: 0, protein: 0, carbs: 0, fat: 0, sodium: 0, sugar: 0, water: 0, creatine: 5 },
+            water: { kcal: 0, protein: 0, carbs: 0, fat: 0, sodium: 0, sugar: 0, water: 300, creatine: 0 }
         };
 
-        let currentState = JSON.parse(localStorage.getItem('mobileNutritionStateRange')) || { ...defaultState };
-
-        let historyStack = []; // 用於復原
+        // 從 LocalStorage 載入資料並補齊可能缺失的新欄位
+        let storedState = JSON.parse(localStorage.getItem('nutritionAppFullData'));
+        let currentState = storedState ? { ...defaultState, ...storedState } : { ...defaultState };
+        let historyStack = [];
 
         // 顯示日期
         const dateOptions = { month: 'long', day: 'numeric', weekday: 'short' };
         document.getElementById('date-display').innerText = new Date().toLocaleDateString('zh-TW', dateOptions);
 
-        // 初始化與渲染
+        // 渲染畫面卡片
         function renderProgress() {
             const container = document.getElementById('progress-container');
             container.innerHTML = '';
@@ -287,28 +278,28 @@
                 let currentVal = currentState[key] || 0;
                 let current = Number(currentVal.toFixed(1));
                 
-                // 若小數點為0則轉整數顯示
+                // 去除不必要的小數點
                 if (current % 1 === 0) current = Math.round(current);
                 
-                // 進度條寬度計算 (以區間的上限 max 作為 100% 基準)
+                // 計算進度條 (上限作為 100%)
                 const percentage = Math.min((current / info.max) * 100, 100);
                 
-                // 預設樣式 (低於 min)
+                // 預設狀態 (未達標)
                 let barColor = info.defaultBar;
                 let textColor = 'text-white';
                 let cardStyle = info.baseStyle;
 
-                // 顏色狀態判斷邏輯
+                // 狀態判斷
                 if (current > info.max) {
-                    // 超標狀態 (亮紅色警告)
+                    // 超標警告 (紅色)
                     barColor = 'bg-red-500 shadow-[0_0_8px_#ef4444]';
                     textColor = 'text-red-500 font-bold';
-                    cardStyle = 'border-red-500/50 bg-red-900/20'; // 超標時覆蓋卡片樣式
+                    cardStyle = 'border-red-500/50 bg-red-900/20';
                 } else if (current >= info.min && current <= info.max) {
-                    // 完美達標區間 (發光綠色)
+                    // 完美達標 (發光綠色)
                     barColor = 'bg-green-400 shadow-[0_0_8px_#4ade80]';
                     textColor = 'text-green-400 font-bold';
-                    cardStyle = 'border-green-500/40 bg-green-900/20'; // 達標時覆蓋卡片樣式
+                    cardStyle = 'border-green-500/40 bg-green-900/20';
                 }
 
                 const card = `
@@ -330,7 +321,7 @@
                 container.innerHTML += card;
             });
 
-            // 更新 Undo 按鈕狀態
+            // 控制復原按鈕
             const undoBtn = document.getElementById('undo-btn');
             if (historyStack.length > 0) {
                 undoBtn.classList.remove('opacity-50', 'pointer-events-none');
@@ -339,10 +330,10 @@
             }
         }
 
-        // 新增食物
+        // 新增紀錄
         function addFood(foodKey, foodName) {
             historyStack.push(JSON.stringify(currentState));
-            if(historyStack.length > 20) historyStack.shift();
+            if(historyStack.length > 20) historyStack.shift(); // 限制紀錄長度
 
             const addition = foodData[foodKey];
             Object.keys(addition).forEach(key => {
@@ -353,7 +344,7 @@
             showToast(`已紀錄：${foodName}`);
         }
 
-        // 復原上一動
+        // 復原
         function undo() {
             if (historyStack.length === 0) return;
             const prevStateStr = historyStack.pop();
@@ -362,9 +353,9 @@
             showToast('已復原上一筆紀錄');
         }
 
-        // 儲存與重新渲染
+        // 儲存至本地端
         function saveAndRender() {
-            localStorage.setItem('mobileNutritionStateRange', JSON.stringify(currentState));
+            localStorage.setItem('nutritionAppFullData', JSON.stringify(currentState));
             renderProgress();
         }
 
@@ -384,7 +375,7 @@
             }, 2500);
         }
 
-        // 重置彈窗邏輯
+        // 重置彈窗
         const modal = document.getElementById('reset-modal');
         const modalContent = document.getElementById('reset-modal-content');
 
@@ -412,7 +403,7 @@
             showToast('今日紀錄已歸零');
         }
 
-        // 手動輸入彈窗邏輯
+        // 手動輸入彈窗
         const manualModal = document.getElementById('manual-modal');
         const manualModalContent = document.getElementById('manual-modal-content');
 
@@ -429,8 +420,8 @@
             manualModalContent.classList.add('scale-95');
             setTimeout(() => {
                 manualModal.classList.add('hidden');
-                // 清空輸入框
-                const inputs = ['kcal', 'protein', 'carbs', 'fat', 'creatine', 'water'];
+                // 清空
+                const inputs = ['kcal', 'protein', 'carbs', 'fat', 'sodium', 'sugar', 'water', 'creatine'];
                 inputs.forEach(id => {
                     document.getElementById(`manual-${id}`).value = '';
                 });
@@ -438,14 +429,19 @@
         }
 
         function submitManualEntry() {
-            const kcal = parseFloat(document.getElementById('manual-kcal').value) || 0;
-            const protein = parseFloat(document.getElementById('manual-protein').value) || 0;
-            const carbs = parseFloat(document.getElementById('manual-carbs').value) || 0;
-            const fat = parseFloat(document.getElementById('manual-fat').value) || 0;
-            const creatine = parseFloat(document.getElementById('manual-creatine').value) || 0;
-            const water = parseFloat(document.getElementById('manual-water').value) || 0;
+            const keys = ['kcal', 'protein', 'carbs', 'fat', 'sodium', 'sugar', 'water', 'creatine'];
+            let hasInput = false;
+            let tempState = { ...currentState };
+            
+            keys.forEach(key => {
+                const val = parseFloat(document.getElementById(`manual-${key}`).value) || 0;
+                if (val !== 0) {
+                    hasInput = true;
+                    tempState[key] += val;
+                }
+            });
 
-            if (kcal === 0 && protein === 0 && carbs === 0 && fat === 0 && creatine === 0 && water === 0) {
+            if (!hasInput) {
                 closeManualModal();
                 return; 
             }
@@ -453,19 +449,13 @@
             historyStack.push(JSON.stringify(currentState));
             if(historyStack.length > 20) historyStack.shift();
 
-            currentState.kcal += kcal;
-            currentState.protein += protein;
-            currentState.carbs += carbs;
-            currentState.fat += fat;
-            currentState.creatine += creatine;
-            currentState.water += water;
-
+            currentState = tempState;
             saveAndRender();
             closeManualModal();
             showToast('已手動新增');
         }
 
-        // 畫面載入時首次渲染
+        // 初始化
         renderProgress();
     </script>
 </body>
