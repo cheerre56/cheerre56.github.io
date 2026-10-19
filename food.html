@@ -201,6 +201,10 @@
                     <label class="text-sm text-gray-400 block mb-1">水分 (ml)</label>
                     <input type="number" id="manual-water" class="w-full bg-gray-800 text-white rounded-lg p-3 outline-none focus:ring-2 focus:ring-cyan-500 border border-gray-700 placeholder-gray-600" placeholder="0">
                 </div>
+                <div>
+                    <label class="text-sm text-gray-400 block mb-1">步數 (步)</label>
+                    <input type="number" id="manual-steps" class="w-full bg-gray-800 text-white rounded-lg p-3 outline-none focus:ring-2 focus:ring-indigo-500 border border-gray-700 placeholder-gray-600" placeholder="0">
+                </div>
             </div>
             <div class="flex gap-3">
                 <button onclick="closeManualModal()" class="flex-1 py-3 bg-gray-800 text-white rounded-xl font-bold">取消</button>
@@ -217,10 +221,11 @@
             carbs: { target: 215, unit: 'g', name: '碳水', color: 'bg-yellow-500', textCol: 'text-yellow-400' },
             fat: { target: 70, unit: 'g', name: '脂肪', color: 'bg-green-500', textCol: 'text-green-400' },
             creatine: { target: 5, unit: 'g', name: '肌酸', color: 'bg-purple-500', textCol: 'text-purple-400' },
-            water: { target: 3000, unit: 'ml', name: '水分', color: 'bg-cyan-500', textCol: 'text-cyan-400' }
+            water: { target: 3000, unit: 'ml', name: '水分', color: 'bg-cyan-500', textCol: 'text-cyan-400' },
+            steps: { target: 10000, unit: '步', name: '步數', color: 'bg-indigo-500', textCol: 'text-indigo-400' }
         };
 
-        const defaultState = { kcal: 0, protein: 0, carbs: 0, fat: 0, creatine: 0, water: 0 };
+        const defaultState = { kcal: 0, protein: 0, carbs: 0, fat: 0, creatine: 0, water: 0, steps: 0 };
         
         // 快捷食物資料
         const foodData = {
@@ -247,19 +252,33 @@
 
             Object.keys(targets).forEach(key => {
                 const info = targets[key];
-                let current = Number(currentState[key].toFixed(1));
+                // 加入 fallback 避免新增步數時舊存檔報錯
+                let currentVal = currentState[key] || 0;
+                let current = Number(currentVal.toFixed(1));
                 // 若小數點為0則轉整數顯示
                 if (current % 1 === 0) current = Math.round(current);
                 
                 const percentage = Math.min((current / info.target) * 100, 100);
-                const isCompleted = current >= info.target;
                 
-                // 達標時的樣式改變
-                const barColor = isCompleted ? 'bg-green-400 shadow-[0_0_10px_rgba(74,222,128,0.5)]' : info.color;
-                const textColor = isCompleted ? 'text-green-400 font-bold' : info.textCol;
+                // 判斷視覺狀態 (未達標 / 剛好達標 / 超標)
+                let barColor = info.color;
+                let textColor = info.textCol;
+                let cardStyle = 'border-gray-800 bg-dark-surface';
+
+                if (current > info.target) {
+                    // 超標狀態 (紅色警示)
+                    barColor = 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]';
+                    textColor = 'text-[#ff4d4d] font-bold';
+                    cardStyle = 'border-red-500/30 bg-red-900/10';
+                } else if (current === info.target) {
+                    // 剛好達標 (發光綠色)
+                    barColor = 'bg-green-400 shadow-[0_0_10px_rgba(74,222,128,0.5)]';
+                    textColor = 'text-green-400 font-bold';
+                    cardStyle = 'border-green-500/30 bg-green-900/10';
+                }
 
                 const card = `
-                    <div class="bg-dark-surface rounded-2xl p-4 flex flex-col justify-between border border-gray-800 ${isCompleted ? 'border-green-500/30 bg-green-900/10' : ''}">
+                    <div class="rounded-2xl p-4 flex flex-col justify-between border ${cardStyle} transition-colors duration-300">
                         <div class="flex justify-between items-start mb-2">
                             <span class="text-gray-300 font-medium text-sm">${info.name}</span>
                         </div>
@@ -381,7 +400,7 @@
             setTimeout(() => {
                 manualModal.classList.add('hidden');
                 // 關閉時清空所有輸入框
-                const inputs = ['kcal', 'protein', 'carbs', 'fat', 'creatine', 'water'];
+                const inputs = ['kcal', 'protein', 'carbs', 'fat', 'creatine', 'water', 'steps'];
                 inputs.forEach(id => {
                     document.getElementById(`manual-${id}`).value = '';
                 });
@@ -395,9 +414,10 @@
             const fat = parseFloat(document.getElementById('manual-fat').value) || 0;
             const creatine = parseFloat(document.getElementById('manual-creatine').value) || 0;
             const water = parseFloat(document.getElementById('manual-water').value) || 0;
+            const steps = parseFloat(document.getElementById('manual-steps').value) || 0;
 
             // 檢查是否有輸入任何數值
-            if (kcal === 0 && protein === 0 && carbs === 0 && fat === 0 && creatine === 0 && water === 0) {
+            if (kcal === 0 && protein === 0 && carbs === 0 && fat === 0 && creatine === 0 && water === 0 && steps === 0) {
                 closeManualModal();
                 return; 
             }
@@ -413,6 +433,7 @@
             currentState.fat += fat;
             currentState.creatine += creatine;
             currentState.water += water;
+            currentState.steps = (currentState.steps || 0) + steps;
 
             saveAndRender();
             closeManualModal();
