@@ -88,49 +88,48 @@
                 <button onclick="addFood('muscleMeal', '增肌餐')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-blue-500/50 transition-colors h-28">
                     <span class="text-3xl mb-2">🍱</span>
                     <span class="font-bold text-sm">增肌餐</span>
-                    <span class="text-[10px] text-gray-400 mt-1">+595大卡 (蛋白質31.1g)</span>
+                    <span class="text-[10px] text-gray-400 mt-1">+595大卡 (蛋白質31g)</span>
                 </button>
 
                 <!-- 雞胸肉 -->
-                <button onclick="addFood('chicken', '雞胸肉 100g')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-red-500/50 transition-colors h-28">
+                <button onclick="addFood('chicken', '雞胸肉')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-red-500/50 transition-colors h-28">
                     <span class="text-3xl mb-2">🍗</span>
-                    <span class="font-bold text-sm">雞胸肉 100g</span>
-                    <span class="text-[10px] text-gray-400 mt-1">+31g 蛋白質</span>
+                    <span class="font-bold text-sm">雞胸肉</span>
+                    <span class="text-[10px] text-gray-400 mt-1">+23g 蛋白質</span>
                 </button>
 
                 <!-- 茶葉蛋 -->
-                <button onclick="addFood('egg', '茶葉蛋 1顆')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-yellow-500/50 transition-colors h-28">
+                <button onclick="addFood('egg', '茶葉蛋')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-yellow-500/50 transition-colors h-28">
                     <span class="text-3xl mb-2">🥚</span>
-                    <span class="font-bold text-sm">茶葉蛋 1顆</span>
+                    <span class="font-bold text-sm">茶葉蛋</span>
                     <span class="text-[10px] text-gray-400 mt-1">+7g 蛋白質</span>
                 </button>
 
                 <!-- 香蕉 -->
-                <button onclick="addFood('banana', '香蕉 1根')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-yellow-300/50 transition-colors h-28">
+                <button onclick="addFood('banana', '香蕉')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-yellow-300/50 transition-colors h-28">
                     <span class="text-3xl mb-2">🍌</span>
-                    <span class="font-bold text-sm">香蕉 1根</span>
-                    <span class="text-[10px] text-gray-400 mt-1">+27g 碳水</span>
+                    <span class="font-bold text-sm">香蕉</span>
+                    <span class="text-[10px] text-gray-400 mt-1">+23g 碳水</span>
                 </button>
                 
                 <!-- 蛋白粉 -->
-                <button onclick="addFood('whey', '蛋白粉 1匙')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-indigo-500/50 transition-colors h-28">
+                <button onclick="addFood('whey', '蛋白粉')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-indigo-500/50 transition-colors h-28">
                     <span class="text-3xl mb-2">🥤</span>
-                    <span class="font-bold text-sm">蛋白粉 1匙</span>
+                    <span class="font-bold text-sm">蛋白粉</span>
                     <span class="text-[10px] text-gray-400 mt-1">+21.3g 蛋白質</span>
                 </button>
 
                 <!-- 補充肌酸 -->
-                <button onclick="addFood('creatine', '補充肌酸 5g')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-purple-500/50 transition-colors h-28">
+                <button onclick="addFood('creatine', '補充肌酸')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-purple-500/50 transition-colors h-28">
                     <span class="text-3xl mb-2">⚡</span>
                     <span class="font-bold text-sm">肌酸 5g</span>
                     <span class="text-[10px] text-gray-400 mt-1">力量補充</span>
                 </button>
 
                 <!-- 喝水 -->
-                <button onclick="addFood('water', '喝水 300ml')" class="tap-effect flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-cyan-500/50 transition-colors h-28">
-                    <span class="text-3xl mb-2">💧</span>
+                <button onclick="addFood('water', '喝水 300ml')" class="tap-effect col-span-2 flex flex-col items-center justify-center p-4 bg-dark-surface rounded-2xl border border-gray-800 hover:border-cyan-500/50 transition-colors h-24">
+                    <span class="text-3xl mb-1">💧</span>
                     <span class="font-bold text-sm">喝水 300ml</span>
-                    <span class="text-[10px] text-gray-400 mt-1">保持水分</span>
                 </button>
             </div>
             
@@ -201,10 +200,6 @@
                     <label class="text-sm text-gray-400 block mb-1">水分 (ml)</label>
                     <input type="number" id="manual-water" class="w-full bg-gray-800 text-white rounded-lg p-3 outline-none focus:ring-2 focus:ring-cyan-500 border border-gray-700 placeholder-gray-600" placeholder="0">
                 </div>
-                <div>
-                    <label class="text-sm text-gray-400 block mb-1">步數 (步)</label>
-                    <input type="number" id="manual-steps" class="w-full bg-gray-800 text-white rounded-lg p-3 outline-none focus:ring-2 focus:ring-indigo-500 border border-gray-700 placeholder-gray-600" placeholder="0">
-                </div>
             </div>
             <div class="flex gap-3">
                 <button onclick="closeManualModal()" class="flex-1 py-3 bg-gray-800 text-white rounded-xl font-bold">取消</button>
@@ -214,31 +209,34 @@
     </div>
 
     <script>
-        // 設定目標與初始狀態
+        // 設定目標與初始狀態 (移除步數)
         const targets = {
-            kcal: { target: 2100, unit: 'kcal', name: '熱量', color: 'bg-orange-500', textCol: 'text-orange-400' },
-            protein: { target: 150, unit: 'g', name: '蛋白質', color: 'bg-blue-500', textCol: 'text-blue-400' },
-            carbs: { target: 215, unit: 'g', name: '碳水', color: 'bg-yellow-500', textCol: 'text-yellow-400' },
-            fat: { target: 70, unit: 'g', name: '脂肪', color: 'bg-green-500', textCol: 'text-green-400' },
-            creatine: { target: 5, unit: 'g', name: '肌酸', color: 'bg-purple-500', textCol: 'text-purple-400' },
-            water: { target: 3000, unit: 'ml', name: '水分', color: 'bg-cyan-500', textCol: 'text-cyan-400' },
-            steps: { target: 10000, unit: '步', name: '步數', color: 'bg-indigo-500', textCol: 'text-indigo-400' }
+            kcal: { target: 2100, unit: 'kcal', name: '熱量', color: 'bg-white' },
+            protein: { target: 150, unit: 'g', name: '蛋白質', color: 'bg-white' },
+            carbs: { target: 215, unit: 'g', name: '碳水', color: 'bg-white' },
+            fat: { target: 70, unit: 'g', name: '脂肪', color: 'bg-white' },
+            creatine: { target: 5, unit: 'g', name: '肌酸', color: 'bg-white' },
+            water: { target: 3000, unit: 'ml', name: '水分', color: 'bg-white' }
         };
 
-        const defaultState = { kcal: 0, protein: 0, carbs: 0, fat: 0, creatine: 0, water: 0, steps: 0 };
+        const defaultState = { kcal: 0, protein: 0, carbs: 0, fat: 0, creatine: 0, water: 0 };
         
-        // 快捷食物資料
+        // 快捷食物資料 (更新為精準備註數值)
         const foodData = {
-            muscleMeal: { kcal: 595, protein: 31.1, carbs: 72.4, fat: 20.1, creatine: 0, water: 0 },
-            chicken: { kcal: 165, protein: 31, carbs: 0, fat: 3.6, creatine: 0, water: 0 },
-            egg: { kcal: 70, protein: 7, carbs: 1, fat: 5, creatine: 0, water: 0 },
-            banana: { kcal: 105, protein: 1.3, carbs: 27, fat: 0.3, creatine: 0, water: 0 },
+            muscleMeal: { kcal: 595, protein: 31, carbs: 72, fat: 20, creatine: 0, water: 0 },
+            egg: { kcal: 70, protein: 7, carbs: 0, fat: 5, creatine: 0, water: 0 },
+            banana: { kcal: 90, protein: 1, carbs: 23, fat: 0, creatine: 0, water: 0 },
+            chicken: { kcal: 105, protein: 23, carbs: 0, fat: 1.5, creatine: 0, water: 0 },
             whey: { kcal: 113, protein: 21.3, carbs: 4.2, fat: 1.1, creatine: 0, water: 0 },
             creatine: { kcal: 0, protein: 0, carbs: 0, fat: 0, creatine: 5, water: 0 },
             water: { kcal: 0, protein: 0, carbs: 0, fat: 0, creatine: 0, water: 300 }
         };
 
-        let currentState = JSON.parse(localStorage.getItem('mobileNutritionState')) || { ...defaultState };
+        let currentState = JSON.parse(localStorage.getItem('mobileNutritionState2')) || { ...defaultState };
+        
+        // 如果舊的 localStorage 有步數屬性，這裡將其剔除以防止出錯
+        if(currentState.steps !== undefined) delete currentState.steps;
+
         let historyStack = []; // 用於復原
 
         // 顯示日期
@@ -252,9 +250,9 @@
 
             Object.keys(targets).forEach(key => {
                 const info = targets[key];
-                // 加入 fallback 避免新增步數時舊存檔報錯
                 let currentVal = currentState[key] || 0;
                 let current = Number(currentVal.toFixed(1));
+                
                 // 若小數點為0則轉整數顯示
                 if (current % 1 === 0) current = Math.round(current);
                 
@@ -262,7 +260,7 @@
                 
                 // 判斷視覺狀態 (未達標 / 剛好達標 / 超標)
                 let barColor = info.color;
-                let textColor = info.textCol;
+                let textColor = 'text-white';
                 let cardStyle = 'border-gray-800 bg-dark-surface';
 
                 if (current > info.target) {
@@ -305,12 +303,9 @@
 
         // 新增食物
         function addFood(foodKey, foodName) {
-            // 儲存當前狀態到歷史紀錄
             historyStack.push(JSON.stringify(currentState));
-            // 限制歷史紀錄長度避免記憶體過大
             if(historyStack.length > 20) historyStack.shift();
 
-            // 更新數值
             const addition = foodData[foodKey];
             Object.keys(addition).forEach(key => {
                 currentState[key] += addition[key];
@@ -323,17 +318,15 @@
         // 復原上一動
         function undo() {
             if (historyStack.length === 0) return;
-            
             const prevStateStr = historyStack.pop();
             currentState = JSON.parse(prevStateStr);
-            
             saveAndRender();
             showToast('已復原上一筆紀錄');
         }
 
         // 儲存與重新渲染
         function saveAndRender() {
-            localStorage.setItem('mobileNutritionState', JSON.stringify(currentState));
+            localStorage.setItem('mobileNutritionState2', JSON.stringify(currentState));
             renderProgress();
         }
 
@@ -353,13 +346,12 @@
             }, 2500);
         }
 
-        // 自訂重置彈窗邏輯
+        // 重置彈窗邏輯
         const modal = document.getElementById('reset-modal');
         const modalContent = document.getElementById('reset-modal-content');
 
         function showResetModal() {
             modal.classList.remove('hidden');
-            // 延遲一點點讓 display block 先作用，再執行動畫
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
                 modalContent.classList.remove('scale-95');
@@ -376,7 +368,7 @@
 
         function confirmReset() {
             currentState = { ...defaultState };
-            historyStack = []; // 重置也清空復原紀錄
+            historyStack = []; 
             saveAndRender();
             closeResetModal();
             showToast('今日紀錄已歸零');
@@ -399,8 +391,8 @@
             manualModalContent.classList.add('scale-95');
             setTimeout(() => {
                 manualModal.classList.add('hidden');
-                // 關閉時清空所有輸入框
-                const inputs = ['kcal', 'protein', 'carbs', 'fat', 'creatine', 'water', 'steps'];
+                // 清空輸入框
+                const inputs = ['kcal', 'protein', 'carbs', 'fat', 'creatine', 'water'];
                 inputs.forEach(id => {
                     document.getElementById(`manual-${id}`).value = '';
                 });
@@ -414,26 +406,21 @@
             const fat = parseFloat(document.getElementById('manual-fat').value) || 0;
             const creatine = parseFloat(document.getElementById('manual-creatine').value) || 0;
             const water = parseFloat(document.getElementById('manual-water').value) || 0;
-            const steps = parseFloat(document.getElementById('manual-steps').value) || 0;
 
-            // 檢查是否有輸入任何數值
-            if (kcal === 0 && protein === 0 && carbs === 0 && fat === 0 && creatine === 0 && water === 0 && steps === 0) {
+            if (kcal === 0 && protein === 0 && carbs === 0 && fat === 0 && creatine === 0 && water === 0) {
                 closeManualModal();
                 return; 
             }
 
-            // 儲存當前狀態到歷史紀錄以供復原
             historyStack.push(JSON.stringify(currentState));
             if(historyStack.length > 20) historyStack.shift();
 
-            // 加上輸入的數值
             currentState.kcal += kcal;
             currentState.protein += protein;
             currentState.carbs += carbs;
             currentState.fat += fat;
             currentState.creatine += creatine;
             currentState.water += water;
-            currentState.steps = (currentState.steps || 0) + steps;
 
             saveAndRender();
             closeManualModal();
